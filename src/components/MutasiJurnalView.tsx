@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateTransactionsHtml } from '../utils/printHelper';
+import { DayakTableWatermark, DayakRibbonTrim, DayakCornerSilhouette } from './DayakPatternDecor';
 
 interface MutasiJurnalViewProps {
   item: BudgetItem;
@@ -48,6 +49,49 @@ const BULAN_OPTIONS = [
   'Desember'
 ];
 
+// Helper to convert any date string format to standard YYYY-MM-DD for native date picker
+function dateStringToIso(str: string): string {
+  if (!str) return '2026-08-29';
+  const trimmed = str.trim();
+  // Format YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+
+  // Format DD/MM/YYYY
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(trimmed)) {
+    const parts = trimmed.split('/');
+    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+  }
+
+  // Format "23 Agustus 2026" or "8 Agustus 2026"
+  const match = trimmed.match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+  if (match) {
+    const day = match[1].padStart(2, '0');
+    const monthName = match[2];
+    const year = match[3];
+    const monthIdx = BULAN_OPTIONS.findIndex(
+      (b) => b.toLowerCase() === monthName.toLowerCase()
+    );
+    const monthNum = monthIdx >= 0 ? String(monthIdx + 1).padStart(2, '0') : '08';
+    return `${year}-${monthNum}-${day}`;
+  }
+
+  return '2026-08-29';
+}
+
+// Helper to convert YYYY-MM-DD to Indonesian display string "29 Agustus 2026"
+function isoToIndonesianDate(isoStr: string, customMonth?: string): string {
+  if (!isoStr) return '29 Agustus 2026';
+  const parts = isoStr.split('-');
+  if (parts.length === 3) {
+    const year = parts[0];
+    const monthIdx = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    const monthName = customMonth || BULAN_OPTIONS[monthIdx] || 'Agustus';
+    return `${day} ${monthName} ${year}`;
+  }
+  return isoStr;
+}
+
 export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   item,
   transactions,
@@ -71,13 +115,44 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
   // Form State matching screenshot
-  const [formTanggal, setFormTanggal] = useState('29/08/2026');
+  const [formDateIso, setFormDateIso] = useState('2026-08-29');
   const [formBulan, setFormBulan] = useState('Agustus');
   const [formUraian, setFormUraian] = useState('');
   const [formNominal, setFormNominal] = useState<number | ''>('');
   const [formFileName, setFormFileName] = useState<string>('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  // Trigger calendar picker popup
+  const handleOpenDatePicker = () => {
+    if (dateInputRef.current) {
+      if (typeof dateInputRef.current.showPicker === 'function') {
+        try {
+          dateInputRef.current.showPicker();
+        } catch {
+          dateInputRef.current.focus();
+        }
+      } else {
+        dateInputRef.current.focus();
+      }
+    }
+  };
+
+  // Handle date change and auto-sync month dropdown
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newIso = e.target.value;
+    setFormDateIso(newIso);
+    if (newIso) {
+      const parts = newIso.split('-');
+      if (parts.length === 3) {
+        const mIdx = parseInt(parts[1], 10) - 1;
+        if (mIdx >= 0 && mIdx < BULAN_OPTIONS.length) {
+          setFormBulan(BULAN_OPTIONS[mIdx]);
+        }
+      }
+    }
+  };
 
   // Filter transactions for this specific BudgetItem
   const itemTransactions = useMemo(() => {
@@ -141,7 +216,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   // Open Add Modal
   const handleOpenAdd = () => {
     setEditingTransaction(null);
-    setFormTanggal('29/08/2026');
+    setFormDateIso('2026-08-29');
     setFormBulan('Agustus');
     setFormUraian('');
     setFormNominal('');
@@ -152,9 +227,10 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   // Open Edit Modal
   const handleOpenEdit = (tx: JournalTransaction) => {
     setEditingTransaction(tx);
-    // Format tanggal
-    setFormTanggal(tx.tanggalTransaksi.includes('/') ? tx.tanggalTransaksi : '29/08/2026');
-    setFormBulan(tx.bulan.replace('Bulan ', ''));
+    const parsedIso = dateStringToIso(tx.tanggalTransaksi);
+    setFormDateIso(parsedIso);
+    const monthClean = tx.bulan.replace('Bulan ', '').trim();
+    setFormBulan(monthClean || 'Agustus');
     setFormUraian(tx.uraianKeterangan);
     setFormNominal(tx.nominal);
     setFormFileName(tx.fileKuitansiName || '');
@@ -175,10 +251,12 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
     const num = typeof formNominal === 'number' ? formNominal : parseFloat(String(formNominal));
     if (!formUraian.trim() || isNaN(num) || num <= 0) return;
 
+    const formattedDate = isoToIndonesianDate(formDateIso, formBulan);
+
     if (editingTransaction) {
       onUpdateTransaction({
         ...editingTransaction,
-        tanggalTransaksi: formTanggal.includes('/') ? `${formTanggal.split('/')[0]} ${formBulan} 2026` : formTanggal,
+        tanggalTransaksi: formattedDate,
         bulan: `Bulan ${formBulan}`,
         uraianKeterangan: formUraian,
         nominal: num,
@@ -188,7 +266,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
       const newId = `j-${item.id}-${Date.now()}`;
       onAddTransaction({
         itemId: item.id,
-        tanggalTransaksi: `${formTanggal.split('/')[0] || '29'} ${formBulan} 2026`,
+        tanggalTransaksi: formattedDate,
         bulan: `Bulan ${formBulan}`,
         mataRekening: item.uraianSpesifik,
         jenisBelanjaBadge: 'BELANJA LANGSUNG',
@@ -273,7 +351,17 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
       )}
 
       {/* Dark Modern Mutasi Jurnal Card Container */}
-      <div className="bg-[#0b1329] text-slate-100 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+      <div className="relative bg-[#0b1329] text-slate-100 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+        {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel Jurnal */}
+        <DayakRibbonTrim colorScheme="gold" />
+
+        {/* Ornamen Sudut Siluet Batik Dayak */}
+        <DayakCornerSilhouette position="top-right" size={90} className="opacity-15 text-amber-500" />
+        <DayakCornerSilhouette position="bottom-left" size={90} className="opacity-15 text-amber-500" />
+
+        {/* Watermark Seni Ukir & Batik Dayak Menempel Keseluruhan Tabel */}
+        <DayakTableWatermark opacity={0.055} />
+
         {/* Header toolbar */}
         <div className="p-5 sm:p-6 border-b border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
@@ -672,19 +760,34 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
               {/* Field 2 & 3: TANGGAL KUITANSI & BULAN */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                    TANGGAL KUITANSI
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                    <span>TANGGAL KUITANSI</span>
+                    <span className="text-[10px] text-blue-400 font-normal normal-case">Klik untuk kalender</span>
                   </label>
-                  <div className="relative flex items-center">
+                  <div
+                    onClick={handleOpenDatePicker}
+                    className="relative flex items-center bg-[#131f3b] border border-slate-700/80 rounded-xl hover:border-blue-500/80 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500/40 transition-colors cursor-pointer"
+                  >
                     <input
-                      type="text"
+                      ref={dateInputRef}
+                      type="date"
                       required
-                      value={formTanggal}
-                      onChange={(e) => setFormTanggal(e.target.value)}
-                      placeholder="29/08/2026"
-                      className="w-full bg-[#131f3b] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-slate-100 font-medium pr-10 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/40"
+                      value={formDateIso}
+                      onChange={handleDateChange}
+                      style={{ colorScheme: 'dark' }}
+                      className="w-full bg-transparent px-3.5 py-2.5 text-xs text-slate-100 font-medium pr-10 focus:outline-none cursor-pointer [color-scheme:dark]"
                     />
-                    <Calendar className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenDatePicker();
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-blue-400 active:text-blue-300 absolute right-2.5 top-1/2 -translate-y-1/2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                      title="Klik untuk membuka kalender"
+                    >
+                      <Calendar className="w-4 h-4 text-slate-300 hover:text-blue-400 transition-colors" />
+                    </button>
                   </div>
                 </div>
 

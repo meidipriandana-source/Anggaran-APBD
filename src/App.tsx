@@ -5,6 +5,7 @@ import {
   DEFAULT_JOURNAL_DATA,
   TOTAL_PAGU_ANGGARAN
 } from './data/budgetData';
+import { LOGO_KALTARA } from './assets/logoKaltara';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { KpiMetrics } from './components/KpiMetrics';
@@ -14,6 +15,7 @@ import { SertifikatView } from './components/SertifikatView';
 import { MonthlyReportView } from './components/MonthlyReportView';
 import { ItemDetailModal } from './components/ItemDetailModal';
 import { PrintPreviewModal } from './components/PrintPreviewModal';
+import { GrandBackgroundSilhouette } from './components/DayakPatternDecor';
 import {
   generateBudgetSummaryHtml,
   generateTransactionsHtml,
@@ -165,7 +167,10 @@ export default function App() {
   }, [activeLiveSelectedItem, transactions, liveBudgetItems, overallTerserap, overallSisa]);
 
   return (
-    <div className="min-h-screen bg-slate-100/70 flex text-slate-800 antialiased font-sans">
+    <div className="min-h-screen bg-slate-100/80 flex text-slate-800 antialiased font-sans relative selection:bg-blue-600 selection:text-white">
+      {/* Background Silhouette Watermark (Les Siluet Motif Batik Dayak & Lambang Pemprov Kaltara) */}
+      <GrandBackgroundSilhouette />
+
       {/* Header Print Preview Modal */}
       <PrintPreviewModal
         isOpen={isHeaderPrintOpen}

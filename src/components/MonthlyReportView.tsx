@@ -3,6 +3,8 @@ import { BudgetItem, JournalTransaction } from '../types';
 import { FORMAT_NUM } from '../data/budgetData';
 import { Download, Printer, Filter, Calendar, CheckSquare, Square, Check, Layers } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
+import { LOGO_KALTARA } from '../assets/logoKaltara';
+import { DayakTableWatermark, DayakRibbonTrim, DayakCornerSilhouette } from './DayakPatternDecor';
 
 interface MonthlyReportViewProps {
   items?: BudgetItem[];
@@ -499,7 +501,22 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = () => {
       />
 
       {/* Clean Card Container with Full Border Grid */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="relative bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+        {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel */}
+        <DayakRibbonTrim colorScheme="emerald" />
+
+        {/* Ornamen Sudut Siluet Batik Dayak */}
+        <DayakCornerSilhouette position="top-right" size={90} className="opacity-20 text-emerald-900" />
+        <DayakCornerSilhouette position="bottom-left" size={90} className="opacity-20 text-emerald-900" />
+
+        {/* Watermark Seni Ukir & Batik Dayak Menempel Keseluruhan Tabel */}
+        <DayakTableWatermark opacity={0.048} />
+
+        {/* Subtle Silhouette Background Watermark */}
+        <div className="absolute right-12 bottom-12 w-96 h-96 opacity-[0.025] grayscale pointer-events-none select-none z-0">
+          <img src={LOGO_KALTARA} alt="" className="w-full h-full object-contain" />
+        </div>
+
         {/* Table Title Header with Action Buttons */}
         <div className="px-5 py-4 border-b border-slate-200 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>

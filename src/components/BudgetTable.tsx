@@ -4,6 +4,8 @@ import { FORMAT_RUPIAH } from '../data/budgetData';
 import { ArrowRight, Search, Download, X, Layers, CheckSquare, Square, Printer, Check } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateBudgetSummaryHtml } from '../utils/printHelper';
+import { LOGO_KALTARA } from '../assets/logoKaltara';
+import { DayakTableWatermark, DayakRibbonTrim, DayakCornerSilhouette } from './DayakPatternDecor';
 
 interface BudgetTableProps {
   items: BudgetItem[];
@@ -146,7 +148,22 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden space-y-0">
+    <div className="relative bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden space-y-0">
+      {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel */}
+      <DayakRibbonTrim colorScheme="blue" />
+
+      {/* Ornamen Sudut Siluet Batik Dayak */}
+      <DayakCornerSilhouette position="top-right" size={90} className="opacity-20" />
+      <DayakCornerSilhouette position="bottom-left" size={90} className="opacity-20" />
+
+      {/* Watermark Seni Ukir & Batik Dayak Menempel Keseluruhan Tabel */}
+      <DayakTableWatermark opacity={0.048} />
+
+      {/* Subtle Silhouette Background Watermark Logo */}
+      <div className="absolute right-8 bottom-8 w-80 h-96 opacity-[0.025] grayscale pointer-events-none select-none z-0">
+        <img src={LOGO_KALTARA} alt="" className="w-full h-full object-contain" />
+      </div>
+
       {/* Category Pills Toolbar */}
       <div className="p-3.5 border-b border-slate-100 bg-slate-50/70 flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
         <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pl-1 pr-2 shrink-0 flex items-center gap-1">

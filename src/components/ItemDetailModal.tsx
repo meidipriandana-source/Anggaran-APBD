@@ -3,6 +3,7 @@ import { BudgetItem } from '../types';
 import { FORMAT_RUPIAH, TOTAL_PAGU_ANGGARAN } from '../data/budgetData';
 import { X, Plane, GraduationCap, Building2, Tag, FileText, CheckCircle2, ShieldCheck, Printer } from 'lucide-react';
 import { printHtmlDirectly } from '../utils/printHelper';
+import { DayakRibbonTrim, DayakTableWatermark } from './DayakPatternDecor';
 
 interface ItemDetailModalProps {
   item: BudgetItem | null;
@@ -82,9 +83,11 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div
-        className="bg-white rounded-2xl max-w-xl w-full border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+        className="relative bg-white rounded-2xl max-w-xl w-full border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
+        <DayakRibbonTrim colorScheme={isPerdin ? 'blue' : isKontribusi ? 'emerald' : 'gold'} />
+        <DayakTableWatermark opacity={0.04} />
         {/* Header */}
         <div
           className={`p-4 sm:p-5 flex items-start justify-between border-b ${

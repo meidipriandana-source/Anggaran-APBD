@@ -112,15 +112,14 @@ export const PrintPreviewModal: React.FC<PrintPreviewModalProps> = ({
         </div>
 
         {/* Paper Container Viewport (Scrollable) */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-950 flex justify-center custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-900/90 flex flex-col items-center custom-scrollbar">
           <div
-            className={`bg-white text-slate-900 shadow-2xl rounded-sm p-6 sm:p-10 transition-all ${
-              landscape ? 'w-full max-w-[1050px]' : 'w-full max-w-[800px]'
+            className={`bg-white text-slate-900 shadow-2xl rounded-sm p-6 sm:p-10 sm:px-12 transition-all my-auto shrink-0 w-full border border-slate-200 ${
+              landscape ? 'max-w-[1100px]' : 'max-w-[850px]'
             }`}
-            style={{ minHeight: '600px' }}
           >
             {/* Kop Surat */}
-            <div className="border-b-2 border-slate-900 pb-3 mb-4 flex items-center justify-between gap-4">
+            <div className="border-b-2 border-double border-slate-900 pb-3 mb-4 flex items-center justify-between gap-4">
               <div className="shrink-0 w-16 sm:w-20 flex items-center justify-center">
                 <img
                   src={LOGO_KALTARA}
@@ -155,9 +154,9 @@ export const PrintPreviewModal: React.FC<PrintPreviewModalProps> = ({
               )}
             </div>
 
-            {/* Injected Content (Table) */}
+            {/* Injected Content (Table with Explicit Light Paper Colors) */}
             <div
-              className="overflow-x-auto text-[10px] [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-slate-400 [&_th]:bg-slate-100 [&_th]:p-2 [&_th]:font-extrabold [&_th]:text-center [&_th]:uppercase [&_td]:border [&_td]:border-slate-300 [&_td]:p-2 [&_td.num]:text-right [&_td.num]:font-mono [&_td.center]:text-center [&_tr.total-row]:bg-slate-200 [&_tr.total-row]:font-black"
+              className="overflow-x-auto text-[10px] w-full text-slate-900 [&_table]:w-full [&_table]:border-collapse [&_table]:bg-white [&_table]:text-slate-900 [&_thead]:bg-slate-100 [&_thead]:text-slate-900 [&_tbody]:bg-white [&_tbody]:text-slate-900 [&_th]:border [&_th]:border-slate-400 [&_th]:bg-slate-100 [&_th]:text-slate-900 [&_th]:p-2 [&_th]:font-extrabold [&_th]:text-center [&_th]:uppercase [&_td]:border [&_td]:border-slate-300 [&_td]:bg-white [&_td]:text-slate-900 [&_td]:p-2 [&_td.num]:text-right [&_td.num]:font-mono [&_td.center]:text-center [&_tr]:bg-white [&_tr.total-row]:bg-slate-200 [&_tr.total-row_td]:bg-slate-200 [&_tr.total-row]:font-black"
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
 

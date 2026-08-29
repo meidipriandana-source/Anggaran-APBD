@@ -276,18 +276,18 @@ export function generateMonthlyReportHtml(
   grandTotalSisa: number
 ): string {
   return `
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 28px;">NO</th>
-          <th style="text-align: left; min-width: 180px;">SASARAN KEGIATAN / KOMPONEN</th>
-          <th style="width: 85px;">PAGU EFEKTIF</th>
-          ${MONTHS_LIST.map((m) => `<th style="width: 55px;">${m.name.slice(0, 3).toUpperCase()}</th>`).join('')}
-          <th style="width: 85px;">REALISASI</th>
-          <th style="width: 85px;">SISA</th>
+    <table style="width: 100%; border-collapse: collapse; background-color: #ffffff; color: #0f172a;">
+      <thead style="background-color: #f1f5f9;">
+        <tr style="background-color: #f1f5f9;">
+          <th style="width: 28px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 4px;">NO</th>
+          <th style="text-align: left; min-width: 180px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 4px;">SASARAN KEGIATAN / KOMPONEN</th>
+          <th style="width: 85px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 4px;">PAGU EFEKTIF</th>
+          ${MONTHS_LIST.map((m) => `<th style="width: 55px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 4px;">${m.name.slice(0, 3).toUpperCase()}</th>`).join('')}
+          <th style="width: 85px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 4px;">REALISASI</th>
+          <th style="width: 85px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 4px;">SISA</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody style="background-color: #ffffff;">
         ${items
           .map((item, idx) => {
             const itemMonthly: { [key: string]: number } = {
@@ -318,30 +318,30 @@ export function generateMonthlyReportHtml(
             const sisaItem = item.jumlahTotal - totalItemRealisasi;
 
             return `
-              <tr>
-                <td class="center">${idx + 1}</td>
-                <td style="font-weight: 600;">${item.uraianSpesifik}</td>
-                <td class="num">${FORMAT_RUPIAH(item.jumlahTotal)}</td>
+              <tr style="background-color: #ffffff;">
+                <td class="center" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 4px;">${idx + 1}</td>
+                <td style="font-weight: 600; background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 4px;">${item.uraianSpesifik}</td>
+                <td class="num" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 4px;">${FORMAT_RUPIAH(item.jumlahTotal)}</td>
                 ${MONTHS_LIST.map((m) => {
                   const val = itemMonthly[m.name] || 0;
-                  return `<td class="num">${val > 0 ? FORMAT_RUPIAH(val) : '-'}</td>`;
+                  return `<td class="num" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 4px;">${val > 0 ? FORMAT_RUPIAH(val) : '-'}</td>`;
                 }).join('')}
-                <td class="num" style="font-weight: bold; color: #1e3a8a;">${FORMAT_RUPIAH(totalItemRealisasi)}</td>
-                <td class="num" style="font-weight: bold;">${FORMAT_RUPIAH(sisaItem)}</td>
+                <td class="num" style="font-weight: bold; color: #1e3a8a; background-color: #ffffff; border: 1px solid #cbd5e1; padding: 4px;">${FORMAT_RUPIAH(totalItemRealisasi)}</td>
+                <td class="num" style="font-weight: bold; background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 4px;">${FORMAT_RUPIAH(sisaItem)}</td>
               </tr>
             `;
           })
           .join('')}
         
-        <tr class="total-row">
-          <td colspan="2" style="text-align: right; font-weight: 900; padding: 6px;">TOTAL REALISASI</td>
-          <td class="num" style="font-weight: 900;">${FORMAT_RUPIAH(grandTotalPagu)}</td>
+        <tr class="total-row" style="background-color: #e2e8f0; font-weight: 900;">
+          <td colspan="2" style="text-align: right; font-weight: 900; padding: 6px; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b;">TOTAL REALISASI</td>
+          <td class="num" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 4px;">${FORMAT_RUPIAH(grandTotalPagu)}</td>
           ${MONTHS_LIST.map((m) => {
             const val = monthlyTotals[m.name] || 0;
-            return `<td class="num" style="font-weight: 900;">${val > 0 ? FORMAT_RUPIAH(val) : '-'}</td>`;
+            return `<td class="num" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 4px;">${val > 0 ? FORMAT_RUPIAH(val) : '-'}</td>`;
           }).join('')}
-          <td class="num" style="font-weight: 900; color: #1e3a8a;">${FORMAT_RUPIAH(grandTotalRealisasi)}</td>
-          <td class="num" style="font-weight: 900;">${FORMAT_RUPIAH(grandTotalSisa)}</td>
+          <td class="num" style="font-weight: 900; color: #1e3a8a; background-color: #e2e8f0; border: 1px solid #64748b; padding: 4px;">${FORMAT_RUPIAH(grandTotalRealisasi)}</td>
+          <td class="num" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 4px;">${FORMAT_RUPIAH(grandTotalSisa)}</td>
         </tr>
       </tbody>
     </table>
@@ -358,47 +358,47 @@ export function generateBudgetSummaryHtml(
   totalSisa: number
 ): string {
   return `
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 28px;">NO</th>
-          <th style="text-align: left;">KODE REKENING & URAIAN SPESIFIK</th>
-          <th style="width: 80px;">VOLUME</th>
-          <th style="width: 95px;">PAGU MURNI</th>
-          <th style="width: 85px;">PERGESERAN</th>
-          <th style="width: 95px;">PAGU EFEKTIF</th>
-          <th style="width: 95px;">REALISASI</th>
-          <th style="width: 95px;">SISA PAGU</th>
-          <th style="width: 55px;">%</th>
+    <table style="width: 100%; border-collapse: collapse; background-color: #ffffff; color: #0f172a;">
+      <thead style="background-color: #f1f5f9;">
+        <tr style="background-color: #f1f5f9;">
+          <th style="width: 28px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">NO</th>
+          <th style="text-align: left; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">KODE REKENING & URAIAN SPESIFIK</th>
+          <th style="width: 75px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">VOLUME</th>
+          <th style="width: 90px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">PAGU MURNI</th>
+          <th style="width: 80px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">PERGESERAN</th>
+          <th style="width: 90px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">PAGU EFEKTIF</th>
+          <th style="width: 90px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">REALISASI</th>
+          <th style="width: 90px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">SISA PAGU</th>
+          <th style="width: 50px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">%</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody style="background-color: #ffffff;">
         ${items
           .map((item, idx) => `
-            <tr>
-              <td class="center">${idx + 1}</td>
-              <td>
-                <strong>${item.uraianSpesifik}</strong><br/>
+            <tr style="background-color: #ffffff;">
+              <td class="center" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${idx + 1}</td>
+              <td style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">
+                <strong style="color: #0f172a;">${item.uraianSpesifik}</strong><br/>
                 <span style="font-size: 8px; color: #475569;">${item.kodeRekening} &bull; ${item.kategoriBelanja}</span>
               </td>
-              <td class="center">${item.koefisienVolume}</td>
-              <td class="num">${FORMAT_RUPIAH(item.paguMurni)}</td>
-              <td class="num">${FORMAT_RUPIAH(item.pergeseran)}</td>
-              <td class="num" style="font-weight: bold;">${FORMAT_RUPIAH(item.jumlahTotal)}</td>
-              <td class="num" style="font-weight: bold; color: #1e3a8a;">${FORMAT_RUPIAH(item.terserap)}</td>
-              <td class="num">${FORMAT_RUPIAH(item.sisa)}</td>
-              <td class="center" style="font-weight: bold;">${item.persenSerapan.toFixed(1)}%</td>
+              <td class="center" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${item.koefisienVolume}</td>
+              <td class="num" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${FORMAT_RUPIAH(item.paguMurni)}</td>
+              <td class="num" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${FORMAT_RUPIAH(item.pergeseran)}</td>
+              <td class="num" style="font-weight: bold; background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${FORMAT_RUPIAH(item.jumlahTotal)}</td>
+              <td class="num" style="font-weight: bold; color: #1e3a8a; background-color: #ffffff; border: 1px solid #cbd5e1; padding: 5px;">${FORMAT_RUPIAH(item.terserap)}</td>
+              <td class="num" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${FORMAT_RUPIAH(item.sisa)}</td>
+              <td class="center" style="font-weight: bold; background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${item.persenSerapan.toFixed(1)}%</td>
             </tr>
           `)
           .join('')}
-        <tr class="total-row">
-          <td colspan="3" style="text-align: right; font-weight: 900; padding: 6px;">TOTAL KESELURUHAN</td>
-          <td class="num" style="font-weight: 900;">${FORMAT_RUPIAH(totalPagu)}</td>
-          <td class="num" style="font-weight: 900;">Rp 0</td>
-          <td class="num" style="font-weight: 900;">${FORMAT_RUPIAH(totalPagu)}</td>
-          <td class="num" style="font-weight: 900; color: #1e3a8a;">${FORMAT_RUPIAH(totalTerserap)}</td>
-          <td class="num" style="font-weight: 900;">${FORMAT_RUPIAH(totalSisa)}</td>
-          <td class="center" style="font-weight: 900;">${totalPagu > 0 ? ((totalTerserap / totalPagu) * 100).toFixed(1) : 0}%</td>
+        <tr class="total-row" style="background-color: #e2e8f0; font-weight: 900;">
+          <td colspan="3" style="text-align: right; font-weight: 900; padding: 6px; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b;">TOTAL KESELURUHAN</td>
+          <td class="num" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 5px;">${FORMAT_RUPIAH(totalPagu)}</td>
+          <td class="num" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 5px;">Rp 0</td>
+          <td class="num" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 5px;">${FORMAT_RUPIAH(totalPagu)}</td>
+          <td class="num" style="font-weight: 900; color: #1e3a8a; background-color: #e2e8f0; border: 1px solid #64748b; padding: 5px;">${FORMAT_RUPIAH(totalTerserap)}</td>
+          <td class="num" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 5px;">${FORMAT_RUPIAH(totalSisa)}</td>
+          <td class="center" style="font-weight: 900; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b; padding: 5px;">${totalPagu > 0 ? ((totalTerserap / totalPagu) * 100).toFixed(1) : 0}%</td>
         </tr>
       </tbody>
     </table>
@@ -415,45 +415,45 @@ export function generateTransactionsHtml(
   const totalNominal = transactions.reduce((acc, t) => acc + t.nominal, 0);
 
   return `
-    <div style="margin-bottom: 10px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px;">
+    <div style="margin-bottom: 10px; background-color: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px;">
       <div><strong>Kode Rekening:</strong> ${item.kodeRekening}</div>
       <div><strong>Uraian Komponen:</strong> ${item.uraianSpesifik}</div>
       <div><strong>Pagu Anggaran:</strong> ${FORMAT_RUPIAH(item.jumlahTotal)} | <strong>Realisasi Terserap:</strong> ${FORMAT_RUPIAH(totalNominal)} | <strong>Sisa:</strong> ${FORMAT_RUPIAH(item.jumlahTotal - totalNominal)}</div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 28px;">NO</th>
-          <th style="width: 80px;">TANGGAL</th>
-          <th style="width: 70px;">BULAN</th>
-          <th style="text-align: left;">URAIAN KETERANGAN TRANSAKSI / KUITANSI</th>
-          <th style="width: 100px;">MATA REKENING / BUKTI</th>
-          <th style="width: 100px;">NOMINAL REALISASI</th>
+    <table style="width: 100%; border-collapse: collapse; background-color: #ffffff; color: #0f172a;">
+      <thead style="background-color: #f1f5f9;">
+        <tr style="background-color: #f1f5f9;">
+          <th style="width: 28px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">NO</th>
+          <th style="width: 80px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">TANGGAL</th>
+          <th style="width: 70px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">BULAN</th>
+          <th style="text-align: left; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">URAIAN KETERANGAN TRANSAKSI / KUITANSI</th>
+          <th style="width: 100px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">MATA REKENING / BUKTI</th>
+          <th style="width: 100px; background-color: #f1f5f9; color: #0f172a; border: 1px solid #64748b; padding: 5px;">NOMINAL REALISASI</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody style="background-color: #ffffff;">
         ${
           transactions.length === 0
-            ? `<tr><td colspan="6" class="center" style="padding: 15px; color: #64748b;">Belum ada data mutasi jurnal transaksi yang tercatat.</td></tr>`
+            ? `<tr><td colspan="6" class="center" style="padding: 15px; color: #64748b; background-color: #ffffff; border: 1px solid #cbd5e1;">Belum ada data mutasi jurnal transaksi yang tercatat.</td></tr>`
             : transactions
                 .map(
                   (tx, idx) => `
-              <tr>
-                <td class="center">${idx + 1}</td>
-                <td class="center">${tx.tanggalTransaksi}</td>
-                <td class="center">${tx.bulan}</td>
-                <td>${tx.uraianKeterangan}</td>
-                <td class="center font-mono">${tx.mataRekening || tx.fileKuitansiName || '-'}</td>
-                <td class="num" style="font-weight: bold;">${FORMAT_RUPIAH(tx.nominal)}</td>
+              <tr style="background-color: #ffffff;">
+                <td class="center" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${idx + 1}</td>
+                <td class="center" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${tx.tanggalTransaksi}</td>
+                <td class="center" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${tx.bulan}</td>
+                <td style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${tx.uraianKeterangan}</td>
+                <td class="center font-mono" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${tx.mataRekening || tx.fileKuitansiName || '-'}</td>
+                <td class="num" style="font-weight: bold; background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; padding: 5px;">${FORMAT_RUPIAH(tx.nominal)}</td>
               </tr>
             `
                 )
                 .join('')
         }
-        <tr class="total-row">
-          <td colspan="5" style="text-align: right; font-weight: 900; padding: 6px;">TOTAL REALISASI MUTASI</td>
-          <td class="num" style="font-weight: 900; color: #1e3a8a;">${FORMAT_RUPIAH(totalNominal)}</td>
+        <tr class="total-row" style="background-color: #e2e8f0; font-weight: 900;">
+          <td colspan="5" style="text-align: right; font-weight: 900; padding: 6px; background-color: #e2e8f0; color: #0f172a; border: 1px solid #64748b;">TOTAL REALISASI MUTASI</td>
+          <td class="num" style="font-weight: 900; color: #1e3a8a; background-color: #e2e8f0; border: 1px solid #64748b; padding: 5px;">${FORMAT_RUPIAH(totalNominal)}</td>
         </tr>
       </tbody>
     </table>

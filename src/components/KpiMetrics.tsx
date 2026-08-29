@@ -1,6 +1,8 @@
 import React from 'react';
-import { CreditCard, Wallet, Scale, ArrowUpRight, TrendingUp, Sparkles } from 'lucide-react';
+import { CreditCard, Wallet, Scale, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { TOTAL_PAGU_ANGGARAN, TOTAL_TERSERAP_ANGGARAN, TOTAL_SISA_ANGGARAN, FORMAT_RUPIAH } from '../data/budgetData';
+import { LOGO_KALTARA } from '../assets/logoKaltara';
+import { DayakArtTwinMotif } from './DayakPatternDecor';
 
 interface KpiMetricsProps {
   totalPagu?: number;
@@ -19,7 +21,12 @@ export const KpiMetrics: React.FC<KpiMetricsProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
       {/* Card 1: TOTAL PAGU EFEKTIF */}
-      <div className="relative overflow-hidden bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all group">
+      <div className="relative overflow-hidden bg-white/95 backdrop-blur-xs rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all group">
+        {/* Silhouette Dayak Art Motif */}
+        <div className="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.055] text-blue-800 pointer-events-none select-none group-hover:opacity-[0.09] transition-opacity">
+          <DayakArtTwinMotif color="#2563eb" />
+        </div>
+
         {/* Ambient glow & icon */}
         <div className="absolute -right-6 -top-6 w-28 h-28 bg-blue-100/50 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-200/40 transition-colors" />
         <div className="absolute right-4 top-4 w-11 h-11 bg-blue-50/80 rounded-xl flex items-center justify-center text-blue-600/40 pointer-events-none group-hover:text-blue-600/70 transition-colors">
@@ -54,7 +61,12 @@ export const KpiMetrics: React.FC<KpiMetricsProps> = ({
       </div>
 
       {/* Card 2: TOTAL TERSERAP */}
-      <div className="relative overflow-hidden bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all group">
+      <div className="relative overflow-hidden bg-white/95 backdrop-blur-xs rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all group">
+        {/* Silhouette Dayak Art Motif */}
+        <div className="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.055] text-emerald-800 pointer-events-none select-none group-hover:opacity-[0.09] transition-opacity">
+          <DayakArtTwinMotif color="#059669" />
+        </div>
+
         {/* Ambient glow & icon */}
         <div className="absolute -right-6 -top-6 w-28 h-28 bg-emerald-100/50 rounded-full blur-2xl pointer-events-none group-hover:bg-emerald-200/40 transition-colors" />
         <div className="absolute right-4 top-4 w-11 h-11 bg-emerald-50/80 rounded-xl flex items-center justify-center text-emerald-600/40 pointer-events-none group-hover:text-emerald-600/70 transition-colors">
@@ -90,7 +102,12 @@ export const KpiMetrics: React.FC<KpiMetricsProps> = ({
       </div>
 
       {/* Card 3: SISA ANGGARAN */}
-      <div className="relative overflow-hidden bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all group">
+      <div className="relative overflow-hidden bg-white/95 backdrop-blur-xs rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all group">
+        {/* Silhouette Dayak Art Motif */}
+        <div className="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.055] text-amber-700 pointer-events-none select-none group-hover:opacity-[0.09] transition-opacity">
+          <DayakArtTwinMotif color="#d97706" />
+        </div>
+
         {/* Ambient glow & icon */}
         <div className="absolute -right-6 -top-6 w-28 h-28 bg-amber-100/50 rounded-full blur-2xl pointer-events-none group-hover:bg-amber-200/40 transition-colors" />
         <div className="absolute right-4 top-4 w-11 h-11 bg-amber-50/80 rounded-xl flex items-center justify-center text-amber-600/40 pointer-events-none group-hover:text-amber-600/70 transition-colors">
