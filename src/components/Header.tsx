@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { CloudUpload, CloudDownload, Printer, Menu, Check, RotateCcw } from 'lucide-react';
+import { LOGO_KALTARA } from '../assets/logoKaltara';
 
 interface HeaderProps {
   title?: string;
@@ -72,11 +73,26 @@ export const Header: React.FC<HeaderProps> = ({
             <Menu className="w-5 h-5" />
           </button>
         )}
+        <div className="hidden sm:flex items-center justify-center shrink-0 w-11 h-13 bg-white p-1 rounded-xl border border-slate-200/80 shadow-2xs">
+          <img
+            src={LOGO_KALTARA}
+            alt="Logo Pemprov Kalimantan Utara"
+            className="w-full h-full object-contain"
+          />
+        </div>
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-200/60 font-mono">
+              APBD 2026
+            </span>
+            <span className="text-[11px] font-bold text-slate-500 font-display uppercase tracking-wider">
+              PEMPROV KALTARA &bull; RSUD dr. H. Jusuf SK
+            </span>
+          </div>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight font-display">
             {title}
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5 font-medium">
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium leading-relaxed">
             {subtitle}
           </p>
         </div>

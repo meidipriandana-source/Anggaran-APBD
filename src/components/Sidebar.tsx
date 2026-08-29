@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { BudgetItem, SidebarMenu } from '../types';
 import { BUDGET_DATA } from '../data/budgetData';
+import { LOGO_KALTARA } from '../assets/logoKaltara';
 
 interface SidebarProps {
   currentMenu: SidebarMenu;
@@ -53,17 +54,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
         }`}
       >
         {/* Brand Header */}
-        <div className="p-5 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs">
-            <PieChart className="w-5 h-5" />
+        <div className="p-4 border-b border-slate-100 flex items-center gap-3 bg-gradient-to-b from-slate-50 to-white">
+          <div className="w-10 h-12 flex items-center justify-center shrink-0">
+            <img
+              src={LOGO_KALTARA}
+              alt="Logo Pemprov Kalimantan Utara"
+              className="w-full h-full object-contain drop-shadow-xs"
+            />
           </div>
-          <div>
-            <h1 className="font-extrabold text-sm text-slate-900 leading-tight">
-              Anggaran APBD
+          <div className="min-w-0">
+            <div className="text-[10px] font-extrabold text-blue-700 tracking-wider uppercase font-mono truncate">
+              PEMPROV KALTARA
+            </div>
+            <h1 className="font-black text-sm text-slate-900 leading-tight font-display tracking-tight truncate">
+              RSUD dr. H. Jusuf SK
             </h1>
-            <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">
-              TAHUN ANGGARAN 2026
-            </span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+                TA 2026 &bull; APBD
+              </span>
+            </div>
           </div>
         </div>
 

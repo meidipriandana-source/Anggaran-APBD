@@ -13,12 +13,19 @@ import { MutasiJurnalView } from './components/MutasiJurnalView';
 import { SertifikatView } from './components/SertifikatView';
 import { MonthlyReportView } from './components/MonthlyReportView';
 import { ItemDetailModal } from './components/ItemDetailModal';
+import { PrintPreviewModal } from './components/PrintPreviewModal';
+import {
+  generateBudgetSummaryHtml,
+  generateTransactionsHtml,
+  generateMonthlyReportHtml
+} from './utils/printHelper';
 
 export default function App() {
   const [currentMenu, setCurrentMenu] = useState<SidebarMenu>('ringkasan');
   const [selectedItem, setSelectedItem] = useState<BudgetItem | null>(null);
   const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useState(false);
   const [modalDetailItem, setModalDetailItem] = useState<BudgetItem | null>(null);
+  const [isHeaderPrintOpen, setIsHeaderPrintOpen] = useState(false);
 
   // Journal Transactions state (can be added, edited, deleted)
   const [transactions, setTransactions] = useState<JournalTransaction[]>(() => {
@@ -132,8 +139,43 @@ export default function App() {
     reader.readAsText(file);
   };
 
+  // Dynamic Printable Document for Header Print Button
+  const headerPrintData = useMemo(() => {
+    if (activeLiveSelectedItem) {
+      const itemTx = transactions.filter((t) => t.budgetItemId === activeLiveSelectedItem.id);
+      return {
+        title: `RINCIAN MUTASI BELANJA: ${activeLiveSelectedItem.uraianSpesifik}`,
+        subtitle: `Kode Rekening: ${activeLiveSelectedItem.kodeRekening} - APBD TA 2026`,
+        landscape: true,
+        htmlContent: generateTransactionsHtml(activeLiveSelectedItem, itemTx)
+      };
+    }
+
+    return {
+      title: 'LAPORAN REALISASI ANGGARAN BELANJA (APBD 2026)',
+      subtitle: 'Sub Kegiatan: Peningkatan Kompetensi dan Kualifikasi SDM Kesehatan',
+      landscape: true,
+      htmlContent: generateBudgetSummaryHtml(
+        liveBudgetItems,
+        TOTAL_PAGU_ANGGARAN,
+        overallTerserap,
+        overallSisa
+      )
+    };
+  }, [activeLiveSelectedItem, transactions, liveBudgetItems, overallTerserap, overallSisa]);
+
   return (
     <div className="min-h-screen bg-slate-100/70 flex text-slate-800 antialiased font-sans">
+      {/* Header Print Preview Modal */}
+      <PrintPreviewModal
+        isOpen={isHeaderPrintOpen}
+        onClose={() => setIsHeaderPrintOpen(false)}
+        title={headerPrintData.title}
+        subtitle={headerPrintData.subtitle}
+        htmlContent={headerPrintData.htmlContent}
+        defaultLandscape={headerPrintData.landscape}
+      />
+
       {/* Sidebar Navigation */}
       <Sidebar
         currentMenu={currentMenu}
@@ -177,6 +219,7 @@ export default function App() {
             onBackup={handleBackup}
             onRestore={handleRestore}
             onRestoreFromFile={handleRestoreFromFile}
+            onPrint={() => setIsHeaderPrintOpen(true)}
           />
 
           {/* 3 Executive KPI Cards - shown on Ringkasan Belanja & Detail Mutasi */}

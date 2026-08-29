@@ -1,7 +1,8 @@
 import React from 'react';
 import { BudgetItem } from '../types';
 import { FORMAT_RUPIAH, TOTAL_PAGU_ANGGARAN } from '../data/budgetData';
-import { X, Plane, GraduationCap, Building2, Tag, FileText, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { X, Plane, GraduationCap, Building2, Tag, FileText, CheckCircle2, ShieldCheck, Printer } from 'lucide-react';
+import { printHtmlDirectly } from '../utils/printHelper';
 
 interface ItemDetailModalProps {
   item: BudgetItem | null;
@@ -13,6 +14,70 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose 
 
   const isPerdin = item.isHighlightPerjalananDinas;
   const isKontribusi = item.isHighlightKontribusi;
+
+  const handlePrintItem = () => {
+    const htmlContent = `
+      <div style="border: 1px solid #cbd5e1; padding: 12px; border-radius: 6px; margin-bottom: 15px; background: #f8fafc;">
+        <table style="width: 100%; border: none;">
+          <tr><td style="border:none; width: 140px; font-weight: bold;">Kode Rekening:</td><td style="border:none; font-family: monospace;">${item.kodeRekening}</td></tr>
+          <tr><td style="border:none; font-weight: bold;">Kategori Belanja:</td><td style="border:none;">${item.kategoriBelanja} (${item.kelompokAkun})</td></tr>
+          <tr><td style="border:none; font-weight: bold;">Uraian Komponen:</td><td style="border:none; font-weight: bold;">${item.uraianSpesifik}</td></tr>
+          <tr><td style="border:none; font-weight: bold;">Sub Kegiatan:</td><td style="border:none;">${item.subKegiatanKelompok}</td></tr>
+          <tr><td style="border:none; font-weight: bold;">Volume & Satuan:</td><td style="border:none;">${item.koefisienVolume} @ ${FORMAT_RUPIAH(item.hargaSatuan)}</td></tr>
+        </table>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>PAGU MURNI</th>
+            <th>PERGESERAN</th>
+            <th>PAGU EFEKTIF</th>
+            <th>REALISASI TERSERAP</th>
+            <th>SISA PAGU</th>
+            <th>% SERAPAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">${FORMAT_RUPIAH(item.paguMurni)}</td>
+            <td class="num">${FORMAT_RUPIAH(item.pergeseran)}</td>
+            <td class="num" style="font-weight: bold;">${FORMAT_RUPIAH(item.jumlahTotal)}</td>
+            <td class="num" style="font-weight: bold; color: #1e3a8a;">${FORMAT_RUPIAH(item.terserap)}</td>
+            <td class="num" style="font-weight: bold;">${FORMAT_RUPIAH(item.sisa)}</td>
+            <td class="center" style="font-weight: bold;">${item.persenSerapan.toFixed(1)}%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 15px;">
+        <h4 style="margin: 0 0 5px 0; text-transform: uppercase;">Spesifikasi & Rincian Teknis Belanja:</h4>
+        <p style="margin: 0; padding: 10px; background: #ffffff; border: 1px solid #cbd5e1; font-size: 11px; line-height: 1.5;">
+          ${item.spesifikasiDetail}
+        </p>
+      </div>
+
+      ${
+        item.catatanAnalisis
+          ? `
+        <div style="margin-top: 10px;">
+          <h4 style="margin: 0 0 5px 0; text-transform: uppercase;">Catatan Analisis / Kebijakan:</h4>
+          <p style="margin: 0; padding: 8px; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 10px; color: #1e40af;">
+            ${item.catatanAnalisis}
+          </p>
+        </div>
+      `
+          : ''
+      }
+    `;
+
+    printHtmlDirectly({
+      title: `LEMBAR RINCIAN BELANJA: ${item.uraianSpesifik}`,
+      subtitle: `Kode Rekening: ${item.kodeRekening} - APBD TA 2026`,
+      landscape: false,
+      htmlContent
+    });
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
@@ -46,14 +111,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose 
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-mono text-xs font-bold px-2 py-0.5 bg-white/80 rounded border border-slate-300">
+                <span className="font-mono text-xs font-bold px-2 py-0.5 bg-white/80 rounded-md border border-slate-300">
                   {item.kodeRekening}
                 </span>
-                <span className="text-xs font-semibold text-slate-600">
+                <span className="text-xs font-bold text-slate-600">
                   {item.kategoriBelanja}
                 </span>
               </div>
-              <h3 className="text-base font-extrabold mt-1 leading-snug">
+              <h3 className="text-base sm:text-lg font-black mt-1 leading-snug font-display">
                 {item.uraianSpesifik}
               </h3>
             </div>
@@ -138,10 +203,11 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose 
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
           <button
             type="button"
-            onClick={() => window.print()}
-            className="px-3.5 py-2 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-2xs transition-all cursor-pointer active:scale-95"
+            onClick={handlePrintItem}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-2xs transition-all cursor-pointer active:scale-95"
           >
-            Cetak Rincian
+            <Printer className="w-3.5 h-3.5 text-slate-600" />
+            <span>Cetak Rincian</span>
           </button>
           <button
             type="button"

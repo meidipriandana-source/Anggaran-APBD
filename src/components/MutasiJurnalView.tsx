@@ -18,8 +18,11 @@ import {
   Download,
   CheckSquare,
   Square,
-  AlertTriangle
+  AlertTriangle,
+  Printer
 } from 'lucide-react';
+import { PrintPreviewModal } from './PrintPreviewModal';
+import { generateTransactionsHtml } from '../utils/printHelper';
 
 interface MutasiJurnalViewProps {
   item: BudgetItem;
@@ -65,6 +68,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   // State for Delete Confirmation Modal (avoids blocked window.confirm in iframe)
   const [txToDelete, setTxToDelete] = useState<JournalTransaction | null>(null);
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
   // Form State matching screenshot
   const [formTanggal, setFormTanggal] = useState('29/08/2026');
@@ -325,6 +329,17 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
               <span>Ekspor CSV</span>
             </button>
 
+            {/* Cetak Mutasi Button */}
+            <button
+              type="button"
+              onClick={() => setIsPrintModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-2 bg-[#131f3b] hover:bg-slate-800 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700/80 transition-all active:scale-95 cursor-pointer"
+              title="Cetak lembar rincian mutasi transaksi"
+            >
+              <Printer className="w-3.5 h-3.5 text-slate-400" />
+              <span>Cetak</span>
+            </button>
+
             {/* + Rekam Data Button */}
             <button
               type="button"
@@ -342,7 +357,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 bg-[#0e172e] text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <tr className="border-b border-slate-800 bg-[#0e172e] text-[11px] font-black text-slate-400 uppercase tracking-wider font-display">
                 <th className="py-3.5 px-4 text-center w-10">
                   <button
                     type="button"
@@ -797,6 +812,19 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* Print Preview Modal for Mutasi Jurnal */}
+      <PrintPreviewModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        title={`RINCIAN MUTASI BELANJA: ${item.uraianSpesifik}`}
+        subtitle={`Kode Rekening: ${item.kodeRekening} - APBD TA 2026`}
+        htmlContent={generateTransactionsHtml(
+          item,
+          filteredTransactions.filter((t) => selectedIds.has(t.id))
+        )}
+        defaultLandscape={true}
+      />
     </div>
   );
 };
