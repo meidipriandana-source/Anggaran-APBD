@@ -1,0 +1,6 @@
+{
+  "name": "Dashboard Analisis Anggaran RSUD dr. H. Jusuf SK 2026",
+  "description": "Laporan Visualisasi Interaktif Looker Studio Rincian Anggaran Belanja Sub Kegiatan Peningkatan SDM Kesehatan RSUD dr. H. Jusuf SK Tahun 2026",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

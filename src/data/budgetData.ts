@@ -1,0 +1,1083 @@
+import { BudgetItem, BudgetSummary, JournalTransaction } from '../types';
+
+export const TOTAL_PAGU_ANGGARAN = 2093974768; // Rp 2.093.974.768,00
+export const TOTAL_TERSERAP_ANGGARAN = 866075334; // Rp 866.075.334,00
+export const TOTAL_SISA_ANGGARAN = 1227899434; // Rp 1.227.899.434,00
+
+/**
+ * Daftar Rincian Anggaran Belanja Sub Kegiatan:
+ * 1.02.03.1.02.0001 Peningkatan Kompetensi dan Kualifikasi Sumber Daya Manusia Kesehatan
+ * RSUD dr. H. Jusuf SK - TA 2026
+ */
+export const BUDGET_DATA: BudgetItem[] = [
+  // 1. Bahan Cetak (Sertifikat & Dokumen)
+  {
+    id: 'item-1',
+    kodeRekening: '5.1.02.01.01.0026',
+    kategoriBelanja: 'Bahan Cetak',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (SERTIFIKAT & DOKUMEN)',
+    uraianSpesifik: 'Bahan Cetak (Sertifikat & Dokumen)',
+    spesifikasiDetail: 'Pencetakan Sertifikat Peserta Pelatihan Asessor Kompetensi & Instrumen Standar',
+    koefisienVolume: '150 Paket',
+    volumeAngka: 150,
+    satuan: 'Paket / Lembar',
+    hargaSatuan: 200000,
+    paguMurni: 30024768,
+    pergeseran: 0,
+    jumlahTotal: 30024768,
+    terserap: 0,
+    sisa: 30024768,
+    persenSerapan: 0.0,
+    persentaseTotal: (30024768 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#ef4444', // red
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    targetSDM: 150,
+    catatanAnalisis: 'Pengadaan sertifikat kelulusan uji kompetensi nakes terakreditasi.'
+  },
+  // 2. Suvenir / Cendera Mata
+  {
+    id: 'item-2',
+    kodeRekening: '5.1.02.01.01.0035',
+    kategoriBelanja: 'Suvenir / Cendera Mata',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI',
+    uraianSpesifik: 'Suvenir / Cendera Mata',
+    spesifikasiDetail: 'Plakat Bahan Kayu + Logam Kuningan Berlogo Pemprov Kaltara untuk Tim Asesor/Narasumber',
+    koefisienVolume: '5 Buah',
+    volumeAngka: 5,
+    satuan: 'Buah',
+    hargaSatuan: 1240000,
+    paguMurni: 6200000,
+    pergeseran: 0,
+    jumlahTotal: 6200000,
+    terserap: 0,
+    sisa: 6200000,
+    persenSerapan: 0.0,
+    persentaseTotal: (6200000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#f97316', // orange
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Cendera mata resmi kelembagaan RSUD dr. H. Jusuf SK.'
+  },
+  // 3. Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa
+  {
+    id: 'item-3',
+    kodeRekening: '5.1.02.01.01.0052',
+    kategoriBelanja: 'Makanan dan Minuman Rapat',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'BELANJA MAKANAN DAN MINUMAN RAPAT / KEGIATAN',
+    uraianSpesifik: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    spesifikasiDetail: 'Konsumsi Rapat Koordinasi & Pembahasan Peningkatan Mutu SDM Rumah Sakit',
+    koefisienVolume: '2.082 Kotak',
+    volumeAngka: 2082,
+    satuan: 'Kotak / Porsi',
+    hargaSatuan: 60000,
+    paguMurni: 124920000,
+    pergeseran: 0,
+    jumlahTotal: 124920000,
+    terserap: 113350000,
+    sisa: 11570000,
+    persenSerapan: 90.7,
+    persentaseTotal: (124920000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#f97316', // orange
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Realisasi serapan 90.7% untuk rapat koordinasi berkala triwulan I & II.'
+  },
+  // 4. Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa (Akreditasi)
+  {
+    id: 'item-4',
+    kodeRekening: '5.1.02.01.01.0052',
+    kategoriBelanja: 'Makanan dan Minuman Rapat',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'MAKANAN DAN MINUMAN AKREDITASI (NASI KOTAK)',
+    uraianSpesifik: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa (Akreditasi)',
+    spesifikasiDetail: 'Konsumsi Rapat Persiapan & Pelaksanaan Tim Akreditasi Rumah Sakit',
+    koefisienVolume: '2.623 Kotak',
+    volumeAngka: 2623,
+    satuan: 'Kotak / Porsi',
+    hargaSatuan: 60000,
+    paguMurni: 157380000,
+    pergeseran: 0,
+    jumlahTotal: 157380000,
+    terserap: 0,
+    sisa: 157380000,
+    persenSerapan: 0.0,
+    persentaseTotal: (157380000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#f97316', // orange
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Alokasi disiapkan untuk pelaksanaan penilaian akreditasi semester II.'
+  },
+  // 5. Prasmanan VIP Spesifikasi: Per Porsi (Akreditasi)
+  {
+    id: 'item-5',
+    kodeRekening: '5.1.02.01.01.0052',
+    kategoriBelanja: 'Makanan dan Minuman Rapat',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'MAKANAN DAN MINUMAN AKREDITASI (PRASMANAN AKREDITASI)',
+    uraianSpesifik: 'Prasmanan VIP Spesifikasi: Per Porsi (Akreditasi)',
+    spesifikasiDetail: 'Konsumsi Prasmanan VIP Tim Penilai / Asesor Akreditasi & Jajaran Direksi',
+    koefisienVolume: '250 Porsi',
+    volumeAngka: 250,
+    satuan: 'Porsi',
+    hargaSatuan: 85000,
+    paguMurni: 21250000,
+    pergeseran: 0,
+    jumlahTotal: 21250000,
+    terserap: 0,
+    sisa: 21250000,
+    persenSerapan: 0.0,
+    persentaseTotal: (21250000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#eab308', // yellow
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Penyediaan jamuan VIP untuk pleno pembukaan dan penutupan survei.'
+  },
+  // 6. Honorarium Pengajar / Narasumber
+  {
+    id: 'item-6',
+    kodeRekening: '5.1.02.02.01.0011',
+    kategoriBelanja: 'Honorarium Narasumber',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'HONORARIUM PENGAJAR DALAM / LUAR DAERAH',
+    uraianSpesifik: 'Honorarium Pengajar / Narasumber',
+    spesifikasiDetail: 'Honor Pengajar / Narasumber Diklat yang Berasal dari Luar SKPD Penyelenggara (764 Jam)',
+    koefisienVolume: '764 Jam',
+    volumeAngka: 764,
+    satuan: 'Orang / Jam',
+    hargaSatuan: 300000,
+    paguMurni: 229200000,
+    pergeseran: 0,
+    jumlahTotal: 229200000,
+    terserap: 142820000,
+    sisa: 86380000,
+    persenSerapan: 62.3,
+    persentaseTotal: (229200000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#10b981', // green
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Terserap 62.3% untuk honor narasumber spesialis dan workshop teknis.'
+  },
+  // 7. Jasa Iklan / Reklame
+  {
+    id: 'item-7',
+    kodeRekening: '5.1.02.02.01.0055',
+    kategoriBelanja: 'Jasa Iklan / Reklame',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI',
+    uraianSpesifik: 'Jasa Iklan / Reklame',
+    spesifikasiDetail: 'Belanja Jasa Publikasi & Iklan Akreditasi - Media Cetak / Surat Kabar Harian',
+    koefisienVolume: '10 Paket',
+    volumeAngka: 10,
+    satuan: 'Paket',
+    hargaSatuan: 1500000,
+    paguMurni: 15000000,
+    pergeseran: 0,
+    jumlahTotal: 15000000,
+    terserap: 0,
+    sisa: 15000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (15000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#06b6d4', // cyan
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Publikasi transparansi mutu pelayanan RS di media cetak daerah.'
+  },
+  // 8. Belanja Kontribusi Kursus/Pelatihan (Pelatihan Tenaga Medis / Keperawatan / Penunjang)
+  {
+    id: 'item-8',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Belanja Kontribusi Kursus/Pelatihan',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KONTRIBUSI (PENINGKATAN KOMPETENSI KAPASITAS ASN)',
+    uraianSpesifik: 'Belanja Kontribusi Kursus/Pelatihan (Pelatihan Tenaga Medis / Keperawatan / Penunjang)',
+    spesifikasiDetail: 'Biaya Kontribusi Lembaga Diklat Eksternal Terakreditasi Kemenkes',
+    koefisienVolume: '50 Orang',
+    volumeAngka: 50,
+    satuan: 'Orang / Kegiatan',
+    hargaSatuan: 11000000,
+    paguMurni: 550000000,
+    pergeseran: 0,
+    jumlahTotal: 550000000,
+    terserap: 195125000,
+    sisa: 354875000,
+    persenSerapan: (195125000 / 550000000) * 100,
+    persentaseTotal: (550000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#3b82f6', // blue
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    targetSDM: 50,
+    catatanAnalisis: 'Realisasi 25 mutasi pelatihan tenaga medis/keperawatan (Total: Rp 195.125.000).'
+  },
+  // 9. Perjalanan Dinas Dalam Negeri
+  {
+    id: 'item-9',
+    kodeRekening: '5.1.02.04.01.0001',
+    kategoriBelanja: 'Perjalanan Dinas Dalam Negeri',
+    kelompokAkun: 'Belanja Perjalanan Dinas',
+    subKegiatanKelompok: 'PERJALANAN DINAS DALAM NEGERI',
+    uraianSpesifik: 'Perjalanan Dinas Dalam Negeri',
+    spesifikasiDetail: 'Biaya Perjalanan Dinas, Tiket Pesawat, Uang Harian, Uang Saku, dan Penginapan Pelatihan/Workshop',
+    koefisienVolume: '87 Orang',
+    volumeAngka: 87,
+    satuan: 'Orang / Paket',
+    hargaSatuan: 10000000,
+    paguMurni: 870000000,
+    pergeseran: 0,
+    jumlahTotal: 870000000,
+    terserap: 336772334,
+    sisa: 533227666,
+    persenSerapan: (336772334 / 870000000) * 100,
+    persentaseTotal: (870000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#3b82f6', // blue
+    isHighlightPerjalananDinas: true,
+    isHighlightKontribusi: false,
+    targetSDM: 87,
+    catatanAnalisis: 'Realisasi 20 mutasi perjalanan dinas dalam negeri (Total: Rp 336.772.334).'
+  },
+  // 10. Biaya Perjalanan Dinas Tenaga Medis (Batch 6 Orang)
+  {
+    id: 'item-10',
+    kodeRekening: '5.1.02.04.01.0001',
+    kategoriBelanja: 'Perjalanan Dinas',
+    kelompokAkun: 'Belanja Perjalanan Dinas',
+    subKegiatanKelompok: 'PERJALANAN DINAS TENAGA MEDIS/PENUNJANG/KEPERAWATAN/MANAJEMEN',
+    uraianSpesifik: 'Biaya Perjalanan Dinas Tenaga Medis (Batch 6 Orang Spesialis Prioritas)',
+    spesifikasiDetail: 'Transportasi dan akomodasi pelatihan fellowship/subspesialis',
+    koefisienVolume: '6 Orang',
+    volumeAngka: 6,
+    satuan: 'Orang / Paket',
+    hargaSatuan: 10000000,
+    paguMurni: 60000000,
+    pergeseran: 0,
+    jumlahTotal: 60000000,
+    terserap: 0,
+    sisa: 60000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (60000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#3b82f6',
+    isHighlightPerjalananDinas: true,
+    isHighlightKontribusi: false,
+    targetSDM: 6,
+    catatanAnalisis: 'Pelatihan spesialisasi dijadwalkan pada triwulan IV.'
+  },
+  // 11. Biaya Kontribusi Pelatihan ATCLS (5 Orang)
+  {
+    id: 'item-11',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Pelatihan',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KONTRIBUSI TENAGA MEDIS/ATCLS/KEPERAWATAN',
+    uraianSpesifik: 'Biaya Kontribusi Pelatihan ATCLS / Tenaga Medis Kegawatdaruratan (5 Orang)',
+    spesifikasiDetail: 'Sertifikasi Kompetensi Advanced Trauma & Cardiac Life Support (ATCLS/ACLS)',
+    koefisienVolume: '5 Orang',
+    volumeAngka: 5,
+    satuan: 'Orang / Kegiatan',
+    hargaSatuan: 10000000,
+    paguMurni: 50000000,
+    pergeseran: 0,
+    jumlahTotal: 50000000,
+    terserap: 29905334,
+    sisa: 20094666,
+    persenSerapan: 59.81,
+    persentaseTotal: (50000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#10b981',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    targetSDM: 5,
+    catatanAnalisis: 'Terserap Rp 29.905.334 untuk 3 dokter spesialis bedah dan anastesi.'
+  },
+  // 12. Biaya Perjalanan Dinas Surveyor Akreditasi (5 Paket)
+  {
+    id: 'item-12',
+    kodeRekening: '5.1.02.04.01.0001',
+    kategoriBelanja: 'Perjalanan Dinas',
+    kelompokAkun: 'Belanja Perjalanan Dinas',
+    subKegiatanKelompok: 'PERJALANAN DINAS SURVEYOR',
+    uraianSpesifik: 'Biaya Perjalanan Dinas Dalam Negeri - Tim Surveyor Akreditasi RS (5 Paket)',
+    spesifikasiDetail: 'Tiket pesawat & akomodasi tim surveyor lembaga independen akreditasi RS',
+    koefisienVolume: '5 Paket',
+    volumeAngka: 5,
+    satuan: 'Paket',
+    hargaSatuan: 10000000,
+    paguMurni: 50000000,
+    pergeseran: 0,
+    jumlahTotal: 50000000,
+    terserap: 0,
+    sisa: 50000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (50000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#3b82f6',
+    isHighlightPerjalananDinas: true,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Akomodasi survei lapangan penilaian akreditasi tingkat nasional.'
+  },
+  // 13. Kontribusi Lembaga Surveyor / Pendampingan (Tahap Lanjut)
+  {
+    id: 'item-13',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Lembaga Surveyor',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (KONTRIBUSI SURVEYOR)',
+    uraianSpesifik: 'Kontribusi Lembaga Surveyor / Pendampingan Akreditasi (Tahap Verifikasi)',
+    spesifikasiDetail: 'Verifikasi instrumen standar keselamatan pasien & rekam medis',
+    koefisienVolume: '1 Kegiatan',
+    volumeAngka: 1,
+    satuan: 'Kegiatan',
+    hargaSatuan: 40000000,
+    paguMurni: 40000000,
+    pergeseran: 0,
+    jumlahTotal: 40000000,
+    terserap: 0,
+    sisa: 40000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (40000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#0d9488',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    catatanAnalisis: 'Kontribusi lembaga survei independen terakreditasi KARS/LAM-KPRS.'
+  },
+  // 14. Kontribusi Lembaga Surveyor / Pendampingan (Simulasi Survei)
+  {
+    id: 'item-14',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Lembaga Surveyor',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (KONTRIBUSI SURVEYOR)',
+    uraianSpesifik: 'Kontribusi Lembaga Surveyor / Pendampingan Akreditasi (Simulasi Mock Survey)',
+    spesifikasiDetail: 'Uji simulasi kesiapan unit gawat darurat, rawat inap, dan ICU',
+    koefisienVolume: '1 Kegiatan',
+    volumeAngka: 1,
+    satuan: 'Kegiatan',
+    hargaSatuan: 30000000,
+    paguMurni: 30000000,
+    pergeseran: 0,
+    jumlahTotal: 30000000,
+    terserap: 0,
+    sisa: 30000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (30000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#0d9488',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    catatanAnalisis: 'Tahapan mock survey sebelum verifikasi final akreditasi paripurna.'
+  },
+  // 15. Kontribusi Lembaga Surveyor / Pendampingan (Bimtek Standar)
+  {
+    id: 'item-15',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Lembaga Surveyor',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (KONTRIBUSI SURVEYOR)',
+    uraianSpesifik: 'Kontribusi Lembaga Surveyor / Pendampingan Akreditasi (Bimtek Standar Mutu)',
+    spesifikasiDetail: 'Bimbingan teknis kepatuhan indikator mutu nasional RS',
+    koefisienVolume: '1 Kegiatan',
+    volumeAngka: 1,
+    satuan: 'Kegiatan',
+    hargaSatuan: 20000000,
+    paguMurni: 20000000,
+    pergeseran: 0,
+    jumlahTotal: 20000000,
+    terserap: 0,
+    sisa: 20000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (20000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#0d9488',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    catatanAnalisis: 'Bimtek pemenuhan dokumen pokja akreditasi.'
+  },
+  // 16. Penggadaan Dokumen/Fotokopi Bahan Pembelajaran
+  {
+    id: 'item-16',
+    kodeRekening: '5.1.02.01.01.0026',
+    kategoriBelanja: 'Bahan Cetak / Penggadaan',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI',
+    uraianSpesifik: 'Penggadaan Dokumen/Fotokopi Bahan Pembelajaran (Kertas HPS/HPL F4/A4)',
+    spesifikasiDetail: 'Fotokopi modul instrumen akreditasi dan panduan pelatihan teknis',
+    koefisienVolume: '43 Lembar',
+    volumeAngka: 43,
+    satuan: 'Lembar',
+    hargaSatuan: 576,
+    paguMurni: 24768,
+    pergeseran: 0,
+    jumlahTotal: 24768,
+    terserap: 0,
+    sisa: 24768,
+    persenSerapan: 0.0,
+    persentaseTotal: (24768 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#ef4444',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Penggadaan lembar fotokopi regulasi dan instrumen asesmen.'
+  }
+];
+
+export const BUDGET_SUMMARY: BudgetSummary = {
+  totalPagu: TOTAL_PAGU_ANGGARAN,
+  totalTerserap: TOTAL_TERSERAP_ANGGARAN,
+  totalSisa: TOTAL_SISA_ANGGARAN,
+  persenSerapanTotal: (TOTAL_TERSERAP_ANGGARAN / TOTAL_PAGU_ANGGARAN) * 100,
+  totalItems: BUDGET_DATA.length
+};
+
+export const MONTHLY_REALIZATION_DATA = [
+  { bulan: 'Januari 2026', pagu: 174497897, realisasi: 45000000, serapan: 25.78, status: 'Selesai' },
+  { bulan: 'Februari 2026', pagu: 174497897, realisasi: 95500000, serapan: 54.72, status: 'Selesai' },
+  { bulan: 'Maret 2026', pagu: 174497897, realisasi: 142820000, serapan: 81.84, status: 'Selesai' },
+  { bulan: 'April 2026', pagu: 174497897, realisasi: 180000000, serapan: 103.15, status: 'Selesai' },
+  { bulan: 'Mei 2026', pagu: 174497897, realisasi: 212755334, serapan: 121.92, status: 'Selesai' },
+  { bulan: 'Juni 2026', pagu: 174497897, realisasi: 190000000, serapan: 108.88, status: 'Berjalan' },
+  { bulan: 'Juli 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'Agustus 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'September 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'Oktober 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'November 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'Desember 2026', pagu: 174497901, realisasi: 0, serapan: 0.0, status: 'Rencana' }
+];
+
+export const FORMAT_RUPIAH = (val: number, withDecimals = false): string => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: withDecimals ? 2 : 0,
+    maximumFractionDigits: withDecimals ? 2 : 0
+  }).format(val);
+};
+
+export const FORMAT_NUM = (val: number): string => {
+  return new Intl.NumberFormat('id-ID').format(val);
+};
+
+export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
+  // Item 3: Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa
+  {
+    id: 'j-3-1',
+    itemId: 'item-3',
+    tanggalTransaksi: '29 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Triase (Belum Mulai)',
+    nominal: 4800000,
+    isChecked: true
+  },
+  {
+    id: 'j-3-2',
+    itemId: 'item-3',
+    tanggalTransaksi: '28 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'psikiatri (Belum Mulai)',
+    nominal: 12650000,
+    isChecked: true
+  },
+  {
+    id: 'j-3-3',
+    itemId: 'item-3',
+    tanggalTransaksi: '28 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'APN (Belum Mulai)',
+    nominal: 17400000,
+    isChecked: true
+  },
+  {
+    id: 'j-3-4',
+    itemId: 'item-3',
+    tanggalTransaksi: '28 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'PALS (Belum Mulai)',
+    nominal: 4560000,
+    isChecked: true
+  },
+  {
+    id: 'j-3-5',
+    itemId: 'item-3',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Penatalaksanaan keperawatan perioperatif bagi perawat kamar bedah Tanggal 8 s.d 9 Agustus 2026 di RSUD dr.H Jusuf.SK Tarakan (Belum SPJ)',
+    nominal: 4320000,
+    isChecked: true
+  },
+  {
+    id: 'j-3-6',
+    itemId: 'item-3',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Basic Trauma and Cardiac Life Support (BTCLS) Gelombang 1-56Tanggal 27 Juni s.d 6 Agustus 2026 di RSUD dr H Jusuf SK ( Belum SPJ)',
+    nominal: 38880000,
+    isChecked: true
+  },
+  {
+    id: 'j-3-7',
+    itemId: 'item-3',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Refresh Bantuan Hidup Dasar (BHD) Bagi staf Non-Medis Tahun 2026 Gelombang 1 s.d 5 Tanggal 19 Mei s.d 4 Juni 2026 di RSUD dr.H Jusuf.SK Tarakan (Belum SPJ)',
+    nominal: 30740000,
+    isChecked: true
+  },
+
+  // Item 6: Honorarium Pengajar / Narasumber (Total Rp 142.820.000)
+  {
+    id: 'j-6-1',
+    itemId: 'item-6',
+    tanggalTransaksi: '15 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Honorarium Pengajar / Narasumber',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Honor Narasumber Diklat BTCLS Batch 1-3 (Dokter Spesialis Anastesi & Bedah)',
+    nominal: 48000000,
+    isChecked: true
+  },
+  {
+    id: 'j-6-2',
+    itemId: 'item-6',
+    tanggalTransaksi: '10 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Honorarium Pengajar / Narasumber',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Honor Pengajar Workshop Refresh BHD Non-Medis Gelombang 1-5',
+    nominal: 42820000,
+    isChecked: true
+  },
+  {
+    id: 'j-6-3',
+    itemId: 'item-6',
+    tanggalTransaksi: '20 Mei 2026',
+    bulan: 'Bulan Mei',
+    mataRekening: 'Honorarium Pengajar / Narasumber',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Honorarium Narasumber Pelatihan Perioperatif Kamar Bedah',
+    nominal: 52000000,
+    isChecked: true
+  },
+
+  // Item 8: Belanja Kontribusi Kursus/Pelatihan (Total 25 Transaksi = Rp 195.125.000)
+  {
+    id: 'j-8-1',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Tatalaksana TB Komprehensif di ruang Isolasi Tanggal 12 s.d 16 Oktober 2026 di RSUP Kariadi Semarang an : Defi Miftahul Jannah, A.Md.Kep (Belum SPJ)',
+    nominal: 4500000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-2',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Nutri Symposium 2026 (Beyond Calories - Protein For Growth Strength Recovery and Survival) tanggal 24 - 26 Juli 2026 di Jakarta an : dr. Husnul Khatimah, Sp.GK (Belum SPJ)',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-3',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan PKKVTD ( Pelatihan Keperawatan kardiovaskuler Tingkat Dasar) Tanggal 7 September s.d 18 November 2026 di Jakarta an : Muhammad Amin Usman Tarro, A.Md.Kep (Belum SPJ)',
+    nominal: 22500000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-4',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti workshop ACPID ASINPO Tanggal 14 s.d 16 Agustus 2026 di Jakarta an : dr. Franky Siantoro, Sp.A (Belum SPJ)',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-5',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Pelatihan Keperawatan Intensif Neonatus bagi perawat di ruang NICU Tanggal 18 Oktober s.d 5 Desember 2026 di RS Sardjito Yogyakarta an : Ns. Rizkini Layuk, S.Kep (Belum SPJ)',
+    nominal: 15000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-6',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti 3rd PEGOSUS Pediatric Gastroenterology Hepatology Symposium Updates Tanggal 31 Juli s.d. 2 Agustus 2026 di Jakarta an : dr. Erma Ratna Fury, Sp.A (Belum SPJ)',
+    nominal: 3000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-7',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan Mengikuti Symposium 4th Solo Surgical Forum Current Surgical Update: Exploring Update and Innovation in Surgery Tanggal 25 s.d 26 Juli 2026 di Solo (Jawa Tengah) an : dr. Rodjaya Putra, Sp.B-KBD (Belum SPJ)',
+    nominal: 2750000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-8',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan / Kontribusi : Mengikuti workshop Baperuom Bandung Pediatric Urogenital and Oncology Surgery Meeting Tanggal 30 Juli s.d 1 Agustus 2026 di Bandung an : dr. Amir Sautin Sibarani, Sp.BA. (Belum SPJ)',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-9',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan Mengikuti PIT PERDOSRI XXV (The 25th Annual Scientific Meeting of Indonesian Association of Physical Medicine & Rehabilitation), pada tanggal 23-26 September 2026 di Batam an : dr. Jerry Kurnia Wahyudi, Sp.KFR (Belum SPJ)',
+    nominal: 2125000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-10',
+    itemId: 'item-8',
+    tanggalTransaksi: '8 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Daring (Platform Ujian Online dan Zoom Meeting) Sertifikasi CCAE Tanggal 15 Agustus 2026 an : Fatmairinah, S.Ak., M.M., CRMP., CRPP',
+    nominal: 2500000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-11',
+    itemId: 'item-8',
+    tanggalTransaksi: '8 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan : Mengikuti PIT PDS PA (Working Conference XVII and Annual Scientific Meeting) 2026 Tanggal 30 Juni s.d 7 Juli 2026 di Malang ( Jawa Timur ) an : dr. Ledyna Rumapar, Sp.PA',
+    nominal: 3550000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-12',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Training of trainer (TOT) BT&CLS Instruktur Course Tanggal 3 s.d 7 Agustus 2026 di Jakarta an : Suhud Tri Rahim, S.Kep,Ns, Bayu Purnomo, S.Kep',
+    nominal: 5200000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-13',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Kegiatan BLINC (Bali International Neurovascular Intervention Conference) 2026 "Stroke Wars:Beyond the Circle" tanggal 26 s.d 29 April 2026 di Bali an : dr. I Nyoman Gunawan, Sp.Rad',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-14',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Perjalanan Dinas Biasa, Mengikuti Workshop dan Simposium American Institute of Functional Integrate Dry Needling (Module 1, Module 2 & Module 3) Tanggal 25 s.d 1 April 2026 an : dr. Septian Widyantoro, Sp.N',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-15',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Kegiatan Pelatihan Workshop ELSA OUTREACH PROGRAMME Tanggal 18-20 Juni 2026 di Balikpapan an. dr. Yufriadi Yunus, Sp.B',
+    nominal: 2500000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-16',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan Mengikuti PelatihanNeurointervensi bagi perawat di rumah sakit Tanggal 27 Juli s.d 24 Agustus 2026 di RS PON Jakarta an : Ns. Ragil Prasojo,S.Kep',
+    nominal: 19000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-17',
+    itemId: 'item-8',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan: Mengikuti Pelatihan Perawatan Intensif ICVCU Tanggal 22 Juli - 21 Oktober 2026 di RS Jantung dan Pembuluh Darah Harapan Kita Jakarta an : Ns. Abelia Pongkaluran, S.Kep',
+    nominal: 20000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-18',
+    itemId: 'item-8',
+    tanggalTransaksi: '6 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan : Pelatihan Keperawatan Kardiovaskuler Tingkat Dasar (PKKVTD) bagi Perawat di Pelayanan Kesehatan Tanggal 7 Juni sampai dengan 15 Agustus 2026 di RS Dr.Kariadi Semarang an : Ns. Sutrisno, S.Kep',
+    nominal: 20000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-19',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat Pelatihan, Mengikuti Workshop dan Simposium USG Abdomen – Pelvis Tahap I Angkatan ke - 101 Tanggal 15 s.d 19 April 2026 Jakarta an : dr. Ryan Vientino Pratama, Sp.PD',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-20',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Perjalanan Dinas, Workshop dan Simposium Jakarta International Endoscopy Symposium & Live Demonstration (JIGES-LD) 2026 Tanggal 11 s.d 15 Februari 2026 Jakarta an : dr. M. Anief Ferdianto, Sp.PD-KGEH',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-21',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Kegiatan National Scientific Meeting 2026 tanggal 30 April 2026 s.d 03 Mei 2026 di Makassar an : dr. Andry Ardhani, Sp.N',
+    nominal: 3000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-22',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Kegiatan IPDAC 19 "Global Perspectives on Cranial Growth and Development in Children; Challenges and Innovation."di Makassar tanggal 28 April s.d 2 Mei 2026 an : drg. Olivia Triifina Ngo, MDSc.,Sp.KGA',
+    nominal: 5000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-23',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Kegiatan Pelatihan Kompetensi pengadaan BARJAS level 1 di Jakarta Tanggal 16-30 April 2026 an : dr.Rustam Samsuddin,MM',
+    nominal: 5250000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-24',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan Mengikuti Pelatihan/ Sertifikasi Penanganan Obat Kanker (Handling Cytotoxic) bagi Tenaga Kefarmasian Tanggal 16 s.d 20 Juni/ Juni 2026 di Jakarta an : Nur Atika, A.Md., Farm.Sti Widia Astuti, A.Md., Farm.',
+    nominal: 16000000,
+    isChecked: true
+  },
+  {
+    id: 'j-8-25',
+    itemId: 'item-8',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan Mengikuti Pelatihan Asuhan Keperawatan EEG dibutuhkan perawat spesifik (Mahir/Kompeten melakukan Pemeriksaan EEG) di RS Universitas Airlangga Surabaya Tanggal 2 Juni s.d 6 Juni an : Ns. Trysnawati, S.Kep',
+    nominal: 8250000,
+    isChecked: true
+  },
+
+  // Item 9: Perjalanan Dinas Dalam Negeri (Total 20 Transaksi = Rp 336.772.334)
+  {
+    id: 'j-9-1',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Perjalanan Dinas Mengikuti Pelatihan Dialisis Batch3 bagi perawat di rumah sakit dan klinik khusus dialisis di RS Airlangga Surabaya, Jawa Timur Tanggal 23 Februari s.d 22 Juli 2026, (Pembayaran Tahap 2 an: Ns. Vidyani Firdosi, S.Kep,Ns. Setiawan Tri Handoko, S.Kep(Belum SPJ)',
+    nominal: 19483500,
+    isChecked: true
+  },
+  {
+    id: 'j-9-2',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti workshop Baperuom Bandung Pediatric Urogenital and Oncology Surgery Meeting Tanggal 30 Juli s.d. 1 Agustus 2026 di Bandung an : dr. Amir Sautin Sibarani, Sp.BA. (Belum SPJ Belum Fix)',
+    nominal: 9076051,
+    isChecked: true
+  },
+  {
+    id: 'j-9-3',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Pelatihan Keperawatan Intensif Neonatus bagi perawat di ruang NICU Tanggal 1 September s.d 20 November 2026 di RSAB Harapan Kita an : Ns. Rizkini Layuk, S.Kep (Belum Fix)',
+    nominal: 61130000,
+    isChecked: true
+  },
+  {
+    id: 'j-9-4',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti workshop ACPID ASINPO Tanggal 14 s.d. 16 Agustus 2026 di Jakarta an : dr. Franky Siantoro, Sp.A (Belum SPJ)',
+    nominal: 10950000,
+    isChecked: true
+  },
+  {
+    id: 'j-9-5',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Pelatihan PKKVTD ( Pelatihan Keperawatan kardiovaskuler Tingkat Dasar) Tanggal 7 September s.d 18 November 2026 di Jakarta an : Muhammad Amin Usman Tarro, A.Md.Kep (Belum Fix)',
+    nominal: 26340000,
+    isChecked: true
+  },
+  {
+    id: 'j-9-6',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Tatalaksana TB Komperhensif di ruang Isolasi Tanggal 12 s.d 16 Oktober 2026 di RSUP Kariadi Semarang an : Defi Miftahul Jannah, A.Md.Kep (Belum Fix)',
+    nominal: 13790000,
+    isChecked: true
+  },
+  {
+    id: 'j-9-7',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat/Pelatihan Mengikuti PIT PERDOSRI XXV (The 25th Annual Scientific Meeting of Indonesian Association of Physical Medicine & Rehabilitation), pada tanggal 23-26 September 2026 di Batam an : dr. Jerry Kurnia Wahyudi, Sp.KFR (Belum Fix)',
+    nominal: 9719700,
+    isChecked: true
+  },
+  {
+    id: 'j-9-8',
+    itemId: 'item-9',
+    tanggalTransaksi: '8 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Perjalanan Dinas Biasa Mengikuti Pelatihan Perawatan Intensif ICVCU Tanggal 21 Juli – 22 Oktober 2026 di RS Jantung dan Pembuluh Darah Harapan Kita Jakarta, Pembayaran Tahap 1 dari total hak peserta meliputi biayaan : Uang Harian 1 Hari,Uang Saku 74 Hari, Uang Kos 1 Bulanan : Ns. Abelia Pongkaluran, S.Kep',
+    nominal: 17185600,
+    isChecked: true
+  },
+  {
+    id: 'j-9-9',
+    itemId: 'item-9',
+    tanggalTransaksi: '8 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Perfuat Tingkat Lanjut (Advance) akan dilaksanakan pada tanggal 13 Januari 2026 sd 17 Juli 2026,di Jakarta (Pembayaran Tahap 2 : akan dilakukan dari Januari s.d April 2026 an : Ayu Putu Marta, S.Kep.Ners,Tirta Lestari, S.Kep.Ns,Ayu Putu Marta,S.Kep',
+    nominal: 35619560,
+    isChecked: true
+  },
+  {
+    id: 'j-9-10',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Pelatihan/ Sertifikasi Penanganan Obat Kanker (Handling Cytotoxic) bagi Tenaga Kefarmasian Tanggal 16 s.d 20 Juni/ Juni 2026 di Jakarta an : Nur Atika, A.Md., Farm,Siti Widia Astuti, A.Md., Farm.',
+    nominal: 16124760,
+    isChecked: true
+  },
+  {
+    id: 'j-9-11',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Keperawatan Kardiovaskuler Tingkat Dasar (PKKVTD) bagi Perawat di Pelayanan Kesehatan Tanggal 7 Juni sampai dengan 15 Agustus 2026 di RS Dr.Kariadi Semarang (Jawa Tengah), Pembayaran Tahap 1 dari total hak peserta meliputi biayaan : Uang Harian 1 Hari,Uang Saku 55 Hari, Uang Kos 1 Bulan. an : Ns. Sutrisno, S.Kep',
+    nominal: 10984400,
+    isChecked: true
+  },
+  {
+    id: 'j-9-12',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Pelatihan Asuhan Keperawatan EEG dibutuhkan perawat spesifik (Mahir/Kompeten melakukan Pemeriksaan EEG) di RS Universitas Airlangga Surabaya Tanggal 1 Juni s.d 7 Juni an : Ns. Trysnawati, S.Kep',
+    nominal: 9844364,
+    isChecked: true
+  },
+  {
+    id: 'j-9-13',
+    itemId: 'item-9',
+    tanggalTransaksi: '23 Juli 2026',
+    bulan: 'Bulan Juli',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Perjalanan Dinas Biasa, Mengikuti Workshop dan Simposium American Institute of Functional Integrate Dry Needling (Module 1, Module 2 & Module 3) Tanggal 25 s.d 1 April 2026 an : dr. Septian Widyantoro, Sp.N',
+    nominal: 9998900,
+    isChecked: true
+  },
+  {
+    id: 'j-9-14',
+    itemId: 'item-9',
+    tanggalTransaksi: '18 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Perjalanan Dinas Mengikuti Pelatihan Dialisis Batch3 bagi perawat di rumah sakit dan klinik khusus dialisis di RS Airlangga Surabaya, Jawa Timur Tanggal 23 Februari s.d 22 Juli 2026, (Pembayaran Tahap 1 : akan dilakukan dari total hak peserta yaitu 121 Hari. Sisa pembayaran, yang meliputi uang harian 1 hari, uang saku selama 29 hari, dan biaya tiket pesawat pulang, dan kos, akan dibayarkan setelah peserta kembali dari pelatihan dan melengkapi seluruh berkas administrasi pelatihan.) an: Ns. Vidyani Firdosi, S.Kep,Ns. Setiawan Tri Handoko, S.Kep',
+    nominal: 21758600,
+    isChecked: true
+  },
+  {
+    id: 'j-9-15',
+    itemId: 'item-9',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Kursus Singkat Pelatihan, Mengikuti Workshop dan Simposium USG Abdomen – Pelvis Tahap I Angkatan ke - 101 Tanggal 15 s.d 19 April 2026 Jakarta an : dr. Ryan Vientino Pratama, Sp.PD',
+    nominal: 9970515,
+    isChecked: true
+  },
+  {
+    id: 'j-9-16',
+    itemId: 'item-9',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Belanja Perjalanan Dinas, Workshop dan Simposium Jakarta International Endoscopy Symposium & Live Demonstration (JIGES-LD) 2026 Tanggal 11 s.d 15 Februari 2026 Jakarta an : dr. M. Anief Ferdianto, Sp.PD-KGEH',
+    nominal: 9501088,
+    isChecked: true
+  },
+  {
+    id: 'j-9-17',
+    itemId: 'item-9',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Kegiatan National Scientific Meeting 2026 tanggal 30 April 2026 s.d 03 Mei 2026 di Makassar an : dr. Andry Ardhani, Sp.N',
+    nominal: 7386260,
+    isChecked: true
+  },
+  {
+    id: 'j-9-18',
+    itemId: 'item-9',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Mengikuti Kegiatan IPDAC 19 "Global Perspectives on Cranial Growth and Development in Children; Challenges and Innovation."di Makassar tanggal 28 April s.d 2 Mei 2026 an : drg. Olivia Triifina Ngo, MDSc.,Sp.KGA',
+    nominal: 9590088,
+    isChecked: true
+  },
+  {
+    id: 'j-9-19',
+    itemId: 'item-9',
+    tanggalTransaksi: '4 Juni 2026',
+    bulan: 'Bulan Juni',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Kegiatan Pelatihan Kompetensi pengadaan BARJAS level 1 di Jakarta Tanggal 16-30 April 2026 an : dr.Rustam Samsuddin,MM',
+    nominal: 12799388,
+    isChecked: true
+  },
+  {
+    id: 'j-9-20',
+    itemId: 'item-9',
+    tanggalTransaksi: '15 Mei 2026',
+    bulan: 'Bulan Mei',
+    mataRekening: 'Perjalanan Dinas Dalam Negeri',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Pelatihan Perfuat Tingkat Lanjut (Advance) akan dilaksanakan pada tanggal 13 Januari 2026 sd 17 Juli 2026,di Jakarta (Pembayaran Tahap 1 : akan dilakukan dari total hak peserta, berupa Kos 4 Bulan dari dari Januari s.d April 2026 dan Uang Saku selama 110 Hari dan uang harian 1 hari) an : Ayu Putu Marta, S.Kep.Ners,Tirta Lestari, S.Kep.Ns',
+    nominal: 35619560,
+    isChecked: true
+  },
+
+  // Item 11: Biaya Kontribusi Pelatihan ATCLS (5 Orang) (Total Rp 29.905.334)
+  {
+    id: 'j-11-1',
+    itemId: 'item-11',
+    tanggalTransaksi: '02 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Biaya Kontribusi Pelatihan ATCLS / Tenaga Medis (5 Orang)',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Kontribusi Registrasi Ujian Sertifikasi ATCLS PERKI (3 Dokter Spesialis)',
+    nominal: 29905334,
+    isChecked: true
+  }
+];
+
