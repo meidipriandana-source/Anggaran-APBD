@@ -20,7 +20,10 @@ import {
   Square,
   AlertTriangle,
   RotateCcw,
-  Printer
+  Printer,
+  Layers,
+  ArrowUpDown,
+  CalendarDays
 } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateTransactionsHtml } from '../utils/printHelper';
@@ -80,6 +83,48 @@ function dateStringToIso(str: string): string {
   return '2026-08-29';
 }
 
+// Helper to extract 0-indexed month index (0 to 11)
+function getTxMonthIndex(t: JournalTransaction): number {
+  if (t.bulan) {
+    const clean = t.bulan.replace(/bulan\s*/i, '').trim().toLowerCase();
+    const idx = BULAN_OPTIONS.findIndex((b) => b.toLowerCase() === clean);
+    if (idx >= 0) return idx;
+  }
+  if (t.tanggalTransaksi) {
+    for (let i = 0; i < BULAN_OPTIONS.length; i++) {
+      if (t.tanggalTransaksi.toLowerCase().includes(BULAN_OPTIONS[i].toLowerCase())) {
+        return i;
+      }
+    }
+  }
+  const iso = dateStringToIso(t.tanggalTransaksi);
+  const parts = iso.split('-');
+  if (parts.length >= 2) {
+    const mNum = parseInt(parts[1], 10) - 1;
+    if (mNum >= 0 && mNum < 12) return mNum;
+  }
+  return 7;
+}
+
+function getTxDayNumber(t: JournalTransaction): number {
+  const match = t.tanggalTransaksi?.match(/^\s*(\d{1,2})/);
+  if (match) return parseInt(match[1], 10);
+  const iso = dateStringToIso(t.tanggalTransaksi);
+  const parts = iso.split('-');
+  if (parts.length === 3) return parseInt(parts[2], 10) || 1;
+  return 1;
+}
+
+function getTxYearNumber(t: JournalTransaction): number {
+  const match = t.tanggalTransaksi?.match(/\b(20\d{2})\b/);
+  if (match) return parseInt(match[1], 10);
+  return 2026;
+}
+
+function getNormalizedMonthName(t: JournalTransaction): string {
+  return BULAN_OPTIONS[getTxMonthIndex(t)] || 'Agustus';
+}
+
 // Helper to convert YYYY-MM-DD to Indonesian display string "29 Agustus 2026"
 function isoToIndonesianDate(isoStr: string, customMonth?: string): string {
   if (!isoStr) return '29 Agustus 2026';
@@ -104,6 +149,9 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   onBackToRingkasan
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedMonthFilter, setSelectedMonthFilter] = useState<string>('all');
+  const [sortMode, setSortMode] = useState<'bulan-asc' | 'bulan-desc' | 'terbaru' | 'nominal-desc' | 'nominal-asc'>('bulan-asc');
+  const [viewLayout, setViewLayout] = useState<'grouped' | 'flat'>('grouped');
   
   // Filter transactions for this specific BudgetItem first
   const itemTransactions = useMemo(() => {
@@ -169,7 +217,6 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
     setSelectedIds((prev) => {
       const validIds = new Set(itemTransactions.map((t) => t.id));
       const next = new Set<string>();
-      // If previous was empty and we have transactions for first time, select all
       if (prev.size === 0 && itemTransactions.length > 0) {
         return validIds;
       }
@@ -182,18 +229,121 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
     });
   }, [itemTransactions]);
 
-  // Apply search query
-  const filteredTransactions = useMemo(() => {
-    if (!searchQuery.trim()) return itemTransactions;
-    const q = searchQuery.toLowerCase();
-    return itemTransactions.filter(
-      (t) =>
-        t.uraianKeterangan.toLowerCase().includes(q) ||
-        t.tanggalTransaksi.toLowerCase().includes(q) ||
-        t.mataRekening.toLowerCase().includes(q) ||
-        t.bulan.toLowerCase().includes(q)
-    );
-  }, [itemTransactions, searchQuery]);
+  // Calculate unique months available in this item's transactions with count & total
+  const availableMonthsWithStats = useMemo(() => {
+    const map = new Map<string, { monthIndex: number; count: number; total: number }>();
+    itemTransactions.forEach((tx) => {
+      const mIdx = getTxMonthIndex(tx);
+      const mName = BULAN_OPTIONS[mIdx];
+      const existing = map.get(mName) || { monthIndex: mIdx, count: 0, total: 0 };
+      existing.count += 1;
+      existing.total += tx.nominal;
+      map.set(mName, existing);
+    });
+    return Array.from(map.entries())
+      .map(([monthName, stat]) => ({ monthName, ...stat }))
+      .sort((a, b) => a.monthIndex - b.monthIndex);
+  }, [itemTransactions]);
+
+  // Filtered and strictly sorted transactions according to month calendar rule
+  const sortedTransactions = useMemo(() => {
+    let list = [...itemTransactions];
+
+    // 1. Filter by selected month tab if not 'all'
+    if (selectedMonthFilter !== 'all') {
+      list = list.filter((t) => getNormalizedMonthName(t).toLowerCase() === selectedMonthFilter.toLowerCase());
+    }
+
+    // 2. Filter by search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(
+        (t) =>
+          t.uraianKeterangan.toLowerCase().includes(q) ||
+          t.tanggalTransaksi.toLowerCase().includes(q) ||
+          t.mataRekening.toLowerCase().includes(q) ||
+          t.bulan.toLowerCase().includes(q)
+      );
+    }
+
+    // 3. Sort chronologically according to aturan bulan
+    list.sort((a, b) => {
+      const ma = getTxMonthIndex(a);
+      const mb = getTxMonthIndex(b);
+      const da = getTxDayNumber(a);
+      const db = getTxDayNumber(b);
+      const ya = getTxYearNumber(a);
+      const yb = getTxYearNumber(b);
+
+      if (sortMode === 'bulan-asc') {
+        // Urutan Bulan Kalender Januari -> Desember (Kronologis Standar SPJ)
+        if (ya !== yb) return ya - yb;
+        if (ma !== mb) return ma - mb;
+        return da - db;
+      }
+      if (sortMode === 'bulan-desc') {
+        // Urutan Bulan Terbalik Desember -> Januari
+        if (ya !== yb) return yb - ya;
+        if (ma !== mb) return mb - ma;
+        return db - da;
+      }
+      if (sortMode === 'terbaru') {
+        if (ya !== yb) return yb - ya;
+        if (ma !== mb) return mb - ma;
+        return db - da;
+      }
+      if (sortMode === 'nominal-desc') {
+        return b.nominal - a.nominal;
+      }
+      if (sortMode === 'nominal-asc') {
+        return a.nominal - b.nominal;
+      }
+      return 0;
+    });
+
+    return list;
+  }, [itemTransactions, selectedMonthFilter, searchQuery, sortMode]);
+
+  // Grouped transactions for grouped view mode
+  const groupedTransactions = useMemo(() => {
+    if (viewLayout !== 'grouped' && selectedMonthFilter !== 'all') return [];
+
+    const groups: {
+      monthName: string;
+      monthIndex: number;
+      subtotal: number;
+      items: JournalTransaction[];
+    }[] = [];
+
+    const groupMap = new Map<string, { monthIndex: number; items: JournalTransaction[] }>();
+
+    sortedTransactions.forEach((tx) => {
+      const mIdx = getTxMonthIndex(tx);
+      const mName = BULAN_OPTIONS[mIdx];
+      const existing = groupMap.get(mName) || { monthIndex: mIdx, items: [] };
+      existing.items.push(tx);
+      groupMap.set(mName, existing);
+    });
+
+    const sortedEntries = Array.from(groupMap.entries()).sort((a, b) => {
+      if (sortMode === 'bulan-desc') {
+        return b[1].monthIndex - a[1].monthIndex;
+      }
+      return a[1].monthIndex - b[1].monthIndex;
+    });
+
+    sortedEntries.forEach(([monthName, data]) => {
+      const subtotal = data.items.reduce((acc, t) => acc + t.nominal, 0);
+      groups.push({
+        monthName,
+        monthIndex: data.monthIndex,
+        subtotal,
+        items: data.items
+      });
+    });
+
+    return groups;
+  }, [sortedTransactions, viewLayout, selectedMonthFilter, sortMode]);
 
   // Calculate sum of selected/checked rows
   const totalNominalTerpilih = useMemo(() => {
@@ -202,12 +352,24 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
       .reduce((sum, t) => sum + t.nominal, 0);
   }, [itemTransactions, selectedIds]);
 
+  const isAllSelected = useMemo(() => {
+    return sortedTransactions.length > 0 && sortedTransactions.every((t) => selectedIds.has(t.id));
+  }, [sortedTransactions, selectedIds]);
+
   // Checkbox toggle handlers
   const handleToggleSelectAll = () => {
-    if (selectedIds.size === filteredTransactions.length && filteredTransactions.length > 0) {
-      setSelectedIds(new Set());
+    if (isAllSelected) {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        sortedTransactions.forEach((t) => next.delete(t.id));
+        return next;
+      });
     } else {
-      setSelectedIds(new Set(filteredTransactions.map((t) => t.id)));
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        sortedTransactions.forEach((t) => next.add(t.id));
+        return next;
+      });
     }
   };
 
@@ -218,6 +380,19 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
         next.delete(id);
       } else {
         next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleToggleMonthGroup = (groupItems: JournalTransaction[]) => {
+    const allGroupSelected = groupItems.every((t) => selectedIds.has(t.id));
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allGroupSelected) {
+        groupItems.forEach((t) => next.delete(t.id));
+      } else {
+        groupItems.forEach((t) => next.add(t.id));
       }
       return next;
     });
@@ -336,8 +511,8 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
 
   // Export CSV of transactions
   const handleExportCSV = () => {
-    const exportData = filteredTransactions.filter((t) => selectedIds.has(t.id));
-    const dataToExport = exportData.length > 0 ? exportData : filteredTransactions;
+    const exportData = sortedTransactions.filter((t) => selectedIds.has(t.id));
+    const dataToExport = exportData.length > 0 ? exportData : sortedTransactions;
 
     const headers = ['No', 'Tanggal Transaksi', 'Bulan', 'Mata Rekening', 'Uraian Keterangan', 'Nominal (Rp)'];
     const rows = dataToExport.map((t, idx) => [
@@ -360,9 +535,6 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
-
-  const isAllSelected =
-    filteredTransactions.length > 0 && selectedIds.size === filteredTransactions.length;
 
   return (
     <div className="space-y-6">
@@ -406,7 +578,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Centang baris untuk menyertakannya dalam cetakan dan penjumlahan otomatis.
+                Pencatatan rincian mutasi belanja disusun tertata rapi sesuai aturan urutan bulan (Januari s.d. Desember).
               </p>
             </div>
           </div>
@@ -439,7 +611,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
               type="button"
               onClick={handleExportCSV}
               className="flex items-center gap-1.5 px-3 py-2 bg-[#131f3b] hover:bg-slate-800 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700/80 transition-all active:scale-95 cursor-pointer"
-              title="Ekspor daftar mutasi transaksi terpilih ke CSV"
+              title="Ekspor daftar mutasi transaksi terpilih ke CSV (tersortir aturan bulan)"
             >
               <Download className="w-3.5 h-3.5 text-slate-400" />
               <span>Ekspor CSV</span>
@@ -450,7 +622,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
               type="button"
               onClick={() => setIsPrintModalOpen(true)}
               className="flex items-center gap-1.5 px-3 py-2 bg-[#131f3b] hover:bg-slate-800 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700/80 transition-all active:scale-95 cursor-pointer"
-              title="Cetak lembar rincian mutasi transaksi"
+              title="Cetak lembar rincian mutasi transaksi (Format F4 / Folio)"
             >
               <Printer className="w-3.5 h-3.5 text-slate-400" />
               <span>Cetak</span>
@@ -466,6 +638,121 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
               <Plus className="w-4 h-4" />
               <span>Rekam Data</span>
             </button>
+          </div>
+        </div>
+
+        {/* Pita Navigasi Penataan Bulan & Urutan Kalender (Aturan Bulan) */}
+        <div className="px-5 py-3 bg-[#0d162f] border-b border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          {/* Left: Quick Month Filter Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-thin">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 mr-1 shrink-0">
+              <CalendarDays className="w-4 h-4 text-blue-400" />
+              <span>Pilihan Bulan:</span>
+            </div>
+
+            {/* Pill: Semua Bulan */}
+            <button
+              type="button"
+              onClick={() => setSelectedMonthFilter('all')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer active:scale-95 ${
+                selectedMonthFilter === 'all'
+                  ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/30 ring-1 ring-blue-400'
+                  : 'bg-[#131f3b] text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/60'
+              }`}
+            >
+              <span>Semua Bulan</span>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                selectedMonthFilter === 'all' ? 'bg-blue-800/80 text-blue-100' : 'bg-slate-700/70 text-slate-300'
+              }`}>
+                {itemTransactions.length}
+              </span>
+            </button>
+
+            {/* Month-specific pills */}
+            {availableMonthsWithStats.map((m) => {
+              const isActive = selectedMonthFilter.toLowerCase() === m.monthName.toLowerCase();
+              return (
+                <button
+                  key={m.monthName}
+                  type="button"
+                  onClick={() => setSelectedMonthFilter(isActive ? 'all' : m.monthName)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer active:scale-95 ${
+                    isActive
+                      ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-500/30 ring-1 ring-emerald-400'
+                      : 'bg-[#131f3b] text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/60'
+                  }`}
+                  title={`${m.monthName}: ${m.count} transaksi (Total ${FORMAT_RUPIAH(m.total)})`}
+                >
+                  <span>{m.monthName}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                    isActive ? 'bg-emerald-800/80 text-emerald-100' : 'bg-slate-700/70 text-slate-300'
+                  }`}>
+                    {m.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right: Sort selector & Grouped View Toggle */}
+          <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+            {/* Sorting Dropdown */}
+            <div className="flex items-center gap-1.5 bg-[#131f3b] border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs">
+              <ArrowUpDown className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              <span className="text-[11px] font-bold text-slate-400 hidden sm:inline">Urutan:</span>
+              <select
+                value={sortMode}
+                onChange={(e) => setSortMode(e.target.value as any)}
+                className="bg-transparent text-xs font-bold text-slate-100 focus:outline-none cursor-pointer pr-1"
+                title="Pilih aturan pengurutan transaksi"
+              >
+                <option value="bulan-asc" className="bg-[#0b1329] text-white">
+                  📅 Sesuai Aturan Bulan (Januari → Desember)
+                </option>
+                <option value="bulan-desc" className="bg-[#0b1329] text-white">
+                  📅 Aturan Bulan Terbalik (Desember → Januari)
+                </option>
+                <option value="terbaru" className="bg-[#0b1329] text-white">
+                  🕒 Tanggal Transaksi Terbaru
+                </option>
+                <option value="nominal-desc" className="bg-[#0b1329] text-white">
+                  💰 Nominal Tertinggi ke Terendah
+                </option>
+                <option value="nominal-asc" className="bg-[#0b1329] text-white">
+                  💰 Nominal Terendah ke Tertinggi
+                </option>
+              </select>
+            </div>
+
+            {/* View Layout Toggle: Kelompokkan per Bulan vs Daftar Berurutan */}
+            <div className="flex items-center bg-[#131f3b] p-0.5 rounded-xl border border-slate-700/80">
+              <button
+                type="button"
+                onClick={() => setViewLayout('grouped')}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  viewLayout === 'grouped'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Kelompokkan tabel berdasarkan pembagian bulan"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Kelompok Bulan</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewLayout('flat')}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  viewLayout === 'flat'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Tampilkan dalam daftar tunggal berurutan"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Daftar Berurutan</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -496,15 +783,168 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/80 text-slate-300">
-              {filteredTransactions.length === 0 ? (
+              {sortedTransactions.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-slate-500">
-                    Belum ada data mutasi jurnal untuk komponen belanja ini. Klik tombol{' '}
+                    Belum ada data mutasi jurnal untuk komponen belanja ini
+                    {selectedMonthFilter !== 'all' ? ` pada bulan ${selectedMonthFilter}` : ''}. Klik tombol{' '}
                     <strong className="text-blue-400">+ Rekam Data</strong> untuk menambahkan kuitansi/transaksi.
                   </td>
                 </tr>
+              ) : viewLayout === 'grouped' && selectedMonthFilter === 'all' ? (
+                /* Mode Berkelompok per Bulan */
+                groupedTransactions.map((group) => {
+                  const isGroupAllSelected = group.items.every((t) => selectedIds.has(t.id));
+                  return (
+                    <React.Fragment key={group.monthName}>
+                      {/* Header Pita Kelompok Bulan */}
+                      <tr className="bg-gradient-to-r from-[#14234b] via-[#101b3a] to-[#0c142b] border-y border-blue-900/60 text-blue-100">
+                        <td className="py-2.5 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleMonthGroup(group.items)}
+                            className="p-1 hover:text-white text-blue-300 cursor-pointer"
+                            title={isGroupAllSelected ? `Batalkan pilihan bulan ${group.monthName}` : `Pilih semua transaksi bulan ${group.monthName}`}
+                          >
+                            {isGroupAllSelected ? (
+                              <CheckSquare className="w-4 h-4 text-blue-400" />
+                            ) : (
+                              <Square className="w-4 h-4 text-blue-400/60" />
+                            )}
+                          </button>
+                        </td>
+                        <td colSpan={3} className="py-2.5 px-4">
+                          <div className="flex items-center gap-3">
+                            <span className="font-extrabold text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5 text-blue-400" />
+                              Bulan {group.monthName} 2026
+                            </span>
+                            <span className="text-[11px] px-2 py-0.5 rounded-full font-bold bg-blue-950 border border-blue-800/80 text-blue-300">
+                              {group.items.length} Transaksi
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedMonthFilter(group.monthName)}
+                              className="text-[10px] text-blue-400 hover:text-blue-200 underline font-medium cursor-pointer"
+                            >
+                              Fokuskan bulan ini
+                            </button>
+                          </div>
+                        </td>
+                        <td className="py-2.5 px-4 text-right whitespace-nowrap">
+                          <div className="text-[10px] text-slate-400 uppercase font-bold">Subtotal Realisasi:</div>
+                          <div className="font-mono font-extrabold text-emerald-400 text-xs sm:text-sm">
+                            {FORMAT_RUPIAH(group.subtotal)}
+                          </div>
+                        </td>
+                        <td className="py-2.5 px-4 text-center">
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            {group.items.filter((t) => selectedIds.has(t.id)).length}/{group.items.length} dipilih
+                          </span>
+                        </td>
+                      </tr>
+
+                      {/* Transaksi di dalam bulan ini */}
+                      {group.items.map((tx) => {
+                        const isChecked = selectedIds.has(tx.id);
+                        return (
+                          <tr
+                            key={tx.id}
+                            className={`group transition-colors duration-150 ${
+                              isChecked ? 'bg-[#0f1b38]/50 hover:bg-[#132349]/70' : 'hover:bg-slate-800/40 opacity-70'
+                            }`}
+                          >
+                            {/* Checkbox */}
+                            <td className="py-4 px-4 text-center">
+                              <button
+                                type="button"
+                                onClick={() => handleToggleRow(tx.id)}
+                                className="p-1 hover:text-white text-slate-400 cursor-pointer"
+                              >
+                                {isChecked ? (
+                                  <CheckSquare className="w-4 h-4 text-blue-500" />
+                                ) : (
+                                  <Square className="w-4 h-4" />
+                                )}
+                              </button>
+                            </td>
+
+                            {/* Tanggal Transaksi */}
+                            <td className="py-4 px-4">
+                              <div className="font-bold text-white leading-tight">
+                                {tx.tanggalTransaksi}
+                              </div>
+                              <div className="text-[11px] text-slate-400 mt-0.5 font-medium flex items-center gap-1">
+                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                {tx.bulan}
+                              </div>
+                            </td>
+
+                            {/* Mata Rekening */}
+                            <td className="py-4 px-4">
+                              <div className="font-semibold text-slate-200 leading-snug">
+                                {tx.mataRekening}
+                              </div>
+                              <div className="mt-1 flex items-center gap-2">
+                                <span className="inline-block px-2 py-0.5 rounded text-[9px] font-black tracking-wider bg-blue-950/80 text-blue-400 border border-blue-800/60 uppercase">
+                                  {tx.jenisBelanjaBadge || 'BELANJA LANGSUNG'}
+                                </span>
+                                {tx.fileKuitansiName && (
+                                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/50 px-1.5 py-0.5 rounded border border-emerald-800/40">
+                                    <FileCheck className="w-3 h-3" />
+                                    PDF Lampiran
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+
+                            {/* Uraian / Keterangan */}
+                            <td className="py-4 px-4">
+                              <p className="text-slate-300 font-normal leading-relaxed">
+                                {tx.uraianKeterangan}
+                              </p>
+                            </td>
+
+                            {/* Nominal (RP) */}
+                            <td className="py-4 px-4 text-right whitespace-nowrap font-mono font-bold text-sm text-white">
+                              {FORMAT_RUPIAH(tx.nominal)}
+                            </td>
+
+                            {/* Tindakan (Edit & Hapus) */}
+                            <td className="py-4 px-4 text-center whitespace-nowrap">
+                              <div className="flex items-center justify-center gap-1.5">
+                                {/* Edit Button */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenEdit(tx)}
+                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-bold bg-blue-900/60 hover:bg-blue-800 active:bg-blue-700 text-blue-300 hover:text-white border border-blue-700/60 transition-all active:scale-95 cursor-pointer"
+                                  title="Edit data transaksi ini"
+                                >
+                                  <Edit2 className="w-3 h-3" />
+                                  <span>Edit</span>
+                                </button>
+
+                                {/* Hapus Button */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenDelete(tx)}
+                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-bold bg-red-950/70 hover:bg-red-900/90 active:bg-red-800 text-red-400 hover:text-white border border-red-800/60 transition-all active:scale-95 cursor-pointer"
+                                  title="Hapus data transaksi ini"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                  <span>Hapus</span>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </React.Fragment>
+                  );
+                })
               ) : (
-                filteredTransactions.map((tx) => {
+                /* Mode Daftar Berurutan (Flat List) */
+                sortedTransactions.map((tx) => {
                   const isChecked = selectedIds.has(tx.id);
                   return (
                     <tr
@@ -533,7 +973,8 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
                         <div className="font-bold text-white leading-tight">
                           {tx.tanggalTransaksi}
                         </div>
-                        <div className="text-[11px] text-slate-400 mt-0.5 font-medium">
+                        <div className="text-[11px] text-slate-400 mt-0.5 font-medium flex items-center gap-1">
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400"></span>
                           {tx.bulan}
                         </div>
                       </td>
@@ -1000,7 +1441,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
         subtitle={`Kode Rekening: ${item.kodeRekening} - APBD TA 2026`}
         htmlContent={generateTransactionsHtml(
           item,
-          filteredTransactions.filter((t) => selectedIds.has(t.id))
+          sortedTransactions.filter((t) => selectedIds.has(t.id))
         )}
         defaultLandscape={true}
       />

@@ -475,6 +475,7 @@ export function generateBudgetSummaryHtml(
 
 /**
  * Generate Printable HTML for Mutasi Jurnal / Kuitansi
+ * Disusun dan diurutkan sesuai aturan kalender bulan (Januari s.d. Desember)
  */
 export function generateTransactionsHtml(
   item: BudgetItem,
@@ -482,11 +483,68 @@ export function generateTransactionsHtml(
 ): string {
   const totalNominal = transactions.reduce((acc, t) => acc + t.nominal, 0);
 
+  // Helper to extract month index (0 to 11)
+  const getTxMonthIndex = (t: JournalTransaction): number => {
+    if (t.bulan) {
+      const clean = t.bulan.replace(/bulan\s*/i, '').trim().toLowerCase();
+      const idx = MONTHS_LIST.findIndex((m) => m.name.toLowerCase() === clean);
+      if (idx >= 0) return idx;
+    }
+    if (t.tanggalTransaksi) {
+      for (let i = 0; i < MONTHS_LIST.length; i++) {
+        if (t.tanggalTransaksi.toLowerCase().includes(MONTHS_LIST[i].name.toLowerCase())) {
+          return i;
+        }
+      }
+    }
+    return 7;
+  };
+
+  const getTxDayNumber = (t: JournalTransaction): number => {
+    const match = t.tanggalTransaksi?.match(/^\s*(\d{1,2})/);
+    return match ? parseInt(match[1], 10) : 1;
+  };
+
+  // Sort chronologically according to aturan bulan
+  const sorted = [...transactions].sort((a, b) => {
+    const ma = getTxMonthIndex(a);
+    const mb = getTxMonthIndex(b);
+    if (ma !== mb) return ma - mb;
+    return getTxDayNumber(a) - getTxDayNumber(b);
+  });
+
+  // Group by month to render clean month dividers if spanning multiple months
+  const monthGroups: { monthName: string; subtotal: number; items: JournalTransaction[] }[] = [];
+  const map = new Map<string, { subtotal: number; items: JournalTransaction[] }>();
+
+  sorted.forEach((tx) => {
+    const mIdx = getTxMonthIndex(tx);
+    const mName = MONTHS_LIST[mIdx].name;
+    const existing = map.get(mName) || { subtotal: 0, items: [] };
+    existing.subtotal += tx.nominal;
+    existing.items.push(tx);
+    map.set(mName, existing);
+  });
+
+  MONTHS_LIST.forEach((m) => {
+    if (map.has(m.name)) {
+      const data = map.get(m.name)!;
+      monthGroups.push({
+        monthName: m.name,
+        subtotal: data.subtotal,
+        items: data.items
+      });
+    }
+  });
+
+  let runningNumber = 1;
+
   return `
     <div style="margin-bottom: 10px; background-color: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; font-size: 8pt;">
       <div><strong>Kode Rekening:</strong> ${item.kodeRekening}</div>
       <div><strong>Uraian Komponen:</strong> ${item.uraianSpesifik}</div>
-      <div><strong>Pagu Anggaran:</strong> ${FORMAT_RUPIAH(item.jumlahTotal)} &bull; <strong>Realisasi Terserap:</strong> ${FORMAT_RUPIAH(totalNominal)} &bull; <strong>Sisa:</strong> ${FORMAT_RUPIAH(item.jumlahTotal - totalNominal)}</div>
+      <div><strong>Pagu Anggaran:</strong> ${FORMAT_RUPIAH(item.jumlahTotal)} &bull; <strong>Realisasi Terserap:</strong> ${FORMAT_RUPIAH(totalNominal)} &bull; <strong>Sisa Pagu:</strong> ${FORMAT_RUPIAH(item.jumlahTotal - totalNominal)}</div>
+      <div style="margin-top: 2px; font-size: 7.5pt; color: #0369a1;"><em>* Catatan: Data transaksi ditata dan diurutkan secara kronologis berdasarkan urutan kalender bulan (Januari s.d. Desember).</em></div>
     </div>
 
     <table style="width: 100%; border-collapse: collapse; table-layout: auto; background-color: #ffffff; color: #0f172a;">
@@ -495,32 +553,54 @@ export function generateTransactionsHtml(
           <th style="width: 4%; text-align: center; padding: 4px 2px;">NO</th>
           <th style="width: 12%; text-align: center; padding: 4px 4px;">TANGGAL</th>
           <th style="width: 10%; text-align: center; padding: 4px 4px;">BULAN</th>
-          <th style="width: 42%; text-align: left; padding: 4px 6px;">URAIAN KETERANGAN TRANSAKSI / KUITANSI</th>
-          <th style="width: 16%; text-align: center; padding: 4px 4px;">BUKTI / MATA REKENING</th>
-          <th style="width: 16%; text-align: right; padding: 4px 6px;">NOMINAL REALISASI</th>
+          <th style="width: 44%; text-align: left; padding: 4px 6px;">URAIAN KETERANGAN TRANSAKSI / KUITANSI</th>
+          <th style="width: 14%; text-align: center; padding: 4px 4px;">BUKTI / MATA REKENING</th>
+          <th style="width: 16%; text-align: right; padding: 4px 6px;">NOMINAL (RP)</th>
         </tr>
       </thead>
       <tbody>
         ${
-          transactions.length === 0
+          sorted.length === 0
             ? `<tr><td colspan="6" class="center" style="padding: 15px; color: #64748b;">Belum ada data mutasi jurnal transaksi yang tercatat.</td></tr>`
-            : transactions
-                .map(
-                  (tx, idx) => `
-              <tr>
-                <td class="center" style="padding: 4px 2px;">${idx + 1}</td>
-                <td class="center" style="padding: 4px 4px; font-size: 7.5pt;">${tx.tanggalTransaksi}</td>
-                <td class="center" style="padding: 4px 4px; font-size: 7.5pt;">${tx.bulan}</td>
-                <td class="desc" style="padding: 4px 6px; font-size: 8pt;">${tx.uraianKeterangan}</td>
-                <td class="center font-mono" style="padding: 4px 4px; font-size: 7pt;">${tx.mataRekening || tx.fileKuitansiName || '-'}</td>
-                <td class="num" style="font-weight: bold; padding: 4px 6px; font-size: 8pt;">${FORMAT_RUPIAH(tx.nominal)}</td>
-              </tr>
-            `
-                )
+            : monthGroups
+                .map((group) => {
+                  const rows = group.items
+                    .map((tx) => {
+                      const num = runningNumber++;
+                      return `
+                        <tr>
+                          <td class="center" style="padding: 3.5px 2px;">${num}</td>
+                          <td class="center" style="padding: 3.5px 4px; font-size: 7.5pt;">${tx.tanggalTransaksi}</td>
+                          <td class="center" style="padding: 3.5px 4px; font-size: 7.5pt; font-weight: 600;">${tx.bulan}</td>
+                          <td class="desc" style="padding: 3.5px 6px; font-size: 7.5pt;">${tx.uraianKeterangan}</td>
+                          <td class="center font-mono" style="padding: 3.5px 4px; font-size: 7pt;">${tx.mataRekening || tx.fileKuitansiName || '-'}</td>
+                          <td class="num" style="font-weight: bold; padding: 3.5px 6px; font-size: 7.5pt;">${FORMAT_RUPIAH(tx.nominal)}</td>
+                        </tr>
+                      `;
+                    })
+                    .join('');
+
+                  // If multiple months present, show month group header & subtotal
+                  if (monthGroups.length > 1) {
+                    return `
+                      <tr style="background-color: #f1f5f9; font-weight: bold; border-top: 1.5px solid #94a3b8; border-bottom: 1.5px solid #94a3b8;">
+                        <td colspan="5" style="padding: 4px 6px; font-size: 7.5pt; text-transform: uppercase; color: #0f172a;">
+                          <strong>&bull; KELOMPOK BULAN ${group.monthName.toUpperCase()} 2026</strong> (${group.items.length} Transaksi)
+                        </td>
+                        <td class="num" style="font-size: 7.5pt; font-weight: 800; color: #1e3a8a;">
+                          ${FORMAT_RUPIAH(group.subtotal)}
+                        </td>
+                      </tr>
+                      ${rows}
+                    `;
+                  }
+
+                  return rows;
+                })
                 .join('')
         }
         <tr class="total-row" style="background-color: #cbd5e1; font-weight: 900;">
-          <td colspan="5" style="text-align: right; font-weight: 900; padding: 5px 6px; font-size: 8pt;">TOTAL REALISASI MUTASI</td>
+          <td colspan="5" style="text-align: right; font-weight: 900; padding: 5px 6px; font-size: 8pt;">TOTAL KESELURUHAN REALISASI MUTASI</td>
           <td class="num" style="font-weight: 900; color: #1e3a8a; padding: 5px 6px; font-size: 8pt;">${FORMAT_RUPIAH(totalNominal)}</td>
         </tr>
       </tbody>
