@@ -305,26 +305,26 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
     }
 
     return `
-      <table>
+      <table style="width: 100%; border-collapse: collapse; table-layout: auto;">
         <thead>
           <tr>
-            <th style="width: 25px;">NO</th>
-            <th style="text-align: left; min-width: 180px;">SASARAN KEGIATAN</th>
-            <th style="width: 80px;">PAGU EFEKTIF</th>
-            <th style="width: 45px;">JAN</th>
-            <th style="width: 45px;">FEB</th>
-            <th style="width: 45px;">MAR</th>
-            <th style="width: 45px;">APR</th>
-            <th style="width: 55px;">MEI</th>
-            <th style="width: 55px;">JUN</th>
-            <th style="width: 55px;">JUL</th>
-            <th style="width: 60px;">AGU</th>
-            <th style="width: 45px;">SEP</th>
-            <th style="width: 45px;">OKT</th>
-            <th style="width: 45px;">NOV</th>
-            <th style="width: 45px;">DES</th>
-            <th style="width: 80px;">REALISASI</th>
-            <th style="width: 80px;">SISA</th>
+            <th style="width: 2.5%; text-align: center; padding: 3px 2px;">NO</th>
+            <th style="width: 23%; text-align: left; padding: 3px 4px;">SASARAN KEGIATAN</th>
+            <th style="width: 7.5%; text-align: right; padding: 3px 2px;">PAGU EFEKTIF</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">JAN</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">FEB</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">MAR</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">APR</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">MEI</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">JUN</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">JUL</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">AGU</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">SEP</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">OKT</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">NOV</th>
+            <th style="width: 4.5%; text-align: center; padding: 3px 1px; font-size: 6.5pt;">DES</th>
+            <th style="width: 7.5%; text-align: right; padding: 3px 2px;">REALISASI</th>
+            <th style="width: 7.5%; text-align: right; padding: 3px 2px;">SISA</th>
           </tr>
         </thead>
         <tbody>
@@ -332,44 +332,44 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
             .map(
               (r, idx) => `
             <tr>
-              <td class="center">${idx + 1}</td>
-              <td style="font-weight: 600;">${r.sasaranKegiatan}</td>
-              <td class="num">${FORMAT_NUM(r.paguEfektif)}</td>
-              <td class="center">${r.januari > 0 ? FORMAT_NUM(r.januari) : '-'}</td>
-              <td class="center">${r.februari > 0 ? FORMAT_NUM(r.februari) : '-'}</td>
-              <td class="center">${r.maret > 0 ? FORMAT_NUM(r.maret) : '-'}</td>
-              <td class="num">${r.april > 0 ? FORMAT_NUM(r.april) : '-'}</td>
-              <td class="num">${r.mei > 0 ? FORMAT_NUM(r.mei) : '-'}</td>
-              <td class="num">${r.juni > 0 ? FORMAT_NUM(r.juni) : '-'}</td>
-              <td class="num">${r.juli > 0 ? FORMAT_NUM(r.juli) : '-'}</td>
-              <td class="num">${r.agustus > 0 ? FORMAT_NUM(r.agustus) : '-'}</td>
-              <td class="center">${r.september > 0 ? FORMAT_NUM(r.september) : '-'}</td>
-              <td class="center">${r.oktober > 0 ? FORMAT_NUM(r.oktober) : '-'}</td>
-              <td class="center">${r.november > 0 ? FORMAT_NUM(r.november) : '-'}</td>
-              <td class="center">${r.desember > 0 ? FORMAT_NUM(r.desember) : '-'}</td>
-              <td class="num" style="font-weight: bold; color: #1e3a8a;">${FORMAT_NUM(r.realisasi)}</td>
-              <td class="num" style="font-weight: bold;">${FORMAT_NUM(r.sisa)}</td>
+              <td class="center" style="padding: 2.5px 2px;">${idx + 1}</td>
+              <td class="sasaran" style="font-weight: 600; padding: 2.5px 4px; font-size: 7pt; line-height: 1.25;">${r.sasaranKegiatan}</td>
+              <td class="num" style="padding: 2.5px 2px; font-size: 7pt;">${FORMAT_NUM(r.paguEfektif)}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.januari > 0 ? FORMAT_NUM(r.januari) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.februari > 0 ? FORMAT_NUM(r.februari) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.maret > 0 ? FORMAT_NUM(r.maret) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.april > 0 ? FORMAT_NUM(r.april) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.mei > 0 ? FORMAT_NUM(r.mei) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.juni > 0 ? FORMAT_NUM(r.juni) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.juli > 0 ? FORMAT_NUM(r.juli) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.agustus > 0 ? FORMAT_NUM(r.agustus) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.september > 0 ? FORMAT_NUM(r.september) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.oktober > 0 ? FORMAT_NUM(r.oktober) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.november > 0 ? FORMAT_NUM(r.november) : '-'}</td>
+              <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.desember > 0 ? FORMAT_NUM(r.desember) : '-'}</td>
+              <td class="num" style="font-weight: bold; color: #1e3a8a; padding: 2.5px 2px; font-size: 7pt;">${FORMAT_NUM(r.realisasi)}</td>
+              <td class="num" style="font-weight: bold; padding: 2.5px 2px; font-size: 7pt;">${FORMAT_NUM(r.sisa)}</td>
             </tr>
           `
             )
             .join('')}
-          <tr class="total-row">
-            <td colspan="2" style="text-align: right; font-weight: 900; padding: 6px;">TOTAL TERPILIH (${rowsToPrint.length} SASARAN)</td>
-            <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.paguEfektif)}</td>
-            <td class="center">${selectedTotals.januari > 0 ? FORMAT_NUM(selectedTotals.januari) : '-'}</td>
-            <td class="center">${selectedTotals.februari > 0 ? FORMAT_NUM(selectedTotals.februari) : '-'}</td>
-            <td class="center">${selectedTotals.maret > 0 ? FORMAT_NUM(selectedTotals.maret) : '-'}</td>
-            <td class="num">${selectedTotals.april > 0 ? FORMAT_NUM(selectedTotals.april) : '-'}</td>
-            <td class="num" style="font-weight: 900;">${selectedTotals.mei > 0 ? FORMAT_NUM(selectedTotals.mei) : '-'}</td>
-            <td class="num" style="font-weight: 900;">${selectedTotals.juni > 0 ? FORMAT_NUM(selectedTotals.juni) : '-'}</td>
-            <td class="num" style="font-weight: 900;">${selectedTotals.juli > 0 ? FORMAT_NUM(selectedTotals.juli) : '-'}</td>
-            <td class="num" style="font-weight: 900;">${selectedTotals.agustus > 0 ? FORMAT_NUM(selectedTotals.agustus) : '-'}</td>
-            <td class="center">${selectedTotals.september > 0 ? FORMAT_NUM(selectedTotals.september) : '-'}</td>
-            <td class="center">${selectedTotals.oktober > 0 ? FORMAT_NUM(selectedTotals.oktober) : '-'}</td>
-            <td class="center">${selectedTotals.november > 0 ? FORMAT_NUM(selectedTotals.november) : '-'}</td>
-            <td class="center">${selectedTotals.desember > 0 ? FORMAT_NUM(selectedTotals.desember) : '-'}</td>
-            <td class="num" style="font-weight: 900; color: #1e3a8a;">${FORMAT_NUM(selectedTotals.realisasi)}</td>
-            <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.sisa)}</td>
+          <tr class="total-row" style="background-color: #cbd5e1; font-weight: 900;">
+            <td colspan="2" style="text-align: right; font-weight: 900; padding: 4px 6px; font-size: 7.5pt;">TOTAL TERPILIH (${rowsToPrint.length} SASARAN)</td>
+            <td class="num" style="font-weight: 900; padding: 4px 2px; font-size: 7pt;">${FORMAT_NUM(selectedTotals.paguEfektif)}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.januari > 0 ? FORMAT_NUM(selectedTotals.januari) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.februari > 0 ? FORMAT_NUM(selectedTotals.februari) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.maret > 0 ? FORMAT_NUM(selectedTotals.maret) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.april > 0 ? FORMAT_NUM(selectedTotals.april) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.mei > 0 ? FORMAT_NUM(selectedTotals.mei) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.juni > 0 ? FORMAT_NUM(selectedTotals.juni) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.juli > 0 ? FORMAT_NUM(selectedTotals.juli) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.agustus > 0 ? FORMAT_NUM(selectedTotals.agustus) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.september > 0 ? FORMAT_NUM(selectedTotals.september) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.oktober > 0 ? FORMAT_NUM(selectedTotals.oktober) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.november > 0 ? FORMAT_NUM(selectedTotals.november) : '-'}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.desember > 0 ? FORMAT_NUM(selectedTotals.desember) : '-'}</td>
+            <td class="num" style="font-weight: 900; color: #1e3a8a; padding: 4px 2px; font-size: 7pt;">${FORMAT_NUM(selectedTotals.realisasi)}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 2px; font-size: 7pt;">${FORMAT_NUM(selectedTotals.sisa)}</td>
           </tr>
         </tbody>
       </table>
