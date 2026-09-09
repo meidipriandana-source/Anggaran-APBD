@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { BudgetItem, JournalTransaction } from '../types';
-import { FORMAT_NUM } from '../data/budgetData';
+import { FORMAT_NUM, BUDGET_DATA, DEFAULT_JOURNAL_DATA } from '../data/budgetData';
 import { Download, Printer, Filter, Calendar, CheckSquare, Square, Check, Layers } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
@@ -31,17 +31,36 @@ interface MonthlyRowItem {
   sisa: number;
 }
 
-export const MonthlyReportView: React.FC<MonthlyReportViewProps> = () => {
+function getMonthKey(t: JournalTransaction): string {
+  const str = `${t.bulan || ''} ${t.tanggalTransaksi || ''}`.toLowerCase();
+  if (str.includes('jan')) return 'januari';
+  if (str.includes('feb')) return 'februari';
+  if (str.includes('mar')) return 'maret';
+  if (str.includes('apr')) return 'april';
+  if (str.includes('mei') || str.includes('may')) return 'mei';
+  if (str.includes('jun')) return 'juni';
+  if (str.includes('jul')) return 'juli';
+  if (str.includes('agu') || str.includes('aug')) return 'agustus';
+  if (str.includes('sep')) return 'september';
+  if (str.includes('okt') || str.includes('oct')) return 'oktober';
+  if (str.includes('nov')) return 'november';
+  if (str.includes('des') || str.includes('dec')) return 'desember';
+  return 'agustus';
+}
+
+export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
+  items = BUDGET_DATA,
+  transactions = DEFAULT_JOURNAL_DATA
+}) => {
   const [highlightMonth, setHighlightMonth] = useState<string>('all');
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
-  // 10 Consolidated Items corresponding directly to APBD 2026
+  // Dynamically compute monthly realization for ALL budget items synchronized with live transactions
   const monthlyRows: MonthlyRowItem[] = useMemo(() => {
-    return [
-      {
-        id: 'row-1',
-        sasaranKegiatan: 'Bahan Cetak (Sertifikat & Dokumen)',
-        paguEfektif: 30024768,
+    return items.map((item) => {
+      const itemTx = transactions.filter((t) => t.itemId === item.id);
+
+      const monthSums: { [key: string]: number } = {
         januari: 0,
         februari: 0,
         maret: 0,
@@ -53,191 +72,60 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = () => {
         september: 0,
         oktober: 0,
         november: 0,
-        desember: 0,
-        realisasi: 0,
-        sisa: 30024768
-      },
-      {
-        id: 'row-2',
-        sasaranKegiatan: 'Suvenir / Cendera Mata',
-        paguEfektif: 6200000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 0,
-        juli: 0,
-        agustus: 0,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 0,
-        sisa: 6200000
-      },
-      {
-        id: 'row-3',
-        sasaranKegiatan: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
-        paguEfektif: 124920000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 0,
-        juli: 0,
-        agustus: 113350000,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 113350000,
-        sisa: 11570000
-      },
-      {
-        id: 'row-4',
-        sasaranKegiatan: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa (Akreditasi)',
-        paguEfektif: 157380000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 0,
-        juli: 0,
-        agustus: 0,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 0,
-        sisa: 157380000
-      },
-      {
-        id: 'row-5',
-        sasaranKegiatan: 'Prasmanan VIP Spesifikasi: Per Porsi (Akreditasi)',
-        paguEfektif: 21250000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 0,
-        juli: 0,
-        agustus: 0,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 0,
-        sisa: 21250000
-      },
-      {
-        id: 'row-6',
-        sasaranKegiatan: 'Honorarium Pengajar / Narasumber',
-        paguEfektif: 229200000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 0,
-        juli: 16000000,
-        agustus: 126820000,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 142820000,
-        sisa: 86380000
-      },
-      {
-        id: 'row-7',
-        sasaranKegiatan: 'Jasa Iklan / Reklame',
-        paguEfektif: 15000000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 0,
-        juli: 0,
-        agustus: 0,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 0,
-        sisa: 15000000
-      },
-      {
-        id: 'row-8',
-        sasaranKegiatan: 'Belanja Kontribusi Kursus/Pelatihan',
-        paguEfektif: 550000000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 67500000,
-        juli: 46500000,
-        agustus: 81125000,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 195125000,
-        sisa: 354875000
-      },
-      {
-        id: 'row-9',
-        sasaranKegiatan: 'Perjalanan Dinas Dalam Negeri',
-        paguEfektif: 870000000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 35619560,
-        juni: 70905939,
-        juli: 46952424,
-        agustus: 183294411,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 336772334,
-        sisa: 533227666
-      },
-      {
-        id: 'row-10',
-        sasaranKegiatan: 'Kontribusi Surveyor',
-        paguEfektif: 90000000,
-        januari: 0,
-        februari: 0,
-        maret: 0,
-        april: 0,
-        mei: 0,
-        juni: 0,
-        juli: 0,
-        agustus: 78008000,
-        september: 0,
-        oktober: 0,
-        november: 0,
-        desember: 0,
-        realisasi: 78008000,
-        sisa: 11992000
-      }
-    ];
-  }, []);
+        desember: 0
+      };
+
+      itemTx.forEach((tx) => {
+        const mKey = getMonthKey(tx);
+        if (monthSums[mKey] !== undefined) {
+          monthSums[mKey] += tx.nominal;
+        } else {
+          monthSums['agustus'] += tx.nominal;
+        }
+      });
+
+      const totalRealisasi = itemTx.reduce((sum, t) => sum + t.nominal, 0);
+      const sisa = Math.max(0, item.jumlahTotal - totalRealisasi);
+
+      return {
+        id: item.id,
+        sasaranKegiatan: item.uraianSpesifik,
+        paguEfektif: item.jumlahTotal,
+        januari: monthSums.januari,
+        februari: monthSums.februari,
+        maret: monthSums.maret,
+        april: monthSums.april,
+        mei: monthSums.mei,
+        juni: monthSums.juni,
+        juli: monthSums.juli,
+        agustus: monthSums.agustus,
+        september: monthSums.september,
+        oktober: monthSums.oktober,
+        november: monthSums.november,
+        desember: monthSums.desember,
+        realisasi: totalRealisasi,
+        sisa
+      };
+    });
+  }, [items, transactions]);
 
   // Track checked/contreng rows (default all selected)
   const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(() => {
-    return new Set([
-      'row-1', 'row-2', 'row-3', 'row-4', 'row-5',
-      'row-6', 'row-7', 'row-8', 'row-9', 'row-10'
-    ]);
+    return new Set(items.map((i) => i.id));
   });
+
+  // Keep selectedRowIds in sync if items change
+  React.useEffect(() => {
+    setSelectedRowIds((prev) => {
+      const allIds = new Set(items.map((i) => i.id));
+      if (prev.size === 0 && items.length > 0) return allIds;
+      const next = new Set<string>();
+      prev.forEach((id) => {
+        if (allIds.has(id)) next.add(id);
+      });
+      return next.size > 0 ? next : allIds;
+    });
+  }, [items]);
 
   const handleToggleRow = (id: string) => {
     setSelectedRowIds((prev) => {
@@ -468,18 +356,18 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = () => {
           <tr class="total-row">
             <td colspan="2" style="text-align: right; font-weight: 900; padding: 6px;">TOTAL TERPILIH (${rowsToPrint.length} SASARAN)</td>
             <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.paguEfektif)}</td>
-            <td class="center">-</td>
-            <td class="center">-</td>
-            <td class="center">-</td>
-            <td class="center">-</td>
-            <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.mei)}</td>
-            <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.juni)}</td>
-            <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.juli)}</td>
-            <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.agustus)}</td>
-            <td class="center">-</td>
-            <td class="center">-</td>
-            <td class="center">-</td>
-            <td class="center">-</td>
+            <td class="center">${selectedTotals.januari > 0 ? FORMAT_NUM(selectedTotals.januari) : '-'}</td>
+            <td class="center">${selectedTotals.februari > 0 ? FORMAT_NUM(selectedTotals.februari) : '-'}</td>
+            <td class="center">${selectedTotals.maret > 0 ? FORMAT_NUM(selectedTotals.maret) : '-'}</td>
+            <td class="num">${selectedTotals.april > 0 ? FORMAT_NUM(selectedTotals.april) : '-'}</td>
+            <td class="num" style="font-weight: 900;">${selectedTotals.mei > 0 ? FORMAT_NUM(selectedTotals.mei) : '-'}</td>
+            <td class="num" style="font-weight: 900;">${selectedTotals.juni > 0 ? FORMAT_NUM(selectedTotals.juni) : '-'}</td>
+            <td class="num" style="font-weight: 900;">${selectedTotals.juli > 0 ? FORMAT_NUM(selectedTotals.juli) : '-'}</td>
+            <td class="num" style="font-weight: 900;">${selectedTotals.agustus > 0 ? FORMAT_NUM(selectedTotals.agustus) : '-'}</td>
+            <td class="center">${selectedTotals.september > 0 ? FORMAT_NUM(selectedTotals.september) : '-'}</td>
+            <td class="center">${selectedTotals.oktober > 0 ? FORMAT_NUM(selectedTotals.oktober) : '-'}</td>
+            <td class="center">${selectedTotals.november > 0 ? FORMAT_NUM(selectedTotals.november) : '-'}</td>
+            <td class="center">${selectedTotals.desember > 0 ? FORMAT_NUM(selectedTotals.desember) : '-'}</td>
             <td class="num" style="font-weight: 900; color: #1e3a8a;">${FORMAT_NUM(selectedTotals.realisasi)}</td>
             <td class="num" style="font-weight: 900;">${FORMAT_NUM(selectedTotals.sisa)}</td>
           </tr>
@@ -744,51 +632,51 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = () => {
                     </td>
 
                     {/* Januari - April */}
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'januari' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.januari > 0 ? FORMAT_NUM(row.januari) : <span className="text-slate-400">-</span>}
                     </td>
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'februari' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.februari > 0 ? FORMAT_NUM(row.februari) : <span className="text-slate-400">-</span>}
                     </td>
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'maret' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.maret > 0 ? FORMAT_NUM(row.maret) : <span className="text-slate-400">-</span>}
                     </td>
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'april' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.april > 0 ? FORMAT_NUM(row.april) : <span className="text-slate-400">-</span>}
                     </td>
 
                     {/* Mei */}
-                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono text-slate-800 whitespace-nowrap ${highlightMonth === 'mei' ? 'bg-blue-50/80 font-bold' : ''}`}>
+                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono whitespace-nowrap ${highlightMonth === 'mei' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-800'}`}>
                       {row.mei > 0 ? FORMAT_NUM(row.mei) : <span className="text-slate-400 block text-center">-</span>}
                     </td>
 
                     {/* Juni */}
-                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono text-slate-800 whitespace-nowrap ${highlightMonth === 'juni' ? 'bg-blue-50/80 font-bold' : ''}`}>
+                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono whitespace-nowrap ${highlightMonth === 'juni' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-800'}`}>
                       {row.juni > 0 ? FORMAT_NUM(row.juni) : <span className="text-slate-400 block text-center">-</span>}
                     </td>
 
                     {/* Juli */}
-                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono text-slate-800 whitespace-nowrap ${highlightMonth === 'juli' ? 'bg-blue-50/80 font-bold' : ''}`}>
+                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono whitespace-nowrap ${highlightMonth === 'juli' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-800'}`}>
                       {row.juli > 0 ? FORMAT_NUM(row.juli) : <span className="text-slate-400 block text-center">-</span>}
                     </td>
 
                     {/* Agustus */}
-                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono text-slate-800 whitespace-nowrap ${highlightMonth === 'agustus' ? 'bg-blue-50/80 font-bold' : ''}`}>
+                    <td className={`border border-slate-200 py-2.5 px-2 text-right font-mono whitespace-nowrap ${highlightMonth === 'agustus' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-800'}`}>
                       {row.agustus > 0 ? FORMAT_NUM(row.agustus) : <span className="text-slate-400 block text-center">-</span>}
                     </td>
 
                     {/* September - Desember */}
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'september' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.september > 0 ? FORMAT_NUM(row.september) : <span className="text-slate-400">-</span>}
                     </td>
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'oktober' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.oktober > 0 ? FORMAT_NUM(row.oktober) : <span className="text-slate-400">-</span>}
                     </td>
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'november' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.november > 0 ? FORMAT_NUM(row.november) : <span className="text-slate-400">-</span>}
                     </td>
-                    <td className="border border-slate-200 py-2.5 px-1 text-center font-mono text-slate-400">
-                      -
+                    <td className={`border border-slate-200 py-2.5 px-1 text-center font-mono whitespace-nowrap ${highlightMonth === 'desember' ? 'bg-blue-50/80 font-bold text-blue-900' : 'text-slate-700'}`}>
+                      {row.desember > 0 ? FORMAT_NUM(row.desember) : <span className="text-slate-400">-</span>}
                     </td>
 
                     {/* Realisasi (Bold Blue) */}
@@ -818,26 +706,42 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = () => {
                 <td className="border border-blue-200 py-2.5 px-3 text-right font-mono font-black text-blue-950 whitespace-nowrap">
                   {FORMAT_NUM(selectedTotals.paguEfektif)}
                 </td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'januari' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.januari > 0 ? FORMAT_NUM(selectedTotals.januari) : '-'}
+                </td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'februari' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.februari > 0 ? FORMAT_NUM(selectedTotals.februari) : '-'}
+                </td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'maret' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.maret > 0 ? FORMAT_NUM(selectedTotals.maret) : '-'}
+                </td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'april' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.april > 0 ? FORMAT_NUM(selectedTotals.april) : '-'}
+                </td>
                 <td className={`border border-blue-200 py-2.5 px-2 text-right font-mono font-black text-blue-950 whitespace-nowrap ${highlightMonth === 'mei' ? 'bg-blue-200/80' : ''}`}>
-                  {FORMAT_NUM(selectedTotals.mei)}
+                  {selectedTotals.mei > 0 ? FORMAT_NUM(selectedTotals.mei) : '-'}
                 </td>
                 <td className={`border border-blue-200 py-2.5 px-2 text-right font-mono font-black text-blue-950 whitespace-nowrap ${highlightMonth === 'juni' ? 'bg-blue-200/80' : ''}`}>
-                  {FORMAT_NUM(selectedTotals.juni)}
+                  {selectedTotals.juni > 0 ? FORMAT_NUM(selectedTotals.juni) : '-'}
                 </td>
                 <td className={`border border-blue-200 py-2.5 px-2 text-right font-mono font-black text-blue-950 whitespace-nowrap ${highlightMonth === 'juli' ? 'bg-blue-200/80' : ''}`}>
-                  {FORMAT_NUM(selectedTotals.juli)}
+                  {selectedTotals.juli > 0 ? FORMAT_NUM(selectedTotals.juli) : '-'}
                 </td>
                 <td className={`border border-blue-200 py-2.5 px-2 text-right font-mono font-black text-blue-950 whitespace-nowrap ${highlightMonth === 'agustus' ? 'bg-blue-200/80' : ''}`}>
-                  {FORMAT_NUM(selectedTotals.agustus)}
+                  {selectedTotals.agustus > 0 ? FORMAT_NUM(selectedTotals.agustus) : '-'}
                 </td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-blue-200 py-2.5 px-1 text-center font-mono text-slate-400">-</td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'september' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.september > 0 ? FORMAT_NUM(selectedTotals.september) : '-'}
+                </td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'oktober' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.oktober > 0 ? FORMAT_NUM(selectedTotals.oktober) : '-'}
+                </td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'november' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.november > 0 ? FORMAT_NUM(selectedTotals.november) : '-'}
+                </td>
+                <td className={`border border-blue-200 py-2.5 px-1 text-center font-mono text-blue-950 ${highlightMonth === 'desember' ? 'bg-blue-200/80' : ''}`}>
+                  {selectedTotals.desember > 0 ? FORMAT_NUM(selectedTotals.desember) : '-'}
+                </td>
                 <td className="border border-blue-200 py-2.5 px-3 text-right font-mono font-black text-blue-700 whitespace-nowrap">
                   {FORMAT_NUM(selectedTotals.realisasi)}
                 </td>
@@ -846,35 +750,51 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = () => {
                 </td>
               </tr>
 
-              {/* TOTAL KESELURUHAN (ALL 10) */}
+              {/* TOTAL KESELURUHAN (ALL ITEMS) */}
               <tr className="border-t border-slate-300 bg-[#edf2f7] font-bold text-slate-900 text-[10.5px]">
                 <td className="border border-slate-200 py-2 px-2 text-center text-slate-400 font-mono text-[10px]">ALL</td>
                 <td className="border border-slate-200 py-2 px-3.5 font-bold uppercase tracking-wider text-slate-700">
-                  Total Seluruh Pagu APBD (10 Sasaran)
+                  Total Seluruh Pagu APBD ({monthlyRows.length} Sasaran)
                 </td>
                 <td className="border border-slate-200 py-2 px-3 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
                   {FORMAT_NUM(totals.paguEfektif)}
                 </td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-slate-200 py-2 px-2 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
-                  {FORMAT_NUM(totals.mei)}
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.januari > 0 ? FORMAT_NUM(totals.januari) : '-'}
+                </td>
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.februari > 0 ? FORMAT_NUM(totals.februari) : '-'}
+                </td>
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.maret > 0 ? FORMAT_NUM(totals.maret) : '-'}
+                </td>
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.april > 0 ? FORMAT_NUM(totals.april) : '-'}
                 </td>
                 <td className="border border-slate-200 py-2 px-2 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
-                  {FORMAT_NUM(totals.juni)}
+                  {totals.mei > 0 ? FORMAT_NUM(totals.mei) : '-'}
                 </td>
                 <td className="border border-slate-200 py-2 px-2 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
-                  {FORMAT_NUM(totals.juli)}
+                  {totals.juni > 0 ? FORMAT_NUM(totals.juni) : '-'}
                 </td>
                 <td className="border border-slate-200 py-2 px-2 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
-                  {FORMAT_NUM(totals.agustus)}
+                  {totals.juli > 0 ? FORMAT_NUM(totals.juli) : '-'}
                 </td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
-                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-400">-</td>
+                <td className="border border-slate-200 py-2 px-2 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
+                  {totals.agustus > 0 ? FORMAT_NUM(totals.agustus) : '-'}
+                </td>
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.september > 0 ? FORMAT_NUM(totals.september) : '-'}
+                </td>
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.oktober > 0 ? FORMAT_NUM(totals.oktober) : '-'}
+                </td>
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.november > 0 ? FORMAT_NUM(totals.november) : '-'}
+                </td>
+                <td className="border border-slate-200 py-2 px-1 text-center font-mono text-slate-600">
+                  {totals.desember > 0 ? FORMAT_NUM(totals.desember) : '-'}
+                </td>
                 <td className="border border-slate-200 py-2 px-3 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
                   {FORMAT_NUM(totals.realisasi)}
                 </td>

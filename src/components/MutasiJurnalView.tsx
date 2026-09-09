@@ -19,6 +19,7 @@ import {
   CheckSquare,
   Square,
   AlertTriangle,
+  RotateCcw,
   Printer
 } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
@@ -31,6 +32,7 @@ interface MutasiJurnalViewProps {
   onAddTransaction: (transaction: Omit<JournalTransaction, 'id'>) => void;
   onUpdateTransaction: (transaction: JournalTransaction) => void;
   onDeleteTransaction: (id: string) => void;
+  onDeleteMultipleTransactions?: (ids: string[]) => void;
   onBackToRingkasan?: () => void;
 }
 
@@ -98,11 +100,18 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   onAddTransaction,
   onUpdateTransaction,
   onDeleteTransaction,
+  onDeleteMultipleTransactions,
   onBackToRingkasan
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Filter transactions for this specific BudgetItem first
+  const itemTransactions = useMemo(() => {
+    return transactions.filter((t) => t.itemId === item.id);
+  }, [transactions, item.id]);
+
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => {
-    return new Set(transactions.map((t) => t.id));
+    return new Set(transactions.filter((t) => t.itemId === item.id).map((t) => t.id));
   });
 
   // Modal State for Add/Edit
@@ -112,6 +121,7 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   // State for Delete Confirmation Modal (avoids blocked window.confirm in iframe)
   const [txToDelete, setTxToDelete] = useState<JournalTransaction | null>(null);
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+  const [isClearAllModalOpen, setIsClearAllModalOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
   // Form State matching screenshot
@@ -154,21 +164,21 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
     }
   };
 
-  // Filter transactions for this specific BudgetItem
-  const itemTransactions = useMemo(() => {
-    return transactions.filter((t) => t.itemId === item.id);
-  }, [transactions, item.id]);
-
-  // Keep selectedIds updated when transactions list changes
+  // Keep selectedIds synchronized with itemTransactions
   React.useEffect(() => {
     setSelectedIds((prev) => {
+      const validIds = new Set(itemTransactions.map((t) => t.id));
       const next = new Set<string>();
-      itemTransactions.forEach((t) => {
-        if (prev.has(t.id) || prev.size === 0) {
-          next.add(t.id);
+      // If previous was empty and we have transactions for first time, select all
+      if (prev.size === 0 && itemTransactions.length > 0) {
+        return validIds;
+      }
+      prev.forEach((id) => {
+        if (validIds.has(id)) {
+          next.add(id);
         }
       });
-      return next.size > 0 ? next : new Set(itemTransactions.map((t) => t.id));
+      return next;
     });
   }, [itemTransactions]);
 
@@ -299,11 +309,29 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   };
 
   const handleConfirmDeleteBulk = () => {
-    selectedIds.forEach((id) => {
-      onDeleteTransaction(id);
-    });
+    const idsToDelete = Array.from(selectedIds);
+    if (idsToDelete.length === 0) return;
+    if (onDeleteMultipleTransactions) {
+      onDeleteMultipleTransactions(idsToDelete);
+    } else {
+      idsToDelete.forEach((id) => {
+        onDeleteTransaction(id);
+      });
+    }
     setSelectedIds(new Set());
     setIsBulkDeleteModalOpen(false);
+  };
+
+  const handleConfirmClearAll = () => {
+    const allIds = itemTransactions.map((t) => t.id);
+    if (allIds.length === 0) return;
+    if (onDeleteMultipleTransactions) {
+      onDeleteMultipleTransactions(allIds);
+    } else {
+      allIds.forEach((id) => onDeleteTransaction(id));
+    }
+    setSelectedIds(new Set());
+    setIsClearAllModalOpen(false);
   };
 
   // Export CSV of transactions
@@ -598,6 +626,17 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
                 <span>Hapus ({selectedIds.size}) Terpilih</span>
               </button>
             )}
+            {itemTransactions.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setIsClearAllModalOpen(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-800/80 hover:bg-red-950/80 text-slate-300 hover:text-red-300 border border-slate-700 hover:border-red-800/80 transition-all cursor-pointer active:scale-95 ml-1"
+                title="Hapus seluruh data mutasi transaksi untuk mata anggaran ini"
+              >
+                <RotateCcw className="w-3 h-3 text-slate-400" />
+                <span>Kosongkan Seluruh Mutasi</span>
+              </button>
+            )}
           </div>
           <div className="flex items-center gap-3 text-right">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
@@ -704,6 +743,43 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Ya, Hapus Semua Terpilih</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal: Kosongkan Seluruh Mutasi Mata Anggaran */}
+      {isClearAllModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-[#0b1329] border border-red-500/40 text-slate-100 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-black text-center text-white">
+                Kosongkan Seluruh Mutasi?
+              </h3>
+              <p className="text-xs text-slate-400 text-center mt-2 leading-relaxed">
+                Anda akan menghapus seluruh <strong className="text-white">{itemTransactions.length} data transaksi</strong> untuk mata anggaran <strong className="text-amber-300">{item.uraianSpesifik}</strong>. Realisasi terserap akan kembali menjadi <strong className="text-emerald-400">Rp 0</strong> dan sisa pagu menjadi utuh.
+              </p>
+
+              <div className="flex items-center justify-center gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setIsClearAllModalOpen(false)}
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmClearAll}
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-red-600/30 transition-all cursor-pointer active:scale-95"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Ya, Kosongkan Semua</span>
                 </button>
               </div>
             </div>

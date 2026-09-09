@@ -15,6 +15,7 @@ import { LOGO_KALTARA } from '../assets/logoKaltara';
 import { DayakRibbonTrim, DayakArtTwinMotif } from './DayakPatternDecor';
 
 interface SidebarProps {
+  items?: BudgetItem[];
   currentMenu: SidebarMenu;
   onSelectMenu: (menu: SidebarMenu) => void;
   selectedItemId?: string;
@@ -24,6 +25,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
+  items = BUDGET_DATA,
   currentMenu,
   onSelectMenu,
   selectedItemId,
@@ -154,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Sub-item List */}
             {isDaftarRincianExpanded && (
               <div className="mt-1 pl-2 space-y-1">
-                {BUDGET_DATA.map((item) => {
+                {items.map((item) => {
                   const isSelected = selectedItemId === item.id;
                   return (
                     <button
