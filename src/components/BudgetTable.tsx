@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { BudgetItem } from '../types';
 import { FORMAT_RUPIAH } from '../data/budgetData';
-import { ArrowRight, Search, Download, X, Layers, CheckSquare, Square, Printer, Check, Wallet } from 'lucide-react';
+import { ArrowRight, Search, Download, X, Layers, CheckSquare, Square, Printer, Check } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateBudgetSummaryHtml } from '../utils/printHelper';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
@@ -11,22 +11,21 @@ interface BudgetTableProps {
   items: BudgetItem[];
   selectedItemId?: string;
   onSelectItem: (item: BudgetItem) => void;
-  onNavigateMenu?: (menu: any) => void;
 }
 
 const CATEGORY_FILTERS = [
-  { id: 'all', label: 'Semua Komponen (4)' },
-  { id: 'mamin', label: 'Makanan & Minuman' },
-  { id: 'honor', label: 'Honorarium Narasumber' },
+  { id: 'all', label: 'Semua Komponen' },
+  { id: 'perdin', label: 'Perjalanan Dinas' },
   { id: 'kursus', label: 'Kursus / Pelatihan' },
-  { id: 'perdin', label: 'Perjalanan Dinas' }
+  { id: 'honor', label: 'Honorarium & Narasumber' },
+  { id: 'mamin', label: 'Makanan & Minuman' },
+  { id: 'lainnya', label: 'Bahan & Lainnya' }
 ];
 
 export const BudgetTable: React.FC<BudgetTableProps> = ({
   items,
   selectedItemId,
-  onSelectItem,
-  onNavigateMenu
+  onSelectItem
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -214,20 +213,6 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Tombol Langsung Cek Kesiapan Kas */}
-          {onNavigateMenu && (
-            <button
-              type="button"
-              onClick={() => onNavigateMenu('kesiapan-kas')}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 active:bg-indigo-200 border border-indigo-200 text-indigo-800 rounded-xl text-xs font-extrabold shadow-2xs transition-all cursor-pointer active:scale-95"
-              title="Buka Matriks Kesiapan Pembayaran Kas (Kegiatan Belum Mulai vs Menunggu SPJ)"
-            >
-              <Wallet className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Kesiapan Kas Pembayaran</span>
-              <span className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse ml-0.5" />
-            </button>
-          )}
-
           {/* Ekspor CSV */}
           <button
             type="button"

@@ -1,13 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { CloudUpload, CloudDownload, Printer, Menu, Check, RotateCcw, Wallet, PieChart, Calendar, Award } from 'lucide-react';
+import { CloudUpload, CloudDownload, Printer, Menu, Check, RotateCcw } from 'lucide-react';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
-import { SidebarMenu } from '../types';
 
 interface HeaderProps {
   title?: string;
   subtitle?: string;
-  currentMenu?: SidebarMenu;
-  onNavigateMenu?: (menu: SidebarMenu) => void;
   onToggleSidebar?: () => void;
   onPrint?: () => void;
   onBackup?: () => void;
@@ -18,8 +15,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   title = 'Ringkasan Eksekutif',
   subtitle = 'Laporan serapan dana dan progres anggaran keseluruhan',
-  currentMenu = 'ringkasan',
-  onNavigateMenu,
   onToggleSidebar,
   onPrint,
   onBackup,
@@ -178,68 +173,6 @@ export const Header: React.FC<HeaderProps> = ({
           <span>Cetak Laporan</span>
         </button>
       </div>
-
-      {/* Top Quick Navigation Tabs */}
-      {onNavigateMenu && (
-        <div className="w-full flex items-center gap-1.5 pt-2 border-t border-slate-200/70 overflow-x-auto custom-scrollbar">
-          <button
-            type="button"
-            onClick={() => onNavigateMenu('ringkasan')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
-              currentMenu === 'ringkasan'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-            }`}
-          >
-            <Wallet className="w-3.5 h-3.5 shrink-0" />
-            <span>Ringkasan Belanja</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onNavigateMenu('kesiapan-kas')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
-              currentMenu === 'kesiapan-kas'
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'bg-indigo-50 text-indigo-800 hover:bg-indigo-100 border border-indigo-200'
-            }`}
-          >
-            <PieChart className="w-3.5 h-3.5 shrink-0 text-indigo-500" />
-            <span>Kesiapan Kas & Komitmen</span>
-            <span className={`text-[9px] px-1 py-0.2 rounded font-extrabold uppercase ${
-              currentMenu === 'kesiapan-kas' ? 'bg-white/20 text-white' : 'bg-indigo-200 text-indigo-900'
-            }`}>
-              Baru
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onNavigateMenu('bulanan')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
-              currentMenu === 'bulanan'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-            }`}
-          >
-            <Calendar className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
-            <span>Laporan Anggaran Per-Bulan</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onNavigateMenu('sertifikat')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
-              currentMenu === 'sertifikat'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-            }`}
-          >
-            <Award className="w-3.5 h-3.5 shrink-0 text-amber-500" />
-            <span>Sertifikat Outhouse</span>
-          </button>
-        </div>
-      )}
     </header>
   );
 };

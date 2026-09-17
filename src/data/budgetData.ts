@@ -1,19 +1,69 @@
 import { BudgetItem, BudgetSummary, JournalTransaction } from '../types';
 
-export const TOTAL_PAGU_ANGGARAN = 1724120000; // Rp 1.724.120.000,00
-export const TOTAL_TERSERAP_ANGGARAN = 808167334; // Rp 808.167.334,00 (Total realisasi seluruh mutasi SP2D)
-export const TOTAL_SISA_ANGGARAN = 915952666; // Rp 915.952.666,00 (Sisa pagu efektif)
+export const TOTAL_PAGU_ANGGARAN = 2093974768; // Rp 2.093.974.768,00
+export const TOTAL_TERSERAP_ANGGARAN = 838072668; // Rp 838.072.668,00 (Total realisasi seluruh mutasi SP2D)
+export const TOTAL_SISA_ANGGARAN = 1255902100; // Rp 1.255.902.100,00 (Sisa pagu efektif)
 
 /**
  * Daftar Rincian Anggaran Belanja Sub Kegiatan:
  * 1.02.03.1.02.0001 Peningkatan Kompetensi dan Kualifikasi Sumber Daya Manusia Kesehatan
  * RSUD dr. H. Jusuf SK - TA 2026
- * Disesuaikan khusus 4 Komponen Utama Terpilih
  */
 export const BUDGET_DATA: BudgetItem[] = [
-  // 1. Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa
+  // 1. Bahan Cetak (Sertifikat & Dokumen)
   {
     id: 'item-1',
+    kodeRekening: '5.1.02.01.01.0026',
+    kategoriBelanja: 'Bahan Cetak',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (SERTIFIKAT & DOKUMEN)',
+    uraianSpesifik: 'Bahan Cetak (Sertifikat & Dokumen)',
+    spesifikasiDetail: 'Pencetakan Sertifikat Peserta Pelatihan Asessor Kompetensi & Instrumen Standar',
+    koefisienVolume: '150 Paket',
+    volumeAngka: 150,
+    satuan: 'Paket / Lembar',
+    hargaSatuan: 200000,
+    paguMurni: 30024768,
+    pergeseran: 0,
+    jumlahTotal: 30024768,
+    terserap: 0,
+    sisa: 30024768,
+    persenSerapan: 0.0,
+    persentaseTotal: (30024768 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#ef4444', // red
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    targetSDM: 150,
+    catatanAnalisis: 'Pengadaan sertifikat kelulusan uji kompetensi nakes terakreditasi.'
+  },
+  // 2. Suvenir / Cendera Mata
+  {
+    id: 'item-2',
+    kodeRekening: '5.1.02.01.01.0035',
+    kategoriBelanja: 'Suvenir / Cendera Mata',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI',
+    uraianSpesifik: 'Suvenir / Cendera Mata',
+    spesifikasiDetail: 'Plakat Bahan Kayu + Logam Kuningan Berlogo Pemprov Kaltara untuk Tim Asesor/Narasumber',
+    koefisienVolume: '5 Buah',
+    volumeAngka: 5,
+    satuan: 'Buah',
+    hargaSatuan: 1240000,
+    paguMurni: 6200000,
+    pergeseran: 0,
+    jumlahTotal: 6200000,
+    terserap: 0,
+    sisa: 6200000,
+    persenSerapan: 0.0,
+    persentaseTotal: (6200000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#f97316', // orange
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Cendera mata resmi kelembagaan RSUD dr. H. Jusuf SK.'
+  },
+  // 3. Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa
+  {
+    id: 'item-3',
     kodeRekening: '5.1.02.01.01.0052',
     kategoriBelanja: 'Makanan dan Minuman Rapat',
     kelompokAkun: 'Belanja Barang',
@@ -34,12 +84,61 @@ export const BUDGET_DATA: BudgetItem[] = [
     colorDot: '#f97316', // orange
     isHighlightPerjalananDinas: false,
     isHighlightKontribusi: false,
-    catatanAnalisis: 'Realisasi serapan 90.7% (Rp 113.350.000) untuk rapat koordinasi berkala dan diklat.'
+    catatanAnalisis: 'Realisasi serapan 90.7% untuk rapat koordinasi berkala triwulan I & II.'
   },
-
-  // 2. Honorarium Pengajar / Narasumber
+  // 4. Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa (Akreditasi)
   {
-    id: 'item-2',
+    id: 'item-4',
+    kodeRekening: '5.1.02.01.01.0052',
+    kategoriBelanja: 'Makanan dan Minuman Rapat',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'MAKANAN DAN MINUMAN AKREDITASI (NASI KOTAK)',
+    uraianSpesifik: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa (Akreditasi)',
+    spesifikasiDetail: 'Konsumsi Rapat Persiapan & Pelaksanaan Tim Akreditasi Rumah Sakit',
+    koefisienVolume: '2.623 Kotak',
+    volumeAngka: 2623,
+    satuan: 'Kotak / Porsi',
+    hargaSatuan: 60000,
+    paguMurni: 157380000,
+    pergeseran: 0,
+    jumlahTotal: 157380000,
+    terserap: 0,
+    sisa: 157380000,
+    persenSerapan: 0.0,
+    persentaseTotal: (157380000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#f97316', // orange
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Alokasi disiapkan untuk pelaksanaan penilaian akreditasi semester II.'
+  },
+  // 5. Prasmanan VIP Spesifikasi: Per Porsi (Akreditasi)
+  {
+    id: 'item-5',
+    kodeRekening: '5.1.02.01.01.0052',
+    kategoriBelanja: 'Makanan dan Minuman Rapat',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'MAKANAN DAN MINUMAN AKREDITASI (PRASMANAN AKREDITASI)',
+    uraianSpesifik: 'Prasmanan VIP Spesifikasi: Per Porsi (Akreditasi)',
+    spesifikasiDetail: 'Konsumsi Prasmanan VIP Tim Penilai / Asesor Akreditasi & Jajaran Direksi',
+    koefisienVolume: '250 Porsi',
+    volumeAngka: 250,
+    satuan: 'Porsi',
+    hargaSatuan: 85000,
+    paguMurni: 21250000,
+    pergeseran: 0,
+    jumlahTotal: 21250000,
+    terserap: 0,
+    sisa: 21250000,
+    persenSerapan: 0.0,
+    persentaseTotal: (21250000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#eab308', // yellow
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Penyediaan jamuan VIP untuk pleno pembukaan dan penutupan survei.'
+  },
+  // 6. Honorarium Pengajar / Narasumber
+  {
+    id: 'item-6',
     kodeRekening: '5.1.02.02.01.0011',
     kategoriBelanja: 'Honorarium Narasumber',
     kelompokAkun: 'Belanja Jasa',
@@ -60,12 +159,36 @@ export const BUDGET_DATA: BudgetItem[] = [
     colorDot: '#10b981', // green
     isHighlightPerjalananDinas: false,
     isHighlightKontribusi: false,
-    catatanAnalisis: 'Terserap 62.3% (Rp 142.820.000) untuk honor narasumber spesialis dan workshop teknis.'
+    catatanAnalisis: 'Terserap 62.3% untuk honor narasumber spesialis dan workshop teknis.'
   },
-
-  // 3. Belanja Kontribusi Kursus/Pelatihan (Pelatihan Tenaga Medis / Keperawatan / Penunjang)
+  // 7. Jasa Iklan / Reklame
   {
-    id: 'item-3',
+    id: 'item-7',
+    kodeRekening: '5.1.02.02.01.0055',
+    kategoriBelanja: 'Jasa Iklan / Reklame',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI',
+    uraianSpesifik: 'Jasa Iklan / Reklame',
+    spesifikasiDetail: 'Belanja Jasa Publikasi & Iklan Akreditasi - Media Cetak / Surat Kabar Harian',
+    koefisienVolume: '10 Paket',
+    volumeAngka: 10,
+    satuan: 'Paket',
+    hargaSatuan: 1500000,
+    paguMurni: 15000000,
+    pergeseran: 0,
+    jumlahTotal: 15000000,
+    terserap: 0,
+    sisa: 15000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (15000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#06b6d4', // cyan
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Publikasi transparansi mutu pelayanan RS di media cetak daerah.'
+  },
+  // 8. Belanja Kontribusi Kursus/Pelatihan (Pelatihan Tenaga Medis / Keperawatan / Penunjang)
+  {
+    id: 'item-8',
     kodeRekening: '5.1.02.02.12.0001',
     kategoriBelanja: 'Belanja Kontribusi Kursus/Pelatihan',
     kelompokAkun: 'Belanja Jasa',
@@ -81,7 +204,7 @@ export const BUDGET_DATA: BudgetItem[] = [
     jumlahTotal: 550000000,
     terserap: 195125000,
     sisa: 354875000,
-    persenSerapan: 35.5,
+    persenSerapan: (195125000 / 550000000) * 100,
     persentaseTotal: (550000000 / TOTAL_PAGU_ANGGARAN) * 100,
     colorDot: '#3b82f6', // blue
     isHighlightPerjalananDinas: false,
@@ -89,32 +212,208 @@ export const BUDGET_DATA: BudgetItem[] = [
     targetSDM: 50,
     catatanAnalisis: 'Realisasi 25 mutasi pelatihan tenaga medis/keperawatan (Total: Rp 195.125.000).'
   },
-
-  // 4. Perjalanan Dinas Dalam Negeri
+  // 9. Perjalanan Dinas Dalam Negeri
   {
-    id: 'item-4',
+    id: 'item-9',
     kodeRekening: '5.1.02.04.01.0001',
     kategoriBelanja: 'Perjalanan Dinas Dalam Negeri',
     kelompokAkun: 'Belanja Perjalanan Dinas',
     subKegiatanKelompok: 'PERJALANAN DINAS DALAM NEGERI',
     uraianSpesifik: 'Perjalanan Dinas Dalam Negeri',
     spesifikasiDetail: 'Biaya Perjalanan Dinas, Tiket Pesawat, Uang Harian, Uang Saku, dan Penginapan Pelatihan/Workshop',
-    koefisienVolume: '82 Orang',
-    volumeAngka: 82,
+    koefisienVolume: '87 Orang',
+    volumeAngka: 87,
     satuan: 'Orang / Paket',
     hargaSatuan: 10000000,
-    paguMurni: 820000000,
+    paguMurni: 870000000,
     pergeseran: 0,
-    jumlahTotal: 820000000,
+    jumlahTotal: 870000000,
     terserap: 356872334,
-    sisa: 463127666,
-    persenSerapan: 43.5,
-    persentaseTotal: (820000000 / TOTAL_PAGU_ANGGARAN) * 100,
-    colorDot: '#8b5cf6', // purple
+    sisa: 513127666,
+    persenSerapan: (356872334 / 870000000) * 100,
+    persentaseTotal: (870000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#3b82f6', // blue
     isHighlightPerjalananDinas: true,
     isHighlightKontribusi: false,
-    targetSDM: 82,
+    targetSDM: 87,
     catatanAnalisis: 'Realisasi 20 mutasi perjalanan dinas dalam negeri (Total: Rp 356.872.334).'
+  },
+  // 10. Biaya Perjalanan Dinas Tenaga Medis (Batch 6 Orang)
+  {
+    id: 'item-10',
+    kodeRekening: '5.1.02.04.01.0001',
+    kategoriBelanja: 'Perjalanan Dinas',
+    kelompokAkun: 'Belanja Perjalanan Dinas',
+    subKegiatanKelompok: 'PERJALANAN DINAS TENAGA MEDIS/PENUNJANG/KEPERAWATAN/MANAJEMEN',
+    uraianSpesifik: 'Biaya Perjalanan Dinas Tenaga Medis (Batch 6 Orang Spesialis Prioritas)',
+    spesifikasiDetail: 'Transportasi dan akomodasi pelatihan fellowship/subspesialis',
+    koefisienVolume: '6 Orang',
+    volumeAngka: 6,
+    satuan: 'Orang / Paket',
+    hargaSatuan: 10000000,
+    paguMurni: 60000000,
+    pergeseran: 0,
+    jumlahTotal: 60000000,
+    terserap: 0,
+    sisa: 60000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (60000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#3b82f6',
+    isHighlightPerjalananDinas: true,
+    isHighlightKontribusi: false,
+    targetSDM: 6,
+    catatanAnalisis: 'Pelatihan spesialisasi dijadwalkan pada triwulan IV.'
+  },
+  // 11. Biaya Kontribusi Pelatihan ATCLS (5 Orang)
+  {
+    id: 'item-11',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Pelatihan',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KONTRIBUSI TENAGA MEDIS/ATCLS/KEPERAWATAN',
+    uraianSpesifik: 'Biaya Kontribusi Pelatihan ATCLS / Tenaga Medis Kegawatdaruratan (5 Orang)',
+    spesifikasiDetail: 'Sertifikasi Kompetensi Advanced Trauma & Cardiac Life Support (ATCLS/ACLS)',
+    koefisienVolume: '5 Orang',
+    volumeAngka: 5,
+    satuan: 'Orang / Kegiatan',
+    hargaSatuan: 10000000,
+    paguMurni: 50000000,
+    pergeseran: 0,
+    jumlahTotal: 50000000,
+    terserap: 29905334,
+    sisa: 20094666,
+    persenSerapan: 59.81,
+    persentaseTotal: (50000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#10b981',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    targetSDM: 5,
+    catatanAnalisis: 'Terserap Rp 29.905.334 untuk 3 dokter spesialis bedah dan anastesi.'
+  },
+  // 12. Biaya Perjalanan Dinas Surveyor Akreditasi (5 Paket)
+  {
+    id: 'item-12',
+    kodeRekening: '5.1.02.04.01.0001',
+    kategoriBelanja: 'Perjalanan Dinas',
+    kelompokAkun: 'Belanja Perjalanan Dinas',
+    subKegiatanKelompok: 'PERJALANAN DINAS SURVEYOR',
+    uraianSpesifik: 'Biaya Perjalanan Dinas Dalam Negeri - Tim Surveyor Akreditasi RS (5 Paket)',
+    spesifikasiDetail: 'Tiket pesawat & akomodasi tim surveyor lembaga independen akreditasi RS',
+    koefisienVolume: '5 Paket',
+    volumeAngka: 5,
+    satuan: 'Paket',
+    hargaSatuan: 10000000,
+    paguMurni: 50000000,
+    pergeseran: 0,
+    jumlahTotal: 50000000,
+    terserap: 0,
+    sisa: 50000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (50000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#3b82f6',
+    isHighlightPerjalananDinas: true,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Akomodasi survei lapangan penilaian akreditasi tingkat nasional.'
+  },
+  // 13. Kontribusi Lembaga Surveyor / Pendampingan (Tahap Lanjut)
+  {
+    id: 'item-13',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Lembaga Surveyor',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (KONTRIBUSI SURVEYOR)',
+    uraianSpesifik: 'Kontribusi Lembaga Surveyor / Pendampingan Akreditasi (Tahap Verifikasi)',
+    spesifikasiDetail: 'Verifikasi instrumen standar keselamatan pasien & rekam medis',
+    koefisienVolume: '1 Kegiatan',
+    volumeAngka: 1,
+    satuan: 'Kegiatan',
+    hargaSatuan: 40000000,
+    paguMurni: 40000000,
+    pergeseran: 0,
+    jumlahTotal: 40000000,
+    terserap: 0,
+    sisa: 40000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (40000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#0d9488',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    catatanAnalisis: 'Kontribusi lembaga survei independen terakreditasi KARS/LAM-KPRS.'
+  },
+  // 14. Kontribusi Lembaga Surveyor / Pendampingan (Simulasi Survei)
+  {
+    id: 'item-14',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Lembaga Surveyor',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (KONTRIBUSI SURVEYOR)',
+    uraianSpesifik: 'Kontribusi Lembaga Surveyor / Pendampingan Akreditasi (Simulasi Mock Survey)',
+    spesifikasiDetail: 'Uji simulasi kesiapan unit gawat darurat, rawat inap, dan ICU',
+    koefisienVolume: '1 Kegiatan',
+    volumeAngka: 1,
+    satuan: 'Kegiatan',
+    hargaSatuan: 30000000,
+    paguMurni: 30000000,
+    pergeseran: 0,
+    jumlahTotal: 30000000,
+    terserap: 0,
+    sisa: 30000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (30000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#0d9488',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    catatanAnalisis: 'Tahapan mock survey sebelum verifikasi final akreditasi paripurna.'
+  },
+  // 15. Kontribusi Lembaga Surveyor / Pendampingan (Bimtek Standar)
+  {
+    id: 'item-15',
+    kodeRekening: '5.1.02.02.12.0001',
+    kategoriBelanja: 'Kontribusi Lembaga Surveyor',
+    kelompokAkun: 'Belanja Jasa',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI (KONTRIBUSI SURVEYOR)',
+    uraianSpesifik: 'Kontribusi Lembaga Surveyor / Pendampingan Akreditasi (Bimtek Standar Mutu)',
+    spesifikasiDetail: 'Bimbingan teknis kepatuhan indikator mutu nasional RS',
+    koefisienVolume: '1 Kegiatan',
+    volumeAngka: 1,
+    satuan: 'Kegiatan',
+    hargaSatuan: 20000000,
+    paguMurni: 20000000,
+    pergeseran: 0,
+    jumlahTotal: 20000000,
+    terserap: 0,
+    sisa: 20000000,
+    persenSerapan: 0.0,
+    persentaseTotal: (20000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#0d9488',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: true,
+    catatanAnalisis: 'Bimtek pemenuhan dokumen pokja akreditasi.'
+  },
+  // 16. Penggadaan Dokumen/Fotokopi Bahan Pembelajaran
+  {
+    id: 'item-16',
+    kodeRekening: '5.1.02.01.01.0026',
+    kategoriBelanja: 'Bahan Cetak / Penggadaan',
+    kelompokAkun: 'Belanja Barang',
+    subKegiatanKelompok: 'KEGIATAN AKREDITASI',
+    uraianSpesifik: 'Penggadaan Dokumen/Fotokopi Bahan Pembelajaran (Kertas HPS/HPL F4/A4)',
+    spesifikasiDetail: 'Fotokopi modul instrumen akreditasi dan panduan pelatihan teknis',
+    koefisienVolume: '43 Lembar',
+    volumeAngka: 43,
+    satuan: 'Lembar',
+    hargaSatuan: 576,
+    paguMurni: 24768,
+    pergeseran: 0,
+    jumlahTotal: 24768,
+    terserap: 0,
+    sisa: 24768,
+    persenSerapan: 0.0,
+    persentaseTotal: (24768 / TOTAL_PAGU_ANGGARAN) * 100,
+    colorDot: '#ef4444',
+    isHighlightPerjalananDinas: false,
+    isHighlightKontribusi: false,
+    catatanAnalisis: 'Penggadaan lembar fotokopi regulasi dan instrumen asesmen.'
   }
 ];
 
@@ -127,18 +426,18 @@ export const BUDGET_SUMMARY: BudgetSummary = {
 };
 
 export const MONTHLY_REALIZATION_DATA = [
-  { bulan: 'Januari 2026', pagu: 147843333, realisasi: 0, serapan: 0.0, status: 'Selesai' },
-  { bulan: 'Februari 2026', pagu: 147843333, realisasi: 0, serapan: 0.0, status: 'Selesai' },
-  { bulan: 'Maret 2026', pagu: 147843333, realisasi: 0, serapan: 0.0, status: 'Selesai' },
-  { bulan: 'April 2026', pagu: 147843333, realisasi: 0, serapan: 0.0, status: 'Selesai' },
-  { bulan: 'Mei 2026', pagu: 147843333, realisasi: 87619560, serapan: 59.26, status: 'Selesai' },
-  { bulan: 'Juni 2026', pagu: 147843333, realisasi: 181958619, serapan: 123.07, status: 'Selesai' },
-  { bulan: 'Juli 2026', pagu: 147843333, realisasi: 148560384, serapan: 100.48, status: 'Selesai' },
-  { bulan: 'Agustus 2026', pagu: 147843333, realisasi: 390028771, serapan: 263.81, status: 'Berjalan' },
-  { bulan: 'September 2026', pagu: 147843333, realisasi: 0, serapan: 0.0, status: 'Rencana' },
-  { bulan: 'Oktober 2026', pagu: 147843333, realisasi: 0, serapan: 0.0, status: 'Rencana' },
-  { bulan: 'November 2026', pagu: 147843333, realisasi: 0, serapan: 0.0, status: 'Rencana' },
-  { bulan: 'Desember 2026', pagu: 147843337, realisasi: 0, serapan: 0.0, status: 'Rencana' }
+  { bulan: 'Januari 2026', pagu: 174497897, realisasi: 45000000, serapan: 25.78, status: 'Selesai' },
+  { bulan: 'Februari 2026', pagu: 174497897, realisasi: 95500000, serapan: 54.72, status: 'Selesai' },
+  { bulan: 'Maret 2026', pagu: 174497897, realisasi: 142820000, serapan: 81.84, status: 'Selesai' },
+  { bulan: 'April 2026', pagu: 174497897, realisasi: 180000000, serapan: 103.15, status: 'Selesai' },
+  { bulan: 'Mei 2026', pagu: 174497897, realisasi: 212755334, serapan: 121.92, status: 'Selesai' },
+  { bulan: 'Juni 2026', pagu: 174497897, realisasi: 190000000, serapan: 108.88, status: 'Berjalan' },
+  { bulan: 'Juli 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'Agustus 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'September 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'Oktober 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'November 2026', pagu: 174497897, realisasi: 0, serapan: 0.0, status: 'Rencana' },
+  { bulan: 'Desember 2026', pagu: 174497901, realisasi: 0, serapan: 0.0, status: 'Rencana' }
 ];
 
 export const FORMAT_RUPIAH = (val: number, withDecimals = false): string => {
@@ -155,10 +454,10 @@ export const FORMAT_NUM = (val: number): string => {
 };
 
 export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
-  // Item 1: Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa (Total 7 Transaksi = Rp 113.350.000)
+  // Item 3: Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa
   {
-    id: 'j-1-1',
-    itemId: 'item-1',
+    id: 'j-3-1',
+    itemId: 'item-3',
     tanggalTransaksi: '29 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
@@ -168,8 +467,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-1-2',
-    itemId: 'item-1',
+    id: 'j-3-2',
+    itemId: 'item-3',
     tanggalTransaksi: '28 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
@@ -179,8 +478,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-1-3',
-    itemId: 'item-1',
+    id: 'j-3-3',
+    itemId: 'item-3',
     tanggalTransaksi: '28 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
@@ -190,8 +489,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-1-4',
-    itemId: 'item-1',
+    id: 'j-3-4',
+    itemId: 'item-3',
     tanggalTransaksi: '28 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
@@ -201,8 +500,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-1-5',
-    itemId: 'item-1',
+    id: 'j-3-5',
+    itemId: 'item-3',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
@@ -212,8 +511,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-1-6',
-    itemId: 'item-1',
+    id: 'j-3-6',
+    itemId: 'item-3',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
@@ -223,8 +522,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-1-7',
-    itemId: 'item-1',
+    id: 'j-3-7',
+    itemId: 'item-3',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Makanan dan Minuman Rapat Spesifikasi: Nasi Kotak Biasa',
@@ -234,10 +533,10 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
 
-  // Item 2: Honorarium Pengajar / Narasumber (Total 3 Transaksi = Rp 142.820.000)
+  // Item 6: Honorarium Pengajar / Narasumber (Total Rp 142.820.000)
   {
-    id: 'j-2-1',
-    itemId: 'item-2',
+    id: 'j-6-1',
+    itemId: 'item-6',
     tanggalTransaksi: '15 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Honorarium Pengajar / Narasumber',
@@ -247,8 +546,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-2-2',
-    itemId: 'item-2',
+    id: 'j-6-2',
+    itemId: 'item-6',
     tanggalTransaksi: '10 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Honorarium Pengajar / Narasumber',
@@ -258,8 +557,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-2-3',
-    itemId: 'item-2',
+    id: 'j-6-3',
+    itemId: 'item-6',
     tanggalTransaksi: '20 Mei 2026',
     bulan: 'Bulan Mei',
     mataRekening: 'Honorarium Pengajar / Narasumber',
@@ -269,10 +568,10 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
 
-  // Item 3: Belanja Kontribusi Kursus/Pelatihan (Total 25 Transaksi = Rp 195.125.000)
+  // Item 8: Belanja Kontribusi Kursus/Pelatihan (Total 25 Transaksi = Rp 195.125.000)
   {
-    id: 'j-3-1',
-    itemId: 'item-3',
+    id: 'j-8-1',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -282,8 +581,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-2',
-    itemId: 'item-3',
+    id: 'j-8-2',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -293,8 +592,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-3',
-    itemId: 'item-3',
+    id: 'j-8-3',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -304,8 +603,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-4',
-    itemId: 'item-3',
+    id: 'j-8-4',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -315,8 +614,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-5',
-    itemId: 'item-3',
+    id: 'j-8-5',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -326,8 +625,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-6',
-    itemId: 'item-3',
+    id: 'j-8-6',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -337,8 +636,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-7',
-    itemId: 'item-3',
+    id: 'j-8-7',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -348,8 +647,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-8',
-    itemId: 'item-3',
+    id: 'j-8-8',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -359,8 +658,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-9',
-    itemId: 'item-3',
+    id: 'j-8-9',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -370,8 +669,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-10',
-    itemId: 'item-3',
+    id: 'j-8-10',
+    itemId: 'item-8',
     tanggalTransaksi: '8 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -381,8 +680,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-11',
-    itemId: 'item-3',
+    id: 'j-8-11',
+    itemId: 'item-8',
     tanggalTransaksi: '8 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -392,8 +691,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-12',
-    itemId: 'item-3',
+    id: 'j-8-12',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -403,8 +702,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-13',
-    itemId: 'item-3',
+    id: 'j-8-13',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -414,8 +713,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-14',
-    itemId: 'item-3',
+    id: 'j-8-14',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -425,8 +724,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-15',
-    itemId: 'item-3',
+    id: 'j-8-15',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -436,8 +735,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-16',
-    itemId: 'item-3',
+    id: 'j-8-16',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -447,8 +746,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-17',
-    itemId: 'item-3',
+    id: 'j-8-17',
+    itemId: 'item-8',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -458,8 +757,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-18',
-    itemId: 'item-3',
+    id: 'j-8-18',
+    itemId: 'item-8',
     tanggalTransaksi: '6 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -469,8 +768,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-19',
-    itemId: 'item-3',
+    id: 'j-8-19',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -480,8 +779,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-20',
-    itemId: 'item-3',
+    id: 'j-8-20',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -491,8 +790,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-21',
-    itemId: 'item-3',
+    id: 'j-8-21',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -502,8 +801,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-22',
-    itemId: 'item-3',
+    id: 'j-8-22',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -513,8 +812,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-23',
-    itemId: 'item-3',
+    id: 'j-8-23',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -524,8 +823,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-24',
-    itemId: 'item-3',
+    id: 'j-8-24',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -535,8 +834,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-3-25',
-    itemId: 'item-3',
+    id: 'j-8-25',
+    itemId: 'item-8',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Belanja Kontribusi Kursus/Pelatihan',
@@ -546,10 +845,10 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
 
-  // Item 4: Perjalanan Dinas Dalam Negeri (Total 20 Transaksi = Rp 356.872.334)
+  // Item 9: Perjalanan Dinas Dalam Negeri (Total 20 Transaksi = Rp 336.772.334)
   {
-    id: 'j-4-1',
-    itemId: 'item-4',
+    id: 'j-9-1',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -559,8 +858,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-2',
-    itemId: 'item-4',
+    id: 'j-9-2',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -570,8 +869,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-3',
-    itemId: 'item-4',
+    id: 'j-9-3',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -581,8 +880,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-4',
-    itemId: 'item-4',
+    id: 'j-9-4',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -592,8 +891,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-5',
-    itemId: 'item-4',
+    id: 'j-9-5',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -603,8 +902,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-6',
-    itemId: 'item-4',
+    id: 'j-9-6',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -614,8 +913,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-7',
-    itemId: 'item-4',
+    id: 'j-9-7',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -625,8 +924,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-8',
-    itemId: 'item-4',
+    id: 'j-9-8',
+    itemId: 'item-9',
     tanggalTransaksi: '8 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -636,8 +935,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-9',
-    itemId: 'item-4',
+    id: 'j-9-9',
+    itemId: 'item-9',
     tanggalTransaksi: '8 Agustus 2026',
     bulan: 'Bulan Agustus',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -647,8 +946,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-10',
-    itemId: 'item-4',
+    id: 'j-9-10',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -658,8 +957,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-11',
-    itemId: 'item-4',
+    id: 'j-9-11',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -669,8 +968,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-12',
-    itemId: 'item-4',
+    id: 'j-9-12',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -680,8 +979,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-13',
-    itemId: 'item-4',
+    id: 'j-9-13',
+    itemId: 'item-9',
     tanggalTransaksi: '23 Juli 2026',
     bulan: 'Bulan Juli',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -691,8 +990,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-14',
-    itemId: 'item-4',
+    id: 'j-9-14',
+    itemId: 'item-9',
     tanggalTransaksi: '18 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -702,8 +1001,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-15',
-    itemId: 'item-4',
+    id: 'j-9-15',
+    itemId: 'item-9',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -713,8 +1012,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-16',
-    itemId: 'item-4',
+    id: 'j-9-16',
+    itemId: 'item-9',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -724,8 +1023,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-17',
-    itemId: 'item-4',
+    id: 'j-9-17',
+    itemId: 'item-9',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -735,8 +1034,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-18',
-    itemId: 'item-4',
+    id: 'j-9-18',
+    itemId: 'item-9',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -746,8 +1045,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-19',
-    itemId: 'item-4',
+    id: 'j-9-19',
+    itemId: 'item-9',
     tanggalTransaksi: '4 Juni 2026',
     bulan: 'Bulan Juni',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -757,8 +1056,8 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     isChecked: true
   },
   {
-    id: 'j-4-20',
-    itemId: 'item-4',
+    id: 'j-9-20',
+    itemId: 'item-9',
     tanggalTransaksi: '15 Mei 2026',
     bulan: 'Bulan Mei',
     mataRekening: 'Perjalanan Dinas Dalam Negeri',
@@ -766,5 +1065,19 @@ export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [
     uraianKeterangan: 'Pelatihan Perfuat Tingkat Lanjut (Advance) akan dilaksanakan pada tanggal 13 Januari 2026 sd 17 Juli 2026,di Jakarta (Pembayaran Tahap 1 : akan dilakukan dari total hak peserta, berupa Kos 4 Bulan dari dari Januari s.d April 2026 dan Uang Saku selama 110 Hari dan uang harian 1 hari) an : Ayu Putu Marta, S.Kep.Ners,Tirta Lestari, S.Kep.Ns',
     nominal: 35619560,
     isChecked: true
+  },
+
+  // Item 11: Biaya Kontribusi Pelatihan ATCLS (5 Orang) (Total Rp 29.905.334)
+  {
+    id: 'j-11-1',
+    itemId: 'item-11',
+    tanggalTransaksi: '02 Agustus 2026',
+    bulan: 'Bulan Agustus',
+    mataRekening: 'Biaya Kontribusi Pelatihan ATCLS / Tenaga Medis (5 Orang)',
+    jenisBelanjaBadge: 'BELANJA LANGSUNG',
+    uraianKeterangan: 'Kontribusi Registrasi Ujian Sertifikasi ATCLS PERKI (3 Dokter Spesialis)',
+    nominal: 29905334,
+    isChecked: true
   }
 ];
+

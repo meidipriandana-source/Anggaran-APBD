@@ -37,7 +37,7 @@ export interface JournalTransaction {
   fileKuitansiName?: string;
 }
 
-export type SidebarMenu = 'ringkasan' | 'sertifikat' | 'bulanan' | 'item-detail' | 'kesiapan-kas';
+export type SidebarMenu = 'ringkasan' | 'sertifikat' | 'bulanan' | 'item-detail';
 
 export interface BudgetSummary {
   totalPagu: number;

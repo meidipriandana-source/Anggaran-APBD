@@ -13,7 +13,6 @@ import { BudgetTable } from './components/BudgetTable';
 import { MutasiJurnalView } from './components/MutasiJurnalView';
 import { SertifikatView } from './components/SertifikatView';
 import { MonthlyReportView } from './components/MonthlyReportView';
-import { CashPreparednessView } from './components/CashPreparednessView';
 import { ItemDetailModal } from './components/ItemDetailModal';
 import { PrintPreviewModal } from './components/PrintPreviewModal';
 import { GrandBackgroundSilhouette } from './components/DayakPatternDecor';
@@ -32,15 +31,10 @@ export default function App() {
 
   // Journal Transactions state (can be added, edited, deleted)
   const [transactions, setTransactions] = useState<JournalTransaction[]>(() => {
-    const validItemIds = new Set(BUDGET_DATA.map((i) => i.id));
-    const saved = localStorage.getItem('budget_journal_transactions_2026_v5');
+    const saved = localStorage.getItem('budget_journal_transactions_2026_v4');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          const filtered = parsed.filter((t: JournalTransaction) => validItemIds.has(t.itemId));
-          if (filtered.length > 0) return filtered;
-        }
+        return JSON.parse(saved);
       } catch (e) {
         console.error(e);
       }
@@ -51,7 +45,7 @@ export default function App() {
   // Keep localStorage in sync
   const updateTransactions = (newTransactions: JournalTransaction[]) => {
     setTransactions(newTransactions);
-    localStorage.setItem('budget_journal_transactions_2026_v5', JSON.stringify(newTransactions));
+    localStorage.setItem('budget_journal_transactions_2026_v4', JSON.stringify(newTransactions));
   };
 
   const handleAddTransaction = (newTx: Omit<JournalTransaction, 'id'>) => {
@@ -189,7 +183,6 @@ export default function App() {
 
       {/* Sidebar Navigation */}
       <Sidebar
-        items={liveBudgetItems}
         currentMenu={currentMenu}
         onSelectMenu={(menu) => {
           setCurrentMenu(menu);
@@ -216,8 +209,6 @@ export default function App() {
                 ? 'Sertifikat & Akreditasi'
                 : currentMenu === 'bulanan'
                 ? 'Laporan Anggaran Per-Bulan'
-                : currentMenu === 'kesiapan-kas'
-                ? 'Kesiapan Kas & Komitmen'
                 : 'Ringkasan Belanja'
             }
             subtitle={
@@ -227,15 +218,8 @@ export default function App() {
                 ? 'Monitoring capaian kelulusan sertifikasi pelatihan & akreditasi'
                 : currentMenu === 'bulanan'
                 ? 'APBD 2026 - Rekapitulasi realisasi belanja per bulan'
-                : currentMenu === 'kesiapan-kas'
-                ? 'Perhitungan persiapan dana kas (Belum Mulai vs Menunggu SPJ/Cair)'
                 : 'Laporan serapan dana dan progres anggaran keseluruhan'
             }
-            currentMenu={currentMenu}
-            onNavigateMenu={(menu) => {
-              setCurrentMenu(menu);
-              setSelectedItem(null);
-            }}
             onToggleSidebar={() => setIsSidebarOpenMobile(!isSidebarOpenMobile)}
             onBackup={handleBackup}
             onRestore={handleRestore}
@@ -271,7 +255,6 @@ export default function App() {
                   items={liveBudgetItems}
                   selectedItemId={selectedItem?.id}
                   onSelectItem={(item) => setSelectedItem(item)}
-                  onNavigateMenu={(menu) => setCurrentMenu(menu)}
                 />
               )}
             </div>
@@ -286,15 +269,6 @@ export default function App() {
           {currentMenu === 'bulanan' && (
             <div className="animate-in fade-in duration-200">
               <MonthlyReportView
-                items={liveBudgetItems}
-                transactions={transactions}
-              />
-            </div>
-          )}
-
-          {currentMenu === 'kesiapan-kas' && (
-            <div className="animate-in fade-in duration-200">
-              <CashPreparednessView
                 items={liveBudgetItems}
                 transactions={transactions}
               />
