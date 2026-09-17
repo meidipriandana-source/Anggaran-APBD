@@ -19,37 +19,36 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
   const macroData = [
     {
       name: 'Belanja Perjalanan Dinas',
-      value: 870000000,
-      percentage: 41.55,
-      color: '#2563eb', // Royal Blue
-      packagesCount: 3,
-      desc: 'Transport & Uang Harian Nakes 82 Orang + 5 Tim Surveyor'
+      value: 820000000,
+      percentage: 47.56,
+      color: '#8b5cf6', // Violet
+      packagesCount: 1,
+      desc: 'Transport & Uang Harian Perjalanan Dinas 82 Orang'
     },
     {
       name: 'Belanja Jasa (Kontribusi & Honor)',
-      value: 884200000,
-      percentage: 42.23,
+      value: 779200000,
+      percentage: 45.19,
       color: '#059669', // Emerald Green
-      packagesCount: 7,
-      desc: 'Kontribusi Diklat (Rp 640 Jt) + Honorarium Pengajar (Rp 229.2 Jt) + Iklan (Rp 15 Jt)'
+      packagesCount: 2,
+      desc: 'Kontribusi Diklat (Rp 550 Jt) + Honorarium Pengajar (Rp 229.2 Jt)'
     },
     {
-      name: 'Belanja Barang (Mamin & Cetak)',
-      value: 339774768,
-      percentage: 16.23,
-      color: '#f59e0b', // Amber
-      packagesCount: 6,
-      desc: 'Makan Minum Rapat/Akreditasi (Rp 303.55 Jt) + Sertifikat/Cetak/Plakat (Rp 36.22 Jt)'
+      name: 'Belanja Barang (Mamin Rapat)',
+      value: 124920000,
+      percentage: 7.25,
+      color: '#f97316', // Orange
+      packagesCount: 1,
+      desc: 'Makan Minum Rapat Spesifikasi Nasi Kotak Biasa (Rp 124.92 Jt)'
     }
   ];
 
   // Specific thematic breakdown
   const thematicData = [
-    { name: 'Perjalanan Dinas Nakes & Tim', value: 870000000, color: '#2563eb', share: '41.55%' },
-    { name: 'Kontribusi Pelatihan / Bimtek', value: 640000000, color: '#10b981', share: '30.56%' },
-    { name: 'Makan & Minum Rapat / Akreditasi', value: 303550000, color: '#f59e0b', share: '14.49%' },
-    { name: 'Honorarium Pengajar / Narasumber', value: 229200000, color: '#8b5cf6', share: '10.95%' },
-    { name: 'Bahan Cetak, Sertifikat & Suvenir', value: 51224768, color: '#64748b', share: '2.45%' }
+    { name: 'Perjalanan Dinas Dalam Negeri', value: 820000000, color: '#8b5cf6', share: '47.56%' },
+    { name: 'Kontribusi Kursus/Pelatihan', value: 550000000, color: '#3b82f6', share: '31.90%' },
+    { name: 'Honorarium Pengajar / Narasumber', value: 229200000, color: '#10b981', share: '13.29%' },
+    { name: 'Makanan & Minuman Rapat', value: 124920000, color: '#f97316', share: '7.25%' }
   ];
 
   const CustomPieTooltip = ({ active, payload }: any) => {

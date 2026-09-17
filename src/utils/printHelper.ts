@@ -363,23 +363,23 @@ export function generateMonthlyReportHtml(
 
             // Fallback for default transactions if no map passed
             if (!itemMonthlyMap) {
-              if (item.id === 'item-3') itemMonthly['Agustus'] = 113350000;
-              if (item.id === 'item-6') {
-                itemMonthly['Juli'] = 16000000;
-                itemMonthly['Agustus'] = 126820000;
+              if (item.id === 'item-1') itemMonthly['Agustus'] = 113350000;
+              if (item.id === 'item-2') {
+                itemMonthly['Mei'] = 52000000;
+                itemMonthly['Juli'] = 42820000;
+                itemMonthly['Agustus'] = 48000000;
               }
-              if (item.id === 'item-8') {
-                itemMonthly['Mei'] = 67500000;
+              if (item.id === 'item-3') {
+                itemMonthly['Juni'] = 62500000;
                 itemMonthly['Juli'] = 46500000;
-                itemMonthly['Agustus'] = 81125000;
+                itemMonthly['Agustus'] = 86125000;
               }
-              if (item.id === 'item-9') {
-                itemMonthly['April'] = 35619560;
-                itemMonthly['Mei'] = 70905939;
+              if (item.id === 'item-4') {
+                itemMonthly['Mei'] = 35619560;
+                itemMonthly['Juni'] = 61414251;
                 itemMonthly['Juli'] = 46952424;
-                itemMonthly['Agustus'] = 183294411;
+                itemMonthly['Agustus'] = 212886099;
               }
-              if (item.id === 'item-10') itemMonthly['Agustus'] = 78008000;
             }
 
             const totalItemRealisasi = item.terserap;

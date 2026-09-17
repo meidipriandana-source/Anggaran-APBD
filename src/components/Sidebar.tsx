@@ -134,7 +134,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span>Laporan Anggaran Per-Bulan</span>
           </button>
 
-          {/* 4. DAFTAR RINCIAN (Accordion Dropdown) */}
+          {/* 4. Kesiapan Kas & Komitmen (Persiapan Pembayaran) */}
+          <button
+            onClick={() => {
+              onSelectMenu('kesiapan-kas');
+              if (onCloseMobile) onCloseMobile();
+            }}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left transition-all ${
+              currentMenu === 'kesiapan-kas'
+                ? 'bg-blue-600 text-white font-bold shadow-xs'
+                : 'text-slate-700 hover:bg-slate-100/80 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <PieChart className="w-4 h-4 text-indigo-500 shrink-0" />
+              <span className="font-medium">Kesiapan Kas & Komitmen</span>
+            </div>
+            <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider ${
+              currentMenu === 'kesiapan-kas' ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-700'
+            }`}>
+              Baru
+            </span>
+          </button>
+
+          {/* 5. DAFTAR RINCIAN (Accordion Dropdown) */}
           <div className="pt-2">
             <button
               onClick={() => setIsDaftarRincianExpanded(!isDaftarRincianExpanded)}
@@ -143,7 +166,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="flex items-center gap-3">
                 <Folder className="w-4 h-4 text-blue-600 shrink-0" />
                 <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px]">
-                  DAFTAR RINCIAN
+                  DAFTAR RINCIAN ({items.length})
                 </span>
               </div>
               {isDaftarRincianExpanded ? (
@@ -156,25 +179,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Sub-item List */}
             {isDaftarRincianExpanded && (
               <div className="mt-1 pl-2 space-y-1">
-                {items.map((item) => {
+                {items.map((item, idx) => {
                   const isSelected = selectedItemId === item.id;
                   return (
                     <button
                       key={item.id}
                       onClick={() => handleItemClick(item)}
                       title={item.uraianSpesifik}
-                      className={`w-full flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left text-[11px] leading-tight transition-all ${
+                      className={`w-full flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left text-[11px] leading-tight transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-blue-50/90 text-blue-700 font-bold border border-blue-300/80 shadow-xs ring-1 ring-blue-500/20'
                           : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       }`}
                     >
-                      {/* Category Dot */}
+                      {/* Index / Category Dot */}
+                      <span className="font-mono text-[10px] font-bold text-slate-400 shrink-0 mt-0.5">
+                        {idx + 1}.
+                      </span>
                       <span
                         className="w-2 h-2 rounded-full shrink-0 mt-1 shadow-2xs"
                         style={{ backgroundColor: item.colorDot || '#3b82f6' }}
                       />
-                      <span className="truncate">{item.uraianSpesifik}</span>
+                      <span className="truncate flex-1">{item.uraianSpesifik}</span>
                     </button>
                   );
                 })}
