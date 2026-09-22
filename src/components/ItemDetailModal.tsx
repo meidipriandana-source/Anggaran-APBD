@@ -1,16 +1,17 @@
 import React from 'react';
 import { BudgetItem } from '../types';
 import { FORMAT_RUPIAH, TOTAL_PAGU_ANGGARAN } from '../data/budgetData';
-import { X, Plane, GraduationCap, Building2, Tag, FileText, CheckCircle2, ShieldCheck, Printer } from 'lucide-react';
+import { X, Plane, GraduationCap, Building2, Tag, FileText, CheckCircle2, ShieldCheck, Printer, SlidersHorizontal } from 'lucide-react';
 import { printHtmlDirectly } from '../utils/printHelper';
-import { DayakRibbonTrim, DayakTableWatermark } from './DayakPatternDecor';
+import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface ItemDetailModalProps {
   item: BudgetItem | null;
   onClose: () => void;
+  onOpenPergeseran?: (itemId: string) => void;
 }
 
-export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose }) => {
+export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose, onOpenPergeseran }) => {
   if (!item) return null;
 
   const isPerdin = item.isHighlightPerjalananDinas;
@@ -45,8 +46,8 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose 
             <td class="num">${FORMAT_RUPIAH(item.pergeseran)}</td>
             <td class="num" style="font-weight: bold;">${FORMAT_RUPIAH(item.jumlahTotal)}</td>
             <td class="num" style="font-weight: bold; color: #1e3a8a;">${FORMAT_RUPIAH(item.terserap)}</td>
-            <td class="num" style="font-weight: bold;">${FORMAT_RUPIAH(item.sisa)}</td>
-            <td class="center" style="font-weight: bold;">${item.persenSerapan.toFixed(1)}%</td>
+            <td class="num" style="font-weight: bold; ${item.sisa < 0 ? 'color: #dc2626;' : ''}">${FORMAT_RUPIAH(item.sisa)}</td>
+            <td class="center" style="font-weight: bold; ${item.persenSerapan > 100 ? 'color: #dc2626;' : ''}">${item.persenSerapan.toFixed(1)}%</td>
           </tr>
         </tbody>
       </table>
@@ -87,7 +88,6 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose 
         onClick={(e) => e.stopPropagation()}
       >
         <DayakRibbonTrim colorScheme={isPerdin ? 'blue' : isKontribusi ? 'emerald' : 'gold'} />
-        <DayakTableWatermark opacity={0.04} />
         {/* Header */}
         <div
           className={`p-4 sm:p-5 flex items-start justify-between border-b ${
@@ -203,15 +203,33 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose 
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={handlePrintItem}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-2xs transition-all cursor-pointer active:scale-95"
-          >
-            <Printer className="w-3.5 h-3.5 text-slate-600" />
-            <span>Cetak Rincian</span>
-          </button>
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handlePrintItem}
+              className="flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-2xs transition-all cursor-pointer active:scale-95"
+            >
+              <Printer className="w-3.5 h-3.5 text-slate-600" />
+              <span>Cetak Rincian</span>
+            </button>
+
+            {onOpenPergeseran && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenPergeseran(item.id);
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 active:bg-amber-200 text-amber-900 border border-amber-300 text-xs font-bold rounded-xl transition-all cursor-pointer active:scale-95 shadow-2xs"
+                title="Input penambahan atau pengurangan anggaran pergeseran"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5 text-amber-700" />
+                <span>Sesuaikan Pergeseran (+/-)</span>
+              </button>
+            )}
+          </div>
+
           <button
             type="button"
             onClick={onClose}

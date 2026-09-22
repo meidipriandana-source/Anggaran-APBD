@@ -22,6 +22,17 @@ export interface BudgetItem {
   isHighlightKontribusi?: boolean;
   targetSDM?: number;
   catatanAnalisis?: string;
+  dasarHukumPergeseran?: string;
+  keteranganPergeseran?: string;
+  tanggalPergeseran?: string;
+}
+
+export interface PergeseranRecord {
+  itemId: string;
+  pergeseran: number; // Nilai penambahan (+) positif atau pengurangan (-) negatif
+  dasarHukum?: string; // SK / Pergub / Dokumen Perubahan
+  keterangan?: string; // Alasan pergeseran / perubahan
+  tanggalPerubahan?: string;
 }
 
 export interface JournalTransaction {

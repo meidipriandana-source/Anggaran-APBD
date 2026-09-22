@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { BudgetItem, JournalTransaction } from '../types';
 import { FORMAT_NUM, BUDGET_DATA, DEFAULT_JOURNAL_DATA } from '../data/budgetData';
-import { Download, Printer, Filter, Calendar, CheckSquare, Square, Check, Layers } from 'lucide-react';
+import { Download, Printer, Filter, Calendar, CheckSquare, Square, Check, Layers, BarChart3 } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
+import { MonthlyTrendChart } from './MonthlyTrendChart';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
-import { DayakTableWatermark, DayakRibbonTrim, DayakCornerSilhouette } from './DayakPatternDecor';
+import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface MonthlyReportViewProps {
   items?: BudgetItem[];
@@ -54,6 +55,7 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
 }) => {
   const [highlightMonth, setHighlightMonth] = useState<string>('all');
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [showChart, setShowChart] = useState(true);
 
   // Dynamically compute monthly realization for ALL budget items synchronized with live transactions
   const monthlyRows: MonthlyRowItem[] = useMemo(() => {
@@ -85,7 +87,7 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
       });
 
       const totalRealisasi = itemTx.reduce((sum, t) => sum + t.nominal, 0);
-      const sisa = Math.max(0, item.jumlahTotal - totalRealisasi);
+      const sisa = item.jumlahTotal - totalRealisasi;
 
       return {
         id: item.id,
@@ -348,7 +350,7 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
               <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.november > 0 ? FORMAT_NUM(r.november) : '-'}</td>
               <td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${r.desember > 0 ? FORMAT_NUM(r.desember) : '-'}</td>
               <td class="num" style="font-weight: bold; color: #1e3a8a; padding: 2.5px 2px; font-size: 7pt;">${FORMAT_NUM(r.realisasi)}</td>
-              <td class="num" style="font-weight: bold; padding: 2.5px 2px; font-size: 7pt;">${FORMAT_NUM(r.sisa)}</td>
+              <td class="num" style="font-weight: bold; padding: 2.5px 2px; font-size: 7pt; ${r.sisa < 0 ? 'color: #dc2626;' : ''}">${FORMAT_NUM(r.sisa)}</td>
             </tr>
           `
             )
@@ -369,7 +371,7 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
             <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.november > 0 ? FORMAT_NUM(selectedTotals.november) : '-'}</td>
             <td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt; text-align: right;">${selectedTotals.desember > 0 ? FORMAT_NUM(selectedTotals.desember) : '-'}</td>
             <td class="num" style="font-weight: 900; color: #1e3a8a; padding: 4px 2px; font-size: 7pt;">${FORMAT_NUM(selectedTotals.realisasi)}</td>
-            <td class="num" style="font-weight: 900; padding: 4px 2px; font-size: 7pt;">${FORMAT_NUM(selectedTotals.sisa)}</td>
+            <td class="num" style="font-weight: 900; padding: 4px 2px; font-size: 7pt; ${selectedTotals.sisa < 0 ? 'color: #dc2626;' : ''}">${FORMAT_NUM(selectedTotals.sisa)}</td>
           </tr>
         </tbody>
       </table>
@@ -388,22 +390,21 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
         defaultLandscape={true}
       />
 
+      {/* Visualisasi Tren Realisasi Anggaran Menggunakan Recharts */}
+      {showChart && (
+        <MonthlyTrendChart
+          items={items}
+          transactions={transactions}
+          selectedRowIds={selectedRowIds}
+          activeHighlightMonth={highlightMonth}
+          onSelectMonth={setHighlightMonth}
+        />
+      )}
+
       {/* Clean Card Container with Full Border Grid */}
       <div className="relative bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
         {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel */}
         <DayakRibbonTrim colorScheme="emerald" />
-
-        {/* Ornamen Sudut Siluet Batik Dayak */}
-        <DayakCornerSilhouette position="top-right" size={90} className="opacity-20 text-emerald-900" />
-        <DayakCornerSilhouette position="bottom-left" size={90} className="opacity-20 text-emerald-900" />
-
-        {/* Watermark Seni Ukir & Batik Dayak Menempel Keseluruhan Tabel */}
-        <DayakTableWatermark opacity={0.048} />
-
-        {/* Subtle Silhouette Background Watermark */}
-        <div className="absolute right-12 bottom-12 w-96 h-96 opacity-[0.025] grayscale pointer-events-none select-none z-0">
-          <img src={LOGO_KALTARA} alt="" className="w-full h-full object-contain" />
-        </div>
 
         {/* Table Title Header with Action Buttons */}
         <div className="px-5 py-4 border-b border-slate-200 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -448,6 +449,21 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
                 </button>
               ))}
             </div>
+
+            {/* Toggle Grafik Tren Recharts */}
+            <button
+              type="button"
+              onClick={() => setShowChart(!showChart)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 border rounded-xl text-xs font-bold shadow-2xs transition-all cursor-pointer active:scale-95 ${
+                showChart
+                  ? 'bg-blue-50 border-blue-200 text-blue-700'
+                  : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
+              }`}
+              title={showChart ? 'Sembunyikan Visualisasi Grafik' : 'Tampilkan Visualisasi Grafik Tren'}
+            >
+              <BarChart3 className="w-3.5 h-3.5 text-blue-600" />
+              <span>{showChart ? 'Tutup Grafik' : 'Buka Grafik Tren'}</span>
+            </button>
 
             {/* Ekspor CSV */}
             <button
@@ -685,8 +701,17 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
                     </td>
 
                     {/* Sisa */}
-                    <td className="border border-slate-200 py-2.5 px-3 text-right font-mono font-medium text-slate-900 whitespace-nowrap">
-                      {FORMAT_NUM(row.sisa)}
+                    <td className={`border border-slate-200 py-2.5 px-3 text-right font-mono whitespace-nowrap ${
+                      row.sisa < 0 ? 'text-red-600 bg-red-50/70 font-extrabold' : 'font-semibold text-slate-900'
+                    }`}>
+                      <div className="flex flex-col items-end">
+                        <span>{FORMAT_NUM(row.sisa)}</span>
+                        {row.sisa < 0 && (
+                          <span className="text-[9px] font-extrabold text-red-600 uppercase tracking-tighter bg-red-100/90 px-1 py-0.2 rounded mt-0.5">
+                            Melebihi Ambang ({FORMAT_NUM(row.sisa)})
+                          </span>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -745,8 +770,17 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
                 <td className="border border-blue-200 py-2.5 px-3 text-right font-mono font-black text-blue-700 whitespace-nowrap">
                   {FORMAT_NUM(selectedTotals.realisasi)}
                 </td>
-                <td className="border border-blue-200 py-2.5 px-3 text-right font-mono font-black text-blue-950 whitespace-nowrap">
-                  {FORMAT_NUM(selectedTotals.sisa)}
+                <td className={`border border-blue-200 py-2.5 px-3 text-right font-mono font-black whitespace-nowrap ${
+                  selectedTotals.sisa < 0 ? 'text-red-600 bg-red-100/80' : 'text-blue-950'
+                }`}>
+                  <div className="flex flex-col items-end">
+                    <span>{FORMAT_NUM(selectedTotals.sisa)}</span>
+                    {selectedTotals.sisa < 0 && (
+                      <span className="text-[9px] font-extrabold text-red-700 uppercase tracking-tighter">
+                        Defisit Minus ({FORMAT_NUM(selectedTotals.sisa)})
+                      </span>
+                    )}
+                  </div>
                 </td>
               </tr>
 
@@ -798,7 +832,9 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
                 <td className="border border-slate-200 py-2 px-3 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
                   {FORMAT_NUM(totals.realisasi)}
                 </td>
-                <td className="border border-slate-200 py-2 px-3 text-right font-mono font-bold text-slate-700 whitespace-nowrap">
+                <td className={`border border-slate-200 py-2 px-3 text-right font-mono font-bold whitespace-nowrap ${
+                  totals.sisa < 0 ? 'text-red-600 bg-red-100/50' : 'text-slate-700'
+                }`}>
                   {FORMAT_NUM(totals.sisa)}
                 </td>
               </tr>

@@ -23,11 +23,12 @@ import {
   Printer,
   Layers,
   ArrowUpDown,
-  CalendarDays
+  CalendarDays,
+  SlidersHorizontal
 } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateTransactionsHtml } from '../utils/printHelper';
-import { DayakTableWatermark, DayakRibbonTrim, DayakCornerSilhouette } from './DayakPatternDecor';
+import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface MutasiJurnalViewProps {
   item: BudgetItem;
@@ -37,6 +38,7 @@ interface MutasiJurnalViewProps {
   onDeleteTransaction: (id: string) => void;
   onDeleteMultipleTransactions?: (ids: string[]) => void;
   onBackToRingkasan?: () => void;
+  onOpenPergeseran?: (itemId: string) => void;
 }
 
 const BULAN_OPTIONS = [
@@ -146,7 +148,8 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
   onUpdateTransaction,
   onDeleteTransaction,
   onDeleteMultipleTransactions,
-  onBackToRingkasan
+  onBackToRingkasan,
+  onOpenPergeseran
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMonthFilter, setSelectedMonthFilter] = useState<string>('all');
@@ -181,6 +184,17 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
+
+  // Projected budget calculations for form threshold monitoring
+  const otherTransactionsTotal = useMemo(() => {
+    return itemTransactions
+      .filter((t) => (editingTransaction ? t.id !== editingTransaction.id : true))
+      .reduce((sum, t) => sum + t.nominal, 0);
+  }, [itemTransactions, editingTransaction]);
+
+  const projectedTotalRealisasi = otherTransactionsTotal + (typeof formNominal === 'number' ? formNominal : 0);
+  const projectedSisa = item.jumlahTotal - projectedTotalRealisasi;
+  const isThresholdExceeded = projectedSisa < 0;
 
   // Trigger calendar picker popup
   const handleOpenDatePicker = () => {
@@ -555,13 +569,6 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
         {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel Jurnal */}
         <DayakRibbonTrim colorScheme="gold" />
 
-        {/* Ornamen Sudut Siluet Batik Dayak */}
-        <DayakCornerSilhouette position="top-right" size={90} className="opacity-15 text-amber-500" />
-        <DayakCornerSilhouette position="bottom-left" size={90} className="opacity-15 text-amber-500" />
-
-        {/* Watermark Seni Ukir & Batik Dayak Menempel Keseluruhan Tabel */}
-        <DayakTableWatermark opacity={0.055} />
-
         {/* Header toolbar */}
         <div className="p-5 sm:p-6 border-b border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
@@ -638,6 +645,56 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
               <Plus className="w-4 h-4" />
               <span>Rekam Data</span>
             </button>
+          </div>
+        </div>
+
+        {/* Item Budget Summary & Threshold Status Ribbon */}
+        <div className={`px-5 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 text-xs ${
+          item.sisa < 0
+            ? 'bg-red-950/50 border-red-800/80 text-red-200'
+            : 'bg-[#0f1b38] border-slate-800 text-slate-300'
+        }`}>
+          <div className="flex items-center gap-2">
+            <span className="font-black text-white">{item.uraianSpesifik}</span>
+            <span className="text-[10.5px] text-slate-400 font-mono">({item.kodeRekening})</span>
+            {onOpenPergeseran && (
+              <button
+                type="button"
+                onClick={() => onOpenPergeseran(item.id)}
+                className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 text-[10px] font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
+                title="Input penambahan atau pengurangan pagu anggaran pergeseran"
+              >
+                <SlidersHorizontal className="w-3 h-3 text-amber-400" />
+                <span>Ubah Pergeseran</span>
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-4 flex-wrap text-[11px] font-mono">
+            <div>
+              <span className="text-slate-400 mr-1.5 font-sans">Pagu Efektif:</span>
+              <span className="font-bold text-white">{FORMAT_RUPIAH(item.jumlahTotal)}</span>
+            </div>
+            <div>
+              <span className="text-slate-400 mr-1.5 font-sans">Realisasi Terserap:</span>
+              <span className="font-bold text-blue-400">{FORMAT_RUPIAH(item.terserap)}</span>
+            </div>
+            <div>
+              <span className="text-slate-400 mr-1.5 font-sans">Sisa Anggaran:</span>
+              <span className={`font-black ${item.sisa < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                {FORMAT_RUPIAH(item.sisa)}
+              </span>
+              {item.sisa < 0 && (
+                <span className="ml-2 text-[9px] font-extrabold text-red-100 bg-red-800 px-2 py-0.5 rounded uppercase font-sans tracking-wide">
+                  Melewati Batas Ambang Anggaran ({FORMAT_RUPIAH(item.sisa)})
+                </span>
+              )}
+            </div>
+            <div>
+              <span className="text-slate-400 mr-1.5 font-sans">Serapan:</span>
+              <span className={`font-bold ${item.persenSerapan > 100 ? 'text-red-400' : 'text-white'}`}>
+                {item.persenSerapan.toFixed(1)}%
+              </span>
+            </div>
           </div>
         </div>
 
@@ -1349,8 +1406,28 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
                   />
                 </div>
                 {formNominal !== '' && typeof formNominal === 'number' && formNominal > 0 && (
-                  <div className="mt-1 text-[11px] text-emerald-400 font-mono font-semibold">
-                    = {FORMAT_RUPIAH(formNominal)}
+                  <div className="mt-1.5 flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-emerald-400 font-semibold">
+                      = {FORMAT_RUPIAH(formNominal)}
+                    </span>
+                    <span className={`font-bold ${isThresholdExceeded ? 'text-red-400' : 'text-slate-400'}`}>
+                      Proyeksi Sisa: {FORMAT_RUPIAH(projectedSisa)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Over-Threshold Warning Alert */}
+                {isThresholdExceeded && (
+                  <div className="mt-2.5 p-3 bg-red-950/70 border border-red-500/60 rounded-xl text-red-200 flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <div className="font-bold text-xs text-red-300">
+                        Peringatan: Melewati Batas Ambang Anggaran!
+                      </div>
+                      <div className="text-[11px] text-red-200/90 leading-relaxed font-sans">
+                        Nominal ini membuat total belanja menjadi <strong className="text-white font-mono">{FORMAT_RUPIAH(projectedTotalRealisasi)}</strong> melebihi pagu <strong className="text-white font-mono">{FORMAT_RUPIAH(item.jumlahTotal)}</strong>. Sisa pagu menjadi minus <strong className="text-red-300 font-mono font-black">{FORMAT_RUPIAH(projectedSisa)}</strong>.
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

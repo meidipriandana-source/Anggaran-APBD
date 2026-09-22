@@ -395,7 +395,7 @@ export function generateMonthlyReportHtml(
                   return `<td class="num" style="padding: 2.5px 1px; font-size: 6.5pt; text-align: right;">${val > 0 ? FORMAT_RUPIAH(val) : '-'}</td>`;
                 }).join('')}
                 <td class="num" style="font-weight: bold; color: #1e3a8a; padding: 2.5px 2px; font-size: 7pt;">${FORMAT_RUPIAH(totalItemRealisasi)}</td>
-                <td class="num" style="font-weight: bold; padding: 2.5px 2px; font-size: 7pt;">${FORMAT_RUPIAH(sisaItem)}</td>
+                <td class="num" style="font-weight: bold; padding: 2.5px 2px; font-size: 7pt; ${sisaItem < 0 ? 'color: #dc2626;' : ''}">${FORMAT_RUPIAH(sisaItem)}</td>
               </tr>
             `;
           })
@@ -409,7 +409,7 @@ export function generateMonthlyReportHtml(
             return `<td class="num" style="font-weight: 900; padding: 4px 1px; font-size: 6.5pt;">${val > 0 ? FORMAT_RUPIAH(val) : '-'}</td>`;
           }).join('')}
           <td class="num" style="font-weight: 900; color: #1e3a8a; padding: 4px 2px; font-size: 7pt;">${FORMAT_RUPIAH(grandTotalRealisasi)}</td>
-          <td class="num" style="font-weight: 900; padding: 4px 2px; font-size: 7pt;">${FORMAT_RUPIAH(grandTotalSisa)}</td>
+          <td class="num" style="font-weight: 900; padding: 4px 2px; font-size: 7pt; ${grandTotalSisa < 0 ? 'color: #dc2626;' : ''}">${FORMAT_RUPIAH(grandTotalSisa)}</td>
         </tr>
       </tbody>
     </table>
@@ -425,6 +425,12 @@ export function generateBudgetSummaryHtml(
   totalTerserap: number,
   totalSisa: number
 ): string {
+  const sumPaguMurni = items.reduce((acc, i) => acc + i.paguMurni, 0);
+  const sumPergeseran = items.reduce((acc, i) => acc + i.pergeseran, 0);
+  const sumPaguEfektif = items.reduce((acc, i) => acc + i.jumlahTotal, 0);
+  const sumTerserap = items.reduce((acc, i) => acc + i.terserap, 0);
+  const sumSisa = sumPaguEfektif - sumTerserap;
+
   return `
     <table style="width: 100%; border-collapse: collapse; table-layout: auto; background-color: #ffffff; color: #0f172a;">
       <thead style="background-color: #e2e8f0;">
@@ -451,22 +457,22 @@ export function generateBudgetSummaryHtml(
               </td>
               <td class="center" style="padding: 3.5px 2px; font-size: 7.5pt;">${item.koefisienVolume}</td>
               <td class="num" style="padding: 3.5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(item.paguMurni)}</td>
-              <td class="num" style="padding: 3.5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(item.pergeseran)}</td>
+              <td class="num" style="padding: 3.5px 4px; font-size: 7.5pt;">${item.pergeseran > 0 ? `+${FORMAT_RUPIAH(item.pergeseran)}` : FORMAT_RUPIAH(item.pergeseran)}</td>
               <td class="num" style="font-weight: bold; padding: 3.5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(item.jumlahTotal)}</td>
               <td class="num" style="font-weight: bold; color: #1e3a8a; padding: 3.5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(item.terserap)}</td>
-              <td class="num" style="padding: 3.5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(item.sisa)}</td>
-              <td class="center" style="font-weight: bold; padding: 3.5px 2px; font-size: 7.5pt;">${item.persenSerapan.toFixed(1)}%</td>
+              <td class="num" style="padding: 3.5px 4px; font-size: 7.5pt; ${item.sisa < 0 ? 'color: #dc2626; font-weight: bold;' : ''}">${FORMAT_RUPIAH(item.sisa)}</td>
+              <td class="center" style="font-weight: bold; padding: 3.5px 2px; font-size: 7.5pt; ${item.persenSerapan > 100 ? 'color: #dc2626;' : ''}">${item.persenSerapan.toFixed(1)}%</td>
             </tr>
           `)
           .join('')}
         <tr class="total-row" style="background-color: #cbd5e1; font-weight: 900;">
           <td colspan="3" style="text-align: right; font-weight: 900; padding: 5px 6px; font-size: 8pt;">TOTAL KESELURUHAN</td>
-          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(totalPagu)}</td>
-          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt;">Rp 0</td>
-          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(totalPagu)}</td>
-          <td class="num" style="font-weight: 900; color: #1e3a8a; padding: 5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(totalTerserap)}</td>
-          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(totalSisa)}</td>
-          <td class="center" style="font-weight: 900; padding: 5px 2px; font-size: 7.5pt;">${totalPagu > 0 ? ((totalTerserap / totalPagu) * 100).toFixed(1) : 0}%</td>
+          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(sumPaguMurni)}</td>
+          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt;">${sumPergeseran > 0 ? `+${FORMAT_RUPIAH(sumPergeseran)}` : FORMAT_RUPIAH(sumPergeseran)}</td>
+          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(sumPaguEfektif)}</td>
+          <td class="num" style="font-weight: 900; color: #1e3a8a; padding: 5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(sumTerserap)}</td>
+          <td class="num" style="font-weight: 900; padding: 5px 4px; font-size: 7.5pt; ${sumSisa < 0 ? 'color: #dc2626;' : ''}">${FORMAT_RUPIAH(sumSisa)}</td>
+          <td class="center" style="font-weight: 900; padding: 5px 2px; font-size: 7.5pt;">${sumPaguEfektif > 0 ? ((sumTerserap / sumPaguEfektif) * 100).toFixed(1) : 0}%</td>
         </tr>
       </tbody>
     </table>

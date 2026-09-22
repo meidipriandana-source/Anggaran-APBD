@@ -109,34 +109,55 @@ export const KpiMetrics: React.FC<KpiMetricsProps> = ({
         </div>
 
         {/* Ambient glow & icon */}
-        <div className="absolute -right-6 -top-6 w-28 h-28 bg-amber-100/50 rounded-full blur-2xl pointer-events-none group-hover:bg-amber-200/40 transition-colors" />
-        <div className="absolute right-4 top-4 w-11 h-11 bg-amber-50/80 rounded-xl flex items-center justify-center text-amber-600/40 pointer-events-none group-hover:text-amber-600/70 transition-colors">
+        <div className={`absolute -right-6 -top-6 w-28 h-28 rounded-full blur-2xl pointer-events-none transition-colors ${
+          totalSisa < 0 ? 'bg-red-100/60 group-hover:bg-red-200/50' : 'bg-amber-100/50 group-hover:bg-amber-200/40'
+        }`} />
+        <div className={`absolute right-4 top-4 w-11 h-11 rounded-xl flex items-center justify-center pointer-events-none transition-colors ${
+          totalSisa < 0 ? 'bg-red-50/80 text-red-600/60 group-hover:text-red-600' : 'bg-amber-50/80 text-amber-600/40 group-hover:text-amber-600/70'
+        }`}>
           <Scale className="w-5 h-5" />
         </div>
 
         <div className="relative z-10 space-y-2">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-br from-amber-600 to-orange-600 text-white rounded-xl shadow-xs">
+            <div className={`p-2 text-white rounded-xl shadow-xs ${
+              totalSisa < 0 ? 'bg-gradient-to-br from-red-600 to-rose-700' : 'bg-gradient-to-br from-amber-600 to-orange-600'
+            }`}>
               <Scale className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 font-display">
-                SISA ANGGARAN
+              <span className={`text-[11px] font-black uppercase tracking-wider font-display ${
+                totalSisa < 0 ? 'text-red-600' : 'text-slate-500'
+              }`}>
+                {totalSisa < 0 ? 'SISA ANGGARAN (DEFISIT)' : 'SISA ANGGARAN'}
               </span>
             </div>
           </div>
 
           <div className="pt-1">
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-display">
+            <div className={`text-2xl sm:text-3xl font-black tracking-tight font-display ${
+              totalSisa < 0 ? 'text-red-600' : 'text-slate-900'
+            }`}>
               {FORMAT_RUPIAH(totalSisa)}
             </div>
           </div>
 
           <div className="pt-1 flex items-center gap-2 text-[11px] text-slate-400 font-semibold">
-            <span className="inline-flex items-center gap-1 text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md font-mono font-bold">
-              {persenSisa.toFixed(1)}%
-            </span>
-            <span>Sisa Kas Tersedia</span>
+            {totalSisa < 0 ? (
+              <>
+                <span className="inline-flex items-center gap-1 text-red-800 bg-red-100 px-2 py-0.5 rounded-md font-mono font-bold">
+                  {persenSisa.toFixed(1)}%
+                </span>
+                <span className="text-red-600 font-bold">Melebihi Alokasi Pagu</span>
+              </>
+            ) : (
+              <>
+                <span className="inline-flex items-center gap-1 text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md font-mono font-bold">
+                  {persenSisa.toFixed(1)}%
+                </span>
+                <span>Sisa Kas Tersedia</span>
+              </>
+            )}
           </div>
         </div>
       </div>

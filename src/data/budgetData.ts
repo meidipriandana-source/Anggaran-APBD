@@ -441,16 +441,35 @@ export const MONTHLY_REALIZATION_DATA = [
 ];
 
 export const FORMAT_RUPIAH = (val: number, withDecimals = false): string => {
-  return new Intl.NumberFormat('id-ID', {
+  if (isNaN(val)) return 'Rp 0';
+  const isNegative = val < 0;
+  const absVal = Math.abs(val);
+  const formatted = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: withDecimals ? 2 : 0,
     maximumFractionDigits: withDecimals ? 2 : 0
-  }).format(val);
+  }).format(absVal);
+  // Ensure consistent spacing 'Rp ' instead of 'Rp'
+  const clean = formatted.replace(/^Rp\s*/, 'Rp ');
+  return isNegative ? `- ${clean}` : clean;
 };
 
 export const FORMAT_NUM = (val: number): string => {
-  return new Intl.NumberFormat('id-ID').format(val);
+  if (isNaN(val)) return '0';
+  const isNegative = val < 0;
+  const absVal = Math.abs(val);
+  const formatted = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(absVal);
+  return isNegative ? `-${formatted}` : formatted;
+};
+
+export const PARSE_ID_NUMBER = (str: string): number => {
+  if (!str) return 0;
+  const clean = str.replace(/[^\d]/g, '');
+  return clean ? parseInt(clean, 10) : 0;
 };
 
 export const DEFAULT_JOURNAL_DATA: JournalTransaction[] = [

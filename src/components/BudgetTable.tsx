@@ -1,16 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { BudgetItem } from '../types';
 import { FORMAT_RUPIAH } from '../data/budgetData';
-import { ArrowRight, Search, Download, X, Layers, CheckSquare, Square, Printer, Check } from 'lucide-react';
+import { ArrowRight, Search, Download, X, Layers, CheckSquare, Square, Printer, Check, SlidersHorizontal } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateBudgetSummaryHtml } from '../utils/printHelper';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
-import { DayakTableWatermark, DayakRibbonTrim, DayakCornerSilhouette } from './DayakPatternDecor';
+import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface BudgetTableProps {
   items: BudgetItem[];
   selectedItemId?: string;
   onSelectItem: (item: BudgetItem) => void;
+  onOpenPergeseran?: (itemId?: string) => void;
 }
 
 const CATEGORY_FILTERS = [
@@ -25,7 +26,8 @@ const CATEGORY_FILTERS = [
 export const BudgetTable: React.FC<BudgetTableProps> = ({
   items,
   selectedItemId,
-  onSelectItem
+  onSelectItem,
+  onOpenPergeseran
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -102,11 +104,13 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
   const selectedTotals = useMemo(() => {
     return selectedItemsToPrint.reduce(
       (acc, item) => ({
+        paguMurni: acc.paguMurni + item.paguMurni,
+        pergeseran: acc.pergeseran + item.pergeseran,
         pagu: acc.pagu + item.jumlahTotal,
         terserap: acc.terserap + item.terserap,
         sisa: acc.sisa + item.sisa
       }),
-      { pagu: 0, terserap: 0, sisa: 0 }
+      { paguMurni: 0, pergeseran: 0, pagu: 0, terserap: 0, sisa: 0 }
     );
   }, [selectedItemsToPrint]);
 
@@ -151,18 +155,6 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     <div className="relative bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden space-y-0">
       {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel */}
       <DayakRibbonTrim colorScheme="blue" />
-
-      {/* Ornamen Sudut Siluet Batik Dayak */}
-      <DayakCornerSilhouette position="top-right" size={90} className="opacity-20" />
-      <DayakCornerSilhouette position="bottom-left" size={90} className="opacity-20" />
-
-      {/* Watermark Seni Ukir & Batik Dayak Menempel Keseluruhan Tabel */}
-      <DayakTableWatermark opacity={0.048} />
-
-      {/* Subtle Silhouette Background Watermark Logo */}
-      <div className="absolute right-8 bottom-8 w-80 h-96 opacity-[0.025] grayscale pointer-events-none select-none z-0">
-        <img src={LOGO_KALTARA} alt="" className="w-full h-full object-contain" />
-      </div>
 
       {/* Category Pills Toolbar */}
       <div className="p-3.5 border-b border-slate-100 bg-slate-50/70 flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
@@ -213,6 +205,19 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Kelola Pergeseran / Perubahan Anggaran */}
+          {onOpenPergeseran && (
+            <button
+              type="button"
+              onClick={() => onOpenPergeseran()}
+              className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 active:bg-amber-200 border border-amber-300 text-amber-900 rounded-xl text-xs font-black shadow-2xs transition-all cursor-pointer active:scale-95"
+              title="Input penambahan (+) atau pengurangan (-) anggaran jika ada pergeseran / APBD Perubahan"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-700" />
+              <span>Kelola Pergeseran (+/-)</span>
+            </button>
+          )}
+
           {/* Ekspor CSV */}
           <button
             type="button"
@@ -381,8 +386,29 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                     </td>
 
                     {/* Pergeseran */}
-                    <td className="py-3.5 px-3 text-right font-mono text-slate-500 font-medium whitespace-nowrap">
-                      {FORMAT_RUPIAH(item.pergeseran)}
+                    <td className="py-3.5 px-3 text-right font-mono whitespace-nowrap">
+                      {onOpenPergeseran ? (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenPergeseran(item.id);
+                          }}
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-bold transition-all group/shift cursor-pointer ${
+                            item.pergeseran > 0
+                              ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 shadow-2xs'
+                              : item.pergeseran < 0
+                              ? 'text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-300 shadow-2xs'
+                              : 'text-slate-500 hover:text-blue-700 hover:bg-blue-50 border border-transparent hover:border-blue-200'
+                          }`}
+                          title="Klik untuk mengubah penambahan atau pengurangan anggaran pergeseran"
+                        >
+                          <span>{item.pergeseran > 0 ? `+${FORMAT_RUPIAH(item.pergeseran)}` : FORMAT_RUPIAH(item.pergeseran)}</span>
+                          <SlidersHorizontal className="w-2.5 h-2.5 text-slate-400 group-hover/shift:text-blue-600 opacity-60 group-hover/shift:opacity-100 transition-all" />
+                        </button>
+                      ) : (
+                        <span className="text-slate-500 font-medium">{FORMAT_RUPIAH(item.pergeseran)}</span>
+                      )}
                     </td>
 
                     {/* Pagu Efektif */}
@@ -396,20 +422,42 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                     </td>
 
                     {/* Sisa (Rp) */}
-                    <td className="py-3.5 px-4 text-right font-mono font-semibold text-slate-700 whitespace-nowrap">
-                      {FORMAT_RUPIAH(item.sisa)}
+                    <td className={`py-3.5 px-4 text-right font-mono whitespace-nowrap ${
+                      item.sisa < 0
+                        ? 'text-red-600 font-extrabold bg-red-50/80'
+                        : 'font-semibold text-slate-700'
+                    }`}>
+                      <div className="flex flex-col items-end">
+                        <span>{FORMAT_RUPIAH(item.sisa)}</span>
+                        {item.sisa < 0 && (
+                          <span className="inline-flex items-center gap-1 text-[9px] font-extrabold text-red-700 bg-red-100 px-1.5 py-0.5 rounded uppercase tracking-tight mt-0.5 shadow-2xs">
+                            Melebihi Ambang ({FORMAT_RUPIAH(item.sisa)})
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     {/* % Serapan with Progress Bar */}
                     <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <div className="flex flex-col items-center gap-1">
-                        <span className="font-mono font-extrabold text-[11px] text-slate-800">
-                          {item.persenSerapan.toFixed(1)}%
-                        </span>
+                        <div className="flex items-center gap-1">
+                          <span className={`font-mono font-extrabold text-[11px] ${
+                            item.persenSerapan > 100 ? 'text-red-600' : 'text-slate-800'
+                          }`}>
+                            {item.persenSerapan.toFixed(1)}%
+                          </span>
+                          {item.persenSerapan > 100 && (
+                            <span className="text-[8.5px] font-bold text-white bg-red-600 px-1 py-0.2 rounded font-sans uppercase">
+                              Over
+                            </span>
+                          )}
+                        </div>
                         <div className="w-16 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-300 ${
-                              item.persenSerapan > 80
+                              item.persenSerapan > 100
+                                ? 'bg-red-600'
+                                : item.persenSerapan > 80
                                 ? 'bg-emerald-600'
                                 : item.persenSerapan > 0
                                 ? 'bg-blue-600'
@@ -441,6 +489,53 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
               })
             )}
           </tbody>
+
+          {/* TOTAL FOOTER ROW */}
+          <tfoot className="border-t-2 border-slate-300 bg-slate-100/90 font-bold text-slate-900 text-xs">
+            <tr className="hover:bg-slate-200/60 transition-colors">
+              <td colSpan={3} className="py-3.5 px-4 text-right font-black uppercase tracking-wider text-slate-700">
+                TOTAL KESELURUHAN ({filteredItems.length} SASARAN)
+              </td>
+              <td className="py-3.5 px-4 text-right font-mono font-black text-slate-800 whitespace-nowrap">
+                {FORMAT_RUPIAH(selectedTotals.paguMurni)}
+              </td>
+              <td className="py-3.5 px-3 text-right font-mono font-bold text-slate-500 whitespace-nowrap">
+                {FORMAT_RUPIAH(selectedTotals.pergeseran)}
+              </td>
+              <td className="py-3.5 px-4 text-right font-mono font-black text-slate-900 whitespace-nowrap">
+                {FORMAT_RUPIAH(selectedTotals.pagu)}
+              </td>
+              <td className="py-3.5 px-4 text-right font-mono font-black text-blue-700 whitespace-nowrap">
+                {FORMAT_RUPIAH(selectedTotals.terserap)}
+              </td>
+              <td className={`py-3.5 px-4 text-right font-mono font-black whitespace-nowrap ${
+                selectedTotals.sisa < 0 ? 'text-red-600 bg-red-100/80 font-black' : 'text-slate-900'
+              }`}>
+                <div className="flex flex-col items-end">
+                  <span>{FORMAT_RUPIAH(selectedTotals.sisa)}</span>
+                  {selectedTotals.sisa < 0 && (
+                    <span className="text-[9px] font-extrabold text-red-700 uppercase tracking-tight">
+                      Defisit Minus ({FORMAT_RUPIAH(selectedTotals.sisa)})
+                    </span>
+                  )}
+                </div>
+              </td>
+              <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                <span className={`font-mono font-black text-xs ${
+                  selectedTotals.pagu > 0 && (selectedTotals.terserap / selectedTotals.pagu) * 100 > 100
+                    ? 'text-red-600'
+                    : 'text-slate-900'
+                }`}>
+                  {selectedTotals.pagu > 0
+                    ? ((selectedTotals.terserap / selectedTotals.pagu) * 100).toFixed(1)
+                    : '0.0'}%
+                </span>
+              </td>
+              <td className="py-3.5 px-4 text-center text-slate-400 font-mono text-[10px]">
+                {selectedItemIds.size > 0 ? `${selectedItemIds.size} Terpilih` : 'Semua'}
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
