@@ -1,8 +1,8 @@
 import { BudgetItem, BudgetSummary, JournalTransaction } from '../types';
 
-export const TOTAL_PAGU_ANGGARAN = 2093974768; // Rp 2.093.974.768,00
+export const TOTAL_PAGU_ANGGARAN = 2043974768; // Rp 2.043.974.768,00
 export const TOTAL_TERSERAP_ANGGARAN = 838072668; // Rp 838.072.668,00 (Total realisasi seluruh mutasi SP2D)
-export const TOTAL_SISA_ANGGARAN = 1255902100; // Rp 1.255.902.100,00 (Sisa pagu efektif)
+export const TOTAL_SISA_ANGGARAN = 1205902100; // Rp 1.205.902.100,00 (Sisa pagu efektif)
 
 /**
  * Daftar Rincian Anggaran Belanja Sub Kegiatan:
@@ -221,21 +221,21 @@ export const BUDGET_DATA: BudgetItem[] = [
     subKegiatanKelompok: 'PERJALANAN DINAS DALAM NEGERI',
     uraianSpesifik: 'Perjalanan Dinas Dalam Negeri',
     spesifikasiDetail: 'Biaya Perjalanan Dinas, Tiket Pesawat, Uang Harian, Uang Saku, dan Penginapan Pelatihan/Workshop',
-    koefisienVolume: '87 Orang',
-    volumeAngka: 87,
+    koefisienVolume: '82 Orang',
+    volumeAngka: 82,
     satuan: 'Orang / Paket',
     hargaSatuan: 10000000,
-    paguMurni: 870000000,
+    paguMurni: 820000000,
     pergeseran: 0,
-    jumlahTotal: 870000000,
+    jumlahTotal: 820000000,
     terserap: 356872334,
-    sisa: 513127666,
-    persenSerapan: (356872334 / 870000000) * 100,
-    persentaseTotal: (870000000 / TOTAL_PAGU_ANGGARAN) * 100,
+    sisa: 463127666,
+    persenSerapan: (356872334 / 820000000) * 100,
+    persentaseTotal: (820000000 / TOTAL_PAGU_ANGGARAN) * 100,
     colorDot: '#3b82f6', // blue
     isHighlightPerjalananDinas: true,
     isHighlightKontribusi: false,
-    targetSDM: 87,
+    targetSDM: 82,
     catatanAnalisis: 'Realisasi 20 mutasi perjalanan dinas dalam negeri (Total: Rp 356.872.334).'
   },
   // 10. Biaya Perjalanan Dinas Tenaga Medis (Batch 6 Orang)

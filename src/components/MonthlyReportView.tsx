@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { BudgetItem, JournalTransaction } from '../types';
 import { FORMAT_NUM, BUDGET_DATA, DEFAULT_JOURNAL_DATA } from '../data/budgetData';
-import { Download, Printer, Filter, Calendar, CheckSquare, Square, Check, Layers, BarChart3 } from 'lucide-react';
+import { Download, Printer, Filter, Calendar, CheckSquare, Square, Check, Layers, BarChart3, AlertCircle } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { MonthlyTrendChart } from './MonthlyTrendChart';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
@@ -612,7 +612,9 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
                     key={row.id}
                     onClick={() => handleToggleRow(row.id)}
                     className={`transition-colors cursor-pointer ${
-                      isChecked
+                      row.sisa < 0
+                        ? 'bg-red-50/95 hover:bg-red-100/90 border-l-4 border-l-red-600'
+                        : isChecked
                         ? 'bg-white hover:bg-blue-50/40'
                         : 'bg-slate-50/50 hover:bg-slate-100/60 opacity-60'
                     }`}
@@ -634,11 +636,18 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
 
                     {/* Sasaran Kegiatan */}
                     <td className="border border-slate-200 py-2.5 px-3.5 font-bold text-slate-900 leading-snug">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono text-slate-400 font-bold">{idx + 1}.</span>
-                        <span className={isChecked ? 'text-slate-900' : 'text-slate-500'}>
-                          {row.sasaranKegiatan}
-                        </span>
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono text-slate-400 font-bold">{idx + 1}.</span>
+                          <span className={isChecked ? 'text-slate-900' : 'text-slate-500'}>
+                            {row.sasaranKegiatan}
+                          </span>
+                        </div>
+                        {row.sisa < 0 && (
+                          <span className="inline-flex items-center gap-1 bg-red-600 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-2xs animate-pulse">
+                            <AlertCircle className="w-3 h-3" /> MELEBIHI PAGU
+                          </span>
+                        )}
                       </div>
                     </td>
 
@@ -704,14 +713,7 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
                     <td className={`border border-slate-200 py-2.5 px-3 text-right font-mono whitespace-nowrap ${
                       row.sisa < 0 ? 'text-red-600 bg-red-50/70 font-extrabold' : 'font-semibold text-slate-900'
                     }`}>
-                      <div className="flex flex-col items-end">
-                        <span>{FORMAT_NUM(row.sisa)}</span>
-                        {row.sisa < 0 && (
-                          <span className="text-[9px] font-extrabold text-red-600 uppercase tracking-tighter bg-red-100/90 px-1 py-0.2 rounded mt-0.5">
-                            Melebihi Ambang ({FORMAT_NUM(row.sisa)})
-                          </span>
-                        )}
-                      </div>
+                      <span>{FORMAT_NUM(row.sisa)}</span>
                     </td>
                   </tr>
                 );

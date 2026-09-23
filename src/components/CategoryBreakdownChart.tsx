@@ -19,8 +19,8 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
   const macroData = [
     {
       name: 'Belanja Perjalanan Dinas',
-      value: 870000000,
-      percentage: 41.55,
+      value: 820000000,
+      percentage: 40.12,
       color: '#2563eb', // Royal Blue
       packagesCount: 3,
       desc: 'Transport & Uang Harian Nakes 82 Orang + 5 Tim Surveyor'
@@ -28,7 +28,7 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
     {
       name: 'Belanja Jasa (Kontribusi & Honor)',
       value: 884200000,
-      percentage: 42.23,
+      percentage: 43.26,
       color: '#059669', // Emerald Green
       packagesCount: 7,
       desc: 'Kontribusi Diklat (Rp 640 Jt) + Honorarium Pengajar (Rp 229.2 Jt) + Iklan (Rp 15 Jt)'
@@ -36,7 +36,7 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
     {
       name: 'Belanja Barang (Mamin & Cetak)',
       value: 339774768,
-      percentage: 16.23,
+      percentage: 16.62,
       color: '#f59e0b', // Amber
       packagesCount: 6,
       desc: 'Makan Minum Rapat/Akreditasi (Rp 303.55 Jt) + Sertifikat/Cetak/Plakat (Rp 36.22 Jt)'
@@ -45,7 +45,7 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
 
   // Specific thematic breakdown
   const thematicData = [
-    { name: 'Perjalanan Dinas Nakes & Tim', value: 870000000, color: '#2563eb', share: '41.55%' },
+    { name: 'Perjalanan Dinas Nakes & Tim', value: 820000000, color: '#2563eb', share: '40.12%' },
     { name: 'Kontribusi Pelatihan / Bimtek', value: 640000000, color: '#10b981', share: '30.56%' },
     { name: 'Makan & Minum Rapat / Akreditasi', value: 303550000, color: '#f59e0b', share: '14.49%' },
     { name: 'Honorarium Pengajar / Narasumber', value: 229200000, color: '#8b5cf6', share: '10.95%' },
