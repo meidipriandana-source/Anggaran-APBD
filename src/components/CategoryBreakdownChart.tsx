@@ -22,7 +22,7 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
       value: 870000000,
       percentage: 41.62,
       color: '#2563eb', // Royal Blue
-      packagesCount: 3,
+      packagesCount: 2,
       desc: 'Transport & Akomodasi 82 Orang Nakes + 5 Tim Surveyor Akreditasi'
     },
     {

@@ -379,7 +379,6 @@ export function generateMonthlyReportHtml(
                 itemMonthly['Juli'] = 46952424;
                 itemMonthly['Agustus'] = 183294411;
               }
-              if (item.id === 'item-10') itemMonthly['Agustus'] = 78008000;
             }
 
             const totalItemRealisasi = item.terserap;
