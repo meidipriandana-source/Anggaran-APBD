@@ -86,7 +86,7 @@ export const Header: React.FC<HeaderProps> = ({
               APBD 2026
             </span>
             <span className="text-[11px] font-bold text-slate-500 font-display uppercase tracking-wider">
-              PEMPROV KALTARA &bull; RSUD dr. H. Jusuf SK
+              Diklat & Akreditasi
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight font-display">

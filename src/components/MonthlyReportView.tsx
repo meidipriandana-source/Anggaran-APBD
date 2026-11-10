@@ -5,7 +5,6 @@ import { Download, Printer, Filter, Calendar, CheckSquare, Square, Check, Layers
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { MonthlyTrendChart } from './MonthlyTrendChart';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
-import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface MonthlyReportViewProps {
   items?: BudgetItem[];
@@ -403,9 +402,6 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
 
       {/* Clean Card Container with Full Border Grid */}
       <div className="relative bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel */}
-        <DayakRibbonTrim colorScheme="emerald" />
-
         {/* Table Title Header with Action Buttons */}
         <div className="px-5 py-4 border-b border-slate-200 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>

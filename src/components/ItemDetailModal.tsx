@@ -3,7 +3,6 @@ import { BudgetItem } from '../types';
 import { FORMAT_RUPIAH, TOTAL_PAGU_ANGGARAN } from '../data/budgetData';
 import { X, Plane, GraduationCap, Building2, Tag, FileText, CheckCircle2, ShieldCheck, Printer, SlidersHorizontal } from 'lucide-react';
 import { printHtmlDirectly } from '../utils/printHelper';
-import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface ItemDetailModalProps {
   item: BudgetItem | null;
@@ -87,7 +86,6 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose,
         className="relative bg-white rounded-2xl max-w-xl w-full border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <DayakRibbonTrim colorScheme={isPerdin ? 'blue' : isKontribusi ? 'emerald' : 'gold'} />
         {/* Header */}
         <div
           className={`p-4 sm:p-5 flex items-start justify-between border-b ${

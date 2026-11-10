@@ -16,7 +16,6 @@ import {
   TrendingDown,
   Info
 } from 'lucide-react';
-import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface PergeseranModalProps {
   isOpen: boolean;
@@ -151,8 +150,6 @@ export const PergeseranModal: React.FC<PergeseranModalProps> = ({
         className="relative bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-2xl overflow-hidden my-auto animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <DayakRibbonTrim colorScheme="gold" />
-
         {/* Header */}
         <div className="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white p-5 flex items-start justify-between border-b border-slate-700/60">
           <div className="flex items-center gap-3">

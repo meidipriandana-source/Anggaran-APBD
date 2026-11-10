@@ -28,7 +28,6 @@ import {
 } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateTransactionsHtml } from '../utils/printHelper';
-import { DayakRibbonTrim } from './DayakPatternDecor';
 
 interface MutasiJurnalViewProps {
   item: BudgetItem;
@@ -566,9 +565,6 @@ export const MutasiJurnalView: React.FC<MutasiJurnalViewProps> = ({
 
       {/* Dark Modern Mutasi Jurnal Card Container */}
       <div className="relative bg-[#0b1329] text-slate-100 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
-        {/* Ornamen Lis Ukir Dayak Kaltara di Atas Tabel Jurnal */}
-        <DayakRibbonTrim colorScheme="gold" />
-
         {/* Header toolbar */}
         <div className="p-5 sm:p-6 border-b border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
