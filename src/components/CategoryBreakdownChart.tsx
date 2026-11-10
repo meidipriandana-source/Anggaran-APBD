@@ -15,41 +15,41 @@ interface CategoryBreakdownChartProps {
 }
 
 export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ onFilterCategory }) => {
-  // Breakdown by Major Account Category
+  // Breakdown by Major Account Category (DPA Perubahan TA 2026)
   const macroData = [
     {
       name: 'Belanja Perjalanan Dinas',
-      value: 820000000,
-      percentage: 40.12,
+      value: 870000000,
+      percentage: 41.62,
       color: '#2563eb', // Royal Blue
       packagesCount: 3,
-      desc: 'Transport & Uang Harian Nakes 82 Orang + 5 Tim Surveyor'
+      desc: 'Transport & Akomodasi 82 Orang Nakes + 5 Tim Surveyor Akreditasi'
     },
     {
-      name: 'Belanja Jasa (Kontribusi & Honor)',
-      value: 884200000,
-      percentage: 43.26,
+      name: 'Belanja Jasa (Kontribusi, Honor & Iklan)',
+      value: 858600000,
+      percentage: 41.07,
       color: '#059669', // Emerald Green
-      packagesCount: 7,
-      desc: 'Kontribusi Diklat (Rp 640 Jt) + Honorarium Pengajar (Rp 229.2 Jt) + Iklan (Rp 15 Jt)'
+      packagesCount: 6,
+      desc: 'Kontribusi Diklat (Rp 540 Jt) + Honorarium Pengajar (Rp 303.6 Jt) + Iklan (Rp 15 Jt)'
     },
     {
-      name: 'Belanja Barang (Mamin & Cetak)',
-      value: 339774768,
-      percentage: 16.62,
+      name: 'Belanja Barang (Makanan & Minuman)',
+      value: 361855000,
+      percentage: 17.31,
       color: '#f59e0b', // Amber
-      packagesCount: 6,
-      desc: 'Makan Minum Rapat/Akreditasi (Rp 303.55 Jt) + Sertifikat/Cetak/Plakat (Rp 36.22 Jt)'
+      packagesCount: 4,
+      desc: 'Konsumsi Rapat/Akreditasi (Rp 326.85 Jt) + Jamuan Tamu Akreditasi (Rp 35 Jt)'
     }
   ];
 
   // Specific thematic breakdown
   const thematicData = [
-    { name: 'Perjalanan Dinas Nakes & Tim', value: 820000000, color: '#2563eb', share: '40.12%' },
-    { name: 'Kontribusi Pelatihan / Bimtek', value: 640000000, color: '#10b981', share: '30.56%' },
-    { name: 'Makan & Minum Rapat / Akreditasi', value: 303550000, color: '#f59e0b', share: '14.49%' },
-    { name: 'Honorarium Pengajar / Narasumber', value: 229200000, color: '#8b5cf6', share: '10.95%' },
-    { name: 'Bahan Cetak, Sertifikat & Suvenir', value: 51224768, color: '#64748b', share: '2.45%' }
+    { name: 'Perjalanan Dinas Nakes & Tim', value: 870000000, color: '#2563eb', share: '41.62%' },
+    { name: 'Kontribusi Pelatihan & Surveyor', value: 540000000, color: '#10b981', share: '25.83%' },
+    { name: 'Makan & Minum Rapat / Akreditasi', value: 361855000, color: '#f59e0b', share: '17.31%' },
+    { name: 'Honorarium Pengajar / Narasumber', value: 303600000, color: '#8b5cf6', share: '14.52%' },
+    { name: 'Jasa Iklan Publikasi Akreditasi', value: 15000000, color: '#64748b', share: '0.72%' }
   ];
 
   const CustomPieTooltip = ({ active, payload }: any) => {

@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { BudgetItem } from '../types';
 import { FORMAT_RUPIAH } from '../data/budgetData';
-import { ArrowRight, Search, Download, X, Layers, CheckSquare, Square, Printer, Check, SlidersHorizontal, AlertCircle, Clock } from 'lucide-react';
+import { ArrowRight, Search, Download, FileSpreadsheet, X, Layers, CheckSquare, Square, Printer, Check, SlidersHorizontal, AlertCircle, Clock } from 'lucide-react';
 import { PrintPreviewModal } from './PrintPreviewModal';
 import { generateBudgetSummaryHtml } from '../utils/printHelper';
 import { LOGO_KALTARA } from '../assets/logoKaltara';
 import { DayakRibbonTrim } from './DayakPatternDecor';
+import * as XLSX from 'xlsx';
 
 interface BudgetTableProps {
   items: BudgetItem[];
@@ -14,13 +15,13 @@ interface BudgetTableProps {
   onOpenPergeseran?: (itemId?: string) => void;
 }
 
-const CATEGORY_FILTERS = [
+const CATEGORY_TABS = [
   { id: 'all', label: 'Semua Komponen' },
   { id: 'perdin', label: 'Perjalanan Dinas' },
-  { id: 'kursus', label: 'Kursus / Pelatihan' },
-  { id: 'honor', label: 'Honorarium & Narasumber' },
+  { id: 'kursus', label: 'Kursus & Kontribusi' },
+  { id: 'honor', label: 'Honorarium Pengajar' },
   { id: 'mamin', label: 'Makanan & Minuman' },
-  { id: 'lainnya', label: 'Bahan & Lainnya' }
+  { id: 'lainnya', label: 'Jasa Iklan' }
 ];
 
 export const BudgetTable: React.FC<BudgetTableProps> = ({
@@ -37,6 +38,34 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     return new Set(items.map((i) => i.id));
   });
 
+  // Dynamic count per category
+  const categoryCounts = useMemo(() => {
+    return {
+      all: items.length,
+      perdin: items.filter((i) => i.isHighlightPerjalananDinas || i.kelompokAkun.includes('Perjalanan')).length,
+      kursus: items.filter((i) => i.isHighlightKontribusi || i.subKegiatanKelompok.toLowerCase().includes('kontribusi')).length,
+      honor: items.filter((i) => i.uraianSpesifik.toLowerCase().includes('honor') || i.kategoriBelanja.toLowerCase().includes('honor')).length,
+      mamin: items.filter(
+        (i) =>
+          i.uraianSpesifik.toLowerCase().includes('makan') ||
+          i.uraianSpesifik.toLowerCase().includes('prasmanan') ||
+          i.kategoriBelanja.toLowerCase().includes('makan')
+      ).length,
+      lainnya: items.filter(
+        (i) =>
+          !i.isHighlightPerjalananDinas &&
+          !i.kelompokAkun.includes('Perjalanan') &&
+          !i.isHighlightKontribusi &&
+          !i.subKegiatanKelompok.toLowerCase().includes('kontribusi') &&
+          !i.uraianSpesifik.toLowerCase().includes('honor') &&
+          !i.kategoriBelanja.toLowerCase().includes('honor') &&
+          !i.uraianSpesifik.toLowerCase().includes('makan') &&
+          !i.uraianSpesifik.toLowerCase().includes('prasmanan') &&
+          !i.kategoriBelanja.toLowerCase().includes('makan')
+      ).length
+    };
+  }, [items]);
+
   // Extract unique sub-kegiatan / kelompok
   const uniqueSubKegiatans = useMemo(() => {
     const set = new Set<string>();
@@ -50,13 +79,23 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
       // Category filter
-      if (selectedCategory === 'perdin' && !item.isHighlightPerjalananDinas) return false;
-      if (selectedCategory === 'kursus' && !item.isHighlightKontribusi) return false;
-      if (selectedCategory === 'honor' && !item.uraianSpesifik.toLowerCase().includes('honor')) return false;
-      if (selectedCategory === 'mamin' && !item.uraianSpesifik.toLowerCase().includes('makanan')) return false;
+      if (selectedCategory === 'perdin' && !item.isHighlightPerjalananDinas && !item.kelompokAkun.includes('Perjalanan')) return false;
+      if (selectedCategory === 'kursus' && !item.isHighlightKontribusi && !item.subKegiatanKelompok.toLowerCase().includes('kontribusi')) return false;
+      if (selectedCategory === 'honor' && !item.uraianSpesifik.toLowerCase().includes('honor') && !item.kategoriBelanja.toLowerCase().includes('honor')) return false;
+      if (
+        selectedCategory === 'mamin' &&
+        !item.uraianSpesifik.toLowerCase().includes('makan') &&
+        !item.uraianSpesifik.toLowerCase().includes('prasmanan') &&
+        !item.kategoriBelanja.toLowerCase().includes('makan')
+      )
+        return false;
       if (
         selectedCategory === 'lainnya' &&
-        (item.isHighlightPerjalananDinas || item.isHighlightKontribusi || item.uraianSpesifik.toLowerCase().includes('honor') || item.uraianSpesifik.toLowerCase().includes('makanan'))
+        (item.isHighlightPerjalananDinas ||
+          item.isHighlightKontribusi ||
+          item.uraianSpesifik.toLowerCase().includes('honor') ||
+          item.uraianSpesifik.toLowerCase().includes('makan') ||
+          item.uraianSpesifik.toLowerCase().includes('prasmanan'))
       )
         return false;
 
@@ -134,9 +173,11 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
       'No',
       'Komponen / Uraian',
       'Kode Rekening',
-      'Pagu Murni',
-      'Pergeseran',
-      'Pagu Efektif',
+      'Sumber Dana',
+      'Koefisien / Volume',
+      'Pagu Murni (Rp)',
+      'Pergeseran (Rp)',
+      'Pagu Efektif (Rp)',
       'Terserap (Rp)',
       'Sisa (Rp)',
       '% Serapan'
@@ -146,6 +187,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
       idx + 1,
       `"${item.uraianSpesifik}"`,
       `"${item.kodeRekening}"`,
+      `"${item.sumberDana || '-'}"`,
+      `"${item.koefisienVolume}"`,
       item.paguMurni,
       item.pergeseran,
       item.jumlahTotal,
@@ -159,11 +202,93 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `Ringkasan_Belanja_APBD_2026_${selectedItemsToPrint.length}_Item.csv`);
+    link.setAttribute('download', `DPA_Perubahan_2026_${selectedItemsToPrint.length}_Item.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const exportExcel = () => {
+    const dataToExport = selectedItemsToPrint;
+    const wsData = [
+      ['RINCIAN ANGARAN BELANJA SUB KEGIATAN (DPA PERUBAHAN SKPD TA 2026)'],
+      ['Sub Kegiatan: 1.02.03.1.02.0001 Peningkatan Kompetensi dan Kualifikasi SDM Kesehatan'],
+      ['SKPD: RSUD dr. H. Jusuf SK Provinsi Kalimantan Utara'],
+      [`Tanggal Unduh: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`],
+      [],
+      [
+        'No',
+        'Kelompok Kegiatan / Sub Kegiatan',
+        'Kode Rekening',
+        'Sumber Dana',
+        'Uraian Spesifik',
+        'Koefisien / Volume',
+        'Satuan',
+        'Harga Satuan (Rp)',
+        'Pagu Murni (Rp)',
+        'Pergeseran (Rp)',
+        'Pagu Efektif (Rp)',
+        'Terserap (Rp)',
+        'Sisa (Rp)',
+        'Serapan (%)'
+      ],
+      ...dataToExport.map((item, idx) => [
+        idx + 1,
+        item.subKegiatanKelompok,
+        item.kodeRekening,
+        item.sumberDana || '-',
+        item.uraianSpesifik,
+        item.koefisienVolume,
+        item.satuan,
+        item.hargaSatuan,
+        item.paguMurni,
+        item.pergeseran,
+        item.jumlahTotal,
+        item.terserap,
+        item.sisa,
+        Number((item.persenSerapan / 100).toFixed(4))
+      ]),
+      [],
+      [
+        'TOTAL',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        selectedTotals.paguMurni,
+        selectedTotals.pergeseran,
+        selectedTotals.pagu,
+        selectedTotals.terserap,
+        selectedTotals.sisa,
+        selectedTotals.pagu > 0 ? Number((selectedTotals.terserap / selectedTotals.pagu).toFixed(4)) : 0
+      ]
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols'] = [
+      { wch: 5 },
+      { wch: 38 },
+      { wch: 22 },
+      { wch: 25 },
+      { wch: 40 },
+      { wch: 18 },
+      { wch: 15 },
+      { wch: 16 },
+      { wch: 18 },
+      { wch: 16 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 12 }
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'DPA Perubahan 2026');
+    XLSX.writeFile(wb, `DPA_Perubahan_APBD_2026_${dataToExport.length}_Item.xlsx`);
   };
 
   return (
@@ -177,8 +302,9 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
           <Layers className="w-3.5 h-3.5" />
           Filter:
         </span>
-        {CATEGORY_FILTERS.map((cat) => {
+        {CATEGORY_TABS.map((cat) => {
           const isActive = selectedCategory === cat.id;
+          const count = categoryCounts[cat.id as keyof typeof categoryCounts] ?? 0;
           return (
             <button
               key={cat.id}
@@ -190,7 +316,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                   : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/70'
               }`}
             >
-              {cat.label}
+              {cat.label} ({count})
             </button>
           );
         })}
@@ -259,6 +385,17 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
           >
             <Download className="w-3.5 h-3.5 text-slate-500" />
             <span>Ekspor CSV ({selectedItemIds.size})</span>
+          </button>
+
+          {/* Ekspor Excel */}
+          <button
+            type="button"
+            onClick={exportExcel}
+            className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-2xs shadow-emerald-500/20 transition-all cursor-pointer active:scale-95"
+            title="Unduh data anggaran ke dalam format Excel (.xlsx)"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-white" />
+            <span>Ekspor Excel ({selectedItemIds.size > 0 ? selectedItemIds.size : filteredItems.length})</span>
           </button>
 
           {/* Cetak Terpilih */}

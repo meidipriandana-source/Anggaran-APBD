@@ -371,7 +371,7 @@ export function generateMonthlyReportHtml(
               if (item.id === 'item-8') {
                 itemMonthly['Mei'] = 67500000;
                 itemMonthly['Juli'] = 46500000;
-                itemMonthly['Agustus'] = 81125000;
+                itemMonthly['Agustus'] = 111030334;
               }
               if (item.id === 'item-9') {
                 itemMonthly['April'] = 35619560;
@@ -453,7 +453,7 @@ export function generateBudgetSummaryHtml(
               <td class="center" style="padding: 3.5px 2px;">${idx + 1}</td>
               <td class="desc" style="padding: 3.5px 6px;">
                 <strong style="color: #0f172a; font-size: 8pt;">${item.uraianSpesifik}</strong><br/>
-                <span style="font-size: 6.5pt; color: #475569;">${item.kodeRekening} &bull; ${item.kategoriBelanja}</span>
+                <span style="font-size: 6.5pt; color: #475569;">${item.kodeRekening} &bull; ${item.kategoriBelanja} ${item.sumberDana ? `&bull; <b>[${item.sumberDana}]</b>` : ''}</span>
               </td>
               <td class="center" style="padding: 3.5px 2px; font-size: 7.5pt;">${item.koefisienVolume}</td>
               <td class="num" style="padding: 3.5px 4px; font-size: 7.5pt;">${FORMAT_RUPIAH(item.paguMurni)}</td>

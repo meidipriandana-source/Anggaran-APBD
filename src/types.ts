@@ -25,6 +25,7 @@ export interface BudgetItem {
   dasarHukumPergeseran?: string;
   keteranganPergeseran?: string;
   tanggalPergeseran?: string;
+  sumberDana?: string;
 }
 
 export interface PergeseranRecord {

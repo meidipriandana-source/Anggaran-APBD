@@ -147,7 +147,19 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, onClose,
             </div>
             {item.spesifikasiDetail && (
               <div className="text-slate-600 text-[11px] pt-1 border-t border-slate-200">
-                <strong>Spesifikasi RKA:</strong> {item.spesifikasiDetail}
+                <strong>Spesifikasi RKA / DPA:</strong> {item.spesifikasiDetail}
+              </div>
+            )}
+            {item.sumberDana && (
+              <div className="pt-1 flex items-center gap-1.5 text-[11px] border-t border-slate-200">
+                <strong className="text-slate-500">Sumber Dana:</strong>
+                <span className={`px-2 py-0.5 rounded font-bold text-[10px] border ${
+                  item.sumberDana.includes('Pajak Rokok')
+                    ? 'bg-amber-50 text-amber-800 border-amber-200'
+                    : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                }`}>
+                  {item.sumberDana}
+                </span>
               </div>
             )}
           </div>

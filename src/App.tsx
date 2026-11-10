@@ -33,7 +33,7 @@ export default function App() {
   // Pergeseran / Perubahan Anggaran Map (keyed by BudgetItem id)
   const [pergeseranMap, setPergeseranMap] = useState<Record<string, PergeseranRecord>>(() => {
     try {
-      const saved = safeStorage.getItem('budget_pergeseran_map_2026_v1');
+      const saved = safeStorage.getItem('budget_pergeseran_map_2026_dpa_perubahan');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') {
@@ -48,7 +48,7 @@ export default function App() {
 
   const updatePergeseranMap = (newMap: Record<string, PergeseranRecord>) => {
     setPergeseranMap(newMap);
-    safeStorage.setItem('budget_pergeseran_map_2026_v1', JSON.stringify(newMap));
+    safeStorage.setItem('budget_pergeseran_map_2026_dpa_perubahan', JSON.stringify(newMap));
   };
 
   const handleSavePergeseran = (record: PergeseranRecord) => {
